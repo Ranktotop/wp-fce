@@ -77,7 +77,9 @@ class Wp_Fce
 		$this->wp_fce = 'wp-fce';
 
 		$this->load_dependencies();
+		$product_cpt = new WP_FCE_CPT_Product();
 		$this->set_locale();
+		$this->define_carbon_fields_hooks();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
 	}
@@ -123,6 +125,11 @@ class Wp_Fce
 		 * side of the site.
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wp-fce-public.php';
+
+		/**
+		 * The custom post type responsible for handling products
+		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-fce-product.php';
 
 		$this->loader = new Wp_Fce_Loader();
 	}
@@ -179,6 +186,28 @@ class Wp_Fce
 
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
+	}
+
+	/**
+	 * Register hook for booting Carbon Fields.
+	 *
+	 * @since 1.0.0
+	 * @access private
+	 */
+	private function define_carbon_fields_hooks()
+	{
+		$this->loader->add_action('after_setup_theme', $this, 'boot_carbon_fields', 0);
+	}
+
+	/**
+	 * Actually boot Carbon Fields.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 */
+	public function boot_carbon_fields()
+	{
+		\Carbon_Fields\Carbon_Fields::boot();
 	}
 
 	/**

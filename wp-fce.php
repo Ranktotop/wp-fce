@@ -8,17 +8,17 @@
  * registers the activation and deactivation functions, and defines a function
  * that starts the plugin.
  *
- * @link              http://example.com
+ * @link              https://marcmeese.com
  * @since             1.0.0
  * @package           Wp_Fce
  *
  * @wordpress-plugin
- * Plugin Name:       WordPress Plugin Boilerplate
+ * Plugin Name:       FluentCommunity Extreme Add-On
  * Plugin URI:        http://example.com/wp-fce-uri/
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Description:       Adds an API to FluentCommunity for supporting external payment processors
  * Version:           1.0.0
- * Author:            Your Name or Your Company
- * Author URI:        http://example.com/
+ * Author:            Marc Meese
+ * Author URI:        https://marcmeese.com
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       wp-fce
@@ -36,6 +36,11 @@ if (! defined('WPINC')) {
  * Rename this for your plugin and update it as you release new versions.
  */
 define('WP_FCE_VERSION', '1.0.0');
+
+//  Composer‑Autoloader laden (für Carbon Fields)
+if (file_exists(__DIR__ . '/vendor/autoload.php')) {
+	require_once __DIR__ . '/vendor/autoload.php';
+}
 
 /**
  * The code that runs during plugin activation.
@@ -59,11 +64,6 @@ function deactivate_wp_fce()
 
 register_activation_hook(__FILE__, 'activate_wp_fce');
 register_deactivation_hook(__FILE__, 'deactivate_wp_fce');
-
-//  Composer‑Autoloader laden (für Carbon Fields)
-if (file_exists(__DIR__ . '/vendor/autoload.php')) {
-	require_once __DIR__ . '/vendor/autoload.php';
-}
 
 /**
  * The core plugin class that is used to define internationalization,
