@@ -1,0 +1,17 @@
+{
+    "name": "rankt/wp_fluent_community_extreme",
+    "autoload": {
+        "psr-4": {
+            "Rankt\\WpFluentCommunityExtreme\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Ranktotop",
+            "email": "marc@rank-to-top.de"
+        }
+    ],
+    "require": {
+        "htmlburger/carbon-fields": "3.6"
+    }
+}

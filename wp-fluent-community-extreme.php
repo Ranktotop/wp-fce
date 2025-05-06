@@ -1,5 +1,7 @@
 <?php
-
+if (file_exists(__DIR__ . '/vendor/autoload.php')) {
+	require_once __DIR__ . '/vendor/autoload.php';
+}
 /**
  * The plugin bootstrap file
  *
@@ -26,7 +28,7 @@
  */
 
 // If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) {
+if (! defined('WPINC')) {
 	die;
 }
 
@@ -35,14 +37,15 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'WP_FLUENT_COMMUNITY_EXTREME_VERSION', '1.0.0' );
+define('WP_FLUENT_COMMUNITY_EXTREME_VERSION', '1.0.0');
 
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-wp-fluent-community-extreme-activator.php
  */
-function activate_wp_fluent_community_extreme() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-fluent-community-extreme-activator.php';
+function activate_wp_fluent_community_extreme()
+{
+	require_once plugin_dir_path(__FILE__) . 'includes/class-wp-fluent-community-extreme-activator.php';
 	Wp_Fluent_Community_Extreme_Activator::activate();
 }
 
@@ -50,19 +53,20 @@ function activate_wp_fluent_community_extreme() {
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-wp-fluent-community-extreme-deactivator.php
  */
-function deactivate_wp_fluent_community_extreme() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-fluent-community-extreme-deactivator.php';
+function deactivate_wp_fluent_community_extreme()
+{
+	require_once plugin_dir_path(__FILE__) . 'includes/class-wp-fluent-community-extreme-deactivator.php';
 	Wp_Fluent_Community_Extreme_Deactivator::deactivate();
 }
 
-register_activation_hook( __FILE__, 'activate_wp_fluent_community_extreme' );
-register_deactivation_hook( __FILE__, 'deactivate_wp_fluent_community_extreme' );
+register_activation_hook(__FILE__, 'activate_wp_fluent_community_extreme');
+register_deactivation_hook(__FILE__, 'deactivate_wp_fluent_community_extreme');
 
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-wp-fluent-community-extreme.php';
+require plugin_dir_path(__FILE__) . 'includes/class-wp-fluent-community-extreme.php';
 
 /**
  * Begins execution of the plugin.
@@ -73,10 +77,10 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-wp-fluent-community-extrem
  *
  * @since    1.0.0
  */
-function run_wp_fluent_community_extreme() {
+function run_wp_fluent_community_extreme()
+{
 
 	$plugin = new Wp_Fluent_Community_Extreme();
 	$plugin->run();
-
 }
 run_wp_fluent_community_extreme();
