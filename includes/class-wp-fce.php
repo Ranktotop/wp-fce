@@ -9,8 +9,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    Wp-Fce
- * @subpackage Wp-Fce/includes
+ * @package    Wp_Fce
+ * @subpackage Wp_Fce/includes
  */
 
 /**
@@ -23,11 +23,11 @@
  * version of the plugin.
  *
  * @since      1.0.0
- * @package    Wp-Fce
- * @subpackage Wp-Fce/includes
+ * @package    Wp_Fce
+ * @subpackage Wp_Fce/includes
  * @author     Your Name <email@example.com>
  */
-class Wp-Fce
+class Wp_Fce
 {
 
 	/**
@@ -36,7 +36,7 @@ class Wp-Fce
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      Wp-Fce_Loader    $loader    Maintains and registers all hooks for the plugin.
+	 * @var      Wp_Fce_Loader    $loader    Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
 
@@ -87,10 +87,10 @@ class Wp-Fce
 	 *
 	 * Include the following files that make up the plugin:
 	 *
-	 * - Wp-Fce_Loader. Orchestrates the hooks of the plugin.
-	 * - Wp-Fce_i18n. Defines internationalization functionality.
-	 * - Wp-Fce_Admin. Defines all hooks for the admin area.
-	 * - Wp-Fce_Public. Defines all hooks for the public side of the site.
+	 * - Wp_Fce_Loader. Orchestrates the hooks of the plugin.
+	 * - Wp_Fce_i18n. Defines internationalization functionality.
+	 * - Wp_Fce_Admin. Defines all hooks for the admin area.
+	 * - Wp_Fce_Public. Defines all hooks for the public side of the site.
 	 *
 	 * Create an instance of the loader which will be used to register the hooks
 	 * with WordPress.
@@ -124,13 +124,13 @@ class Wp-Fce
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wp-fce-public.php';
 
-		$this->loader = new Wp-Fce_Loader();
+		$this->loader = new Wp_Fce_Loader();
 	}
 
 	/**
 	 * Define the locale for this plugin for internationalization.
 	 *
-	 * Uses the Wp-Fce_i18n class in order to set the domain and to register the hook
+	 * Uses the Wp_Fce_i18n class in order to set the domain and to register the hook
 	 * with WordPress.
 	 *
 	 * @since    1.0.0
@@ -139,7 +139,7 @@ class Wp-Fce
 	private function set_locale()
 	{
 
-		$plugin_i18n = new Wp-Fce_i18n();
+		$plugin_i18n = new Wp_Fce_i18n();
 
 		$this->loader->add_action('plugins_loaded', $plugin_i18n, 'load_plugin_textdomain');
 	}
@@ -154,7 +154,7 @@ class Wp-Fce
 	private function define_admin_hooks()
 	{
 
-		$plugin_admin = new Wp-Fce_Admin($this->get_wp_fce(), $this->get_version());
+		$plugin_admin = new Wp_Fce_Admin($this->get_wp_fce(), $this->get_version());
 
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
@@ -175,7 +175,7 @@ class Wp-Fce
 	private function define_public_hooks()
 	{
 
-		$plugin_public = new Wp-Fce_Public($this->get_wp_fce(), $this->get_version());
+		$plugin_public = new Wp_Fce_Public($this->get_wp_fce(), $this->get_version());
 
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
@@ -207,7 +207,7 @@ class Wp-Fce
 	 * The reference to the class that orchestrates the hooks with the plugin.
 	 *
 	 * @since     1.0.0
-	 * @return    Wp-Fce_Loader    Orchestrates the hooks of the plugin.
+	 * @return    Wp_Fce_Loader    Orchestrates the hooks of the plugin.
 	 */
 	public function get_loader()
 	{

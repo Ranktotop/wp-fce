@@ -10,7 +10,7 @@
  *
  * @link              http://example.com
  * @since             1.0.0
- * @package           Wp-Fce
+ * @package           Wp_Fce
  *
  * @wordpress-plugin
  * Plugin Name:       WordPress Plugin Boilerplate
@@ -44,7 +44,7 @@ define('WP_FCE_VERSION', '1.0.0');
 function activate_wp_fce()
 {
 	require_once plugin_dir_path(__FILE__) . 'includes/class-wp-fce-activator.php';
-	Wp-Fce_Activator::activate();
+	Wp_Fce_Activator::activate();
 }
 
 /**
@@ -54,7 +54,7 @@ function activate_wp_fce()
 function deactivate_wp_fce()
 {
 	require_once plugin_dir_path(__FILE__) . 'includes/class-wp-fce-deactivator.php';
-	Wp-Fce_Deactivator::deactivate();
+	Wp_Fce_Deactivator::deactivate();
 }
 
 register_activation_hook(__FILE__, 'activate_wp_fce');
@@ -83,7 +83,7 @@ require plugin_dir_path(__FILE__) . 'includes/class-wp-fce.php';
 function run_wp_fce()
 {
 
-	$plugin = new Wp-Fce();
+	$plugin = new Wp_Fce();
 	$plugin->run();
 }
 run_wp_fce();

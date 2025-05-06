@@ -6,8 +6,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    Wp-Fce
- * @subpackage Wp-Fce/admin
+ * @package    Wp_Fce
+ * @subpackage Wp_Fce/admin
  */
 
 /**
@@ -16,11 +16,11 @@
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the admin-specific stylesheet and JavaScript.
  *
- * @package    Wp-Fce
- * @subpackage Wp-Fce/admin
+ * @package    Wp_Fce
+ * @subpackage Wp_Fce/admin
  * @author     Your Name <email@example.com>
  */
-class Wp-Fce_Admin {
+class Wp_Fce_Admin {
 
 	/**
 	 * The ID of this plugin.
@@ -65,10 +65,10 @@ class Wp-Fce_Admin {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in Wp-Fce_Loader as all of the hooks are defined
+		 * defined in Wp_Fce_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The Wp-Fce_Loader will then create the relationship
+		 * The Wp_Fce_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
@@ -88,10 +88,10 @@ class Wp-Fce_Admin {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in Wp-Fce_Loader as all of the hooks are defined
+		 * defined in Wp_Fce_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The Wp-Fce_Loader will then create the relationship
+		 * The Wp_Fce_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */

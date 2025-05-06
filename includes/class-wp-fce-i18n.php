@@ -9,8 +9,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    Wp-Fce
- * @subpackage Wp-Fce/includes
+ * @package    Wp_Fce
+ * @subpackage Wp_Fce/includes
  */
 
 /**
@@ -20,11 +20,11 @@
  * so that it is ready for translation.
  *
  * @since      1.0.0
- * @package    Wp-Fce
- * @subpackage Wp-Fce/includes
+ * @package    Wp_Fce
+ * @subpackage Wp_Fce/includes
  * @author     Your Name <email@example.com>
  */
-class Wp-Fce_i18n {
+class Wp_Fce_i18n {
 
 
 	/**

@@ -25,7 +25,7 @@ The Boilerplate can be installed directly into your plugins folder "as-is". You 
 * rename files from `wp-fce` to `example-me`
 * change `wp_fce` to `example_me`
 * change `wp-fce` to `example-me`
-* change `Wp-Fce` to `Example_Me`
+* change `Wp_Fce` to `Example_Me`
 * change `WP_FCE_` to `EXAMPLE_ME_`
 
 It's safe to activate the plugin at this point. Because the Boilerplate has no real functionality there will be no menu items, meta boxes, or custom post types added until you write the code.
@@ -74,7 +74,7 @@ Note that if you include your own classes, or third-party libraries, there are t
 * `wp-fce/admin` is for all admin-specific functionality
 * `wp-fce/public` is for all public-facing functionality
 
-Note that previous versions of the Boilerplate did not include `Wp-Fce_Loader` but this class is used to register all filters and actions with WordPress.
+Note that previous versions of the Boilerplate did not include `Wp_Fce_Loader` but this class is used to register all filters and actions with WordPress.
 
 The example code provided shows how to register your hooks with the Loader class.
 

@@ -6,8 +6,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    Wp-Fce
- * @subpackage Wp-Fce/includes
+ * @package    Wp_Fce
+ * @subpackage Wp_Fce/includes
  */
 
 /**
@@ -17,11 +17,11 @@
  * the plugin, and register them with the WordPress API. Call the
  * run function to execute the list of actions and filters.
  *
- * @package    Wp-Fce
- * @subpackage Wp-Fce/includes
+ * @package    Wp_Fce
+ * @subpackage Wp_Fce/includes
  * @author     Your Name <email@example.com>
  */
-class Wp-Fce_Loader {
+class Wp_Fce_Loader {
 
 	/**
 	 * The array of actions registered with WordPress.

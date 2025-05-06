@@ -6,8 +6,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    Wp-Fce
- * @subpackage Wp-Fce/includes
+ * @package    Wp_Fce
+ * @subpackage Wp_Fce/includes
  */
 
 /**
@@ -16,11 +16,11 @@
  * This class defines all code necessary to run during the plugin's activation.
  *
  * @since      1.0.0
- * @package    Wp-Fce
- * @subpackage Wp-Fce/includes
+ * @package    Wp_Fce
+ * @subpackage Wp_Fce/includes
  * @author     Your Name <email@example.com>
  */
-class Wp-Fce_Activator {
+class Wp_Fce_Activator {
 
 	/**
 	 * Short Description. (use period)
