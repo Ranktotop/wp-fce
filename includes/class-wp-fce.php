@@ -9,8 +9,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    Wp_Fluent_Community_Extreme
- * @subpackage Wp_Fluent_Community_Extreme/includes
+ * @package    Wp-Fce
+ * @subpackage Wp-Fce/includes
  */
 
 /**
@@ -23,11 +23,12 @@
  * version of the plugin.
  *
  * @since      1.0.0
- * @package    Wp_Fluent_Community_Extreme
- * @subpackage Wp_Fluent_Community_Extreme/includes
+ * @package    Wp-Fce
+ * @subpackage Wp-Fce/includes
  * @author     Your Name <email@example.com>
  */
-class Wp_Fluent_Community_Extreme {
+class Wp-Fce
+{
 
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
@@ -35,7 +36,7 @@ class Wp_Fluent_Community_Extreme {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      Wp_Fluent_Community_Extreme_Loader    $loader    Maintains and registers all hooks for the plugin.
+	 * @var      Wp-Fce_Loader    $loader    Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
 
@@ -44,9 +45,9 @@ class Wp_Fluent_Community_Extreme {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      string    $wp_fluent_community_extreme    The string used to uniquely identify this plugin.
+	 * @var      string    $wp_fce    The string used to uniquely identify this plugin.
 	 */
-	protected $wp_fluent_community_extreme;
+	protected $wp_fce;
 
 	/**
 	 * The current version of the plugin.
@@ -66,19 +67,19 @@ class Wp_Fluent_Community_Extreme {
 	 *
 	 * @since    1.0.0
 	 */
-	public function __construct() {
-		if ( defined( 'WP_FLUENT_COMMUNITY_EXTREME_VERSION' ) ) {
-			$this->version = WP_FLUENT_COMMUNITY_EXTREME_VERSION;
+	public function __construct()
+	{
+		if (defined('WP_FCE_VERSION')) {
+			$this->version = WP_FCE_VERSION;
 		} else {
 			$this->version = '1.0.0';
 		}
-		$this->wp_fluent_community_extreme = 'wp-fluent-community-extreme';
+		$this->wp_fce = 'wp-fce';
 
 		$this->load_dependencies();
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
-
 	}
 
 	/**
@@ -86,10 +87,10 @@ class Wp_Fluent_Community_Extreme {
 	 *
 	 * Include the following files that make up the plugin:
 	 *
-	 * - Wp_Fluent_Community_Extreme_Loader. Orchestrates the hooks of the plugin.
-	 * - Wp_Fluent_Community_Extreme_i18n. Defines internationalization functionality.
-	 * - Wp_Fluent_Community_Extreme_Admin. Defines all hooks for the admin area.
-	 * - Wp_Fluent_Community_Extreme_Public. Defines all hooks for the public side of the site.
+	 * - Wp-Fce_Loader. Orchestrates the hooks of the plugin.
+	 * - Wp-Fce_i18n. Defines internationalization functionality.
+	 * - Wp-Fce_Admin. Defines all hooks for the admin area.
+	 * - Wp-Fce_Public. Defines all hooks for the public side of the site.
 	 *
 	 * Create an instance of the loader which will be used to register the hooks
 	 * with WordPress.
@@ -97,50 +98,50 @@ class Wp_Fluent_Community_Extreme {
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function load_dependencies() {
+	private function load_dependencies()
+	{
 
 		/**
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-fluent-community-extreme-loader.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-fce-loader.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-fluent-community-extreme-i18n.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-fce-i18n.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wp-fluent-community-extreme-admin.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-wp-fce-admin.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-wp-fluent-community-extreme-public.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wp-fce-public.php';
 
-		$this->loader = new Wp_Fluent_Community_Extreme_Loader();
-
+		$this->loader = new Wp-Fce_Loader();
 	}
 
 	/**
 	 * Define the locale for this plugin for internationalization.
 	 *
-	 * Uses the Wp_Fluent_Community_Extreme_i18n class in order to set the domain and to register the hook
+	 * Uses the Wp-Fce_i18n class in order to set the domain and to register the hook
 	 * with WordPress.
 	 *
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function set_locale() {
+	private function set_locale()
+	{
 
-		$plugin_i18n = new Wp_Fluent_Community_Extreme_i18n();
+		$plugin_i18n = new Wp-Fce_i18n();
 
-		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
-
+		$this->loader->add_action('plugins_loaded', $plugin_i18n, 'load_plugin_textdomain');
 	}
 
 	/**
@@ -150,13 +151,18 @@ class Wp_Fluent_Community_Extreme {
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function define_admin_hooks() {
+	private function define_admin_hooks()
+	{
 
-		$plugin_admin = new Wp_Fluent_Community_Extreme_Admin( $this->get_wp_fluent_community_extreme(), $this->get_version() );
+		$plugin_admin = new Wp-Fce_Admin($this->get_wp_fce(), $this->get_version());
 
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
+		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
 
+		require_once plugin_dir_path(__FILE__) . '../admin/class-wp-fce-options.php';
+		$options = new \WP_Fluent_Community_Extreme_Options();
+		$this->loader->add_action('after_setup_theme',             $options, 'boot');
+		$this->loader->add_action('carbon_fields_register_fields', $options, 'fields');
 	}
 
 	/**
@@ -166,13 +172,13 @@ class Wp_Fluent_Community_Extreme {
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function define_public_hooks() {
+	private function define_public_hooks()
+	{
 
-		$plugin_public = new Wp_Fluent_Community_Extreme_Public( $this->get_wp_fluent_community_extreme(), $this->get_version() );
+		$plugin_public = new Wp-Fce_Public($this->get_wp_fce(), $this->get_version());
 
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
-
+		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
+		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
 	}
 
 	/**
@@ -180,7 +186,8 @@ class Wp_Fluent_Community_Extreme {
 	 *
 	 * @since    1.0.0
 	 */
-	public function run() {
+	public function run()
+	{
 		$this->loader->run();
 	}
 
@@ -191,17 +198,19 @@ class Wp_Fluent_Community_Extreme {
 	 * @since     1.0.0
 	 * @return    string    The name of the plugin.
 	 */
-	public function get_wp_fluent_community_extreme() {
-		return $this->wp_fluent_community_extreme;
+	public function get_wp_fce()
+	{
+		return $this->wp_fce;
 	}
 
 	/**
 	 * The reference to the class that orchestrates the hooks with the plugin.
 	 *
 	 * @since     1.0.0
-	 * @return    Wp_Fluent_Community_Extreme_Loader    Orchestrates the hooks of the plugin.
+	 * @return    Wp-Fce_Loader    Orchestrates the hooks of the plugin.
 	 */
-	public function get_loader() {
+	public function get_loader()
+	{
 		return $this->loader;
 	}
 
@@ -211,8 +220,8 @@ class Wp_Fluent_Community_Extreme {
 	 * @since     1.0.0
 	 * @return    string    The version number of the plugin.
 	 */
-	public function get_version() {
+	public function get_version()
+	{
 		return $this->version;
 	}
-
 }

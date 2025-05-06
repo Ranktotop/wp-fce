@@ -1,5 +1,5 @@
 {
-    "name": "rankt/wp_fluent_community_extreme",
+    "name": "rankt/wp_fce",
     "autoload": {
         "psr-4": {
             "Rankt\\WpFluentCommunityExtreme\\": "src/"

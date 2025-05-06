@@ -22,7 +22,7 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    Wp_Fluent_Community_Extreme
+ * @package    Wp-Fce
  */
 
 // If uninstall not called from WordPress, then exit.

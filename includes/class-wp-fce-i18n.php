@@ -9,8 +9,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    Wp_Fluent_Community_Extreme
- * @subpackage Wp_Fluent_Community_Extreme/includes
+ * @package    Wp-Fce
+ * @subpackage Wp-Fce/includes
  */
 
 /**
@@ -20,11 +20,11 @@
  * so that it is ready for translation.
  *
  * @since      1.0.0
- * @package    Wp_Fluent_Community_Extreme
- * @subpackage Wp_Fluent_Community_Extreme/includes
+ * @package    Wp-Fce
+ * @subpackage Wp-Fce/includes
  * @author     Your Name <email@example.com>
  */
-class Wp_Fluent_Community_Extreme_i18n {
+class Wp-Fce_i18n {
 
 
 	/**
@@ -35,7 +35,7 @@ class Wp_Fluent_Community_Extreme_i18n {
 	public function load_plugin_textdomain() {
 
 		load_plugin_textdomain(
-			'wp-fluent-community-extreme',
+			'wp-fce',
 			false,
 			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
 		);

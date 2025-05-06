@@ -6,8 +6,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    Wp_Fluent_Community_Extreme
- * @subpackage Wp_Fluent_Community_Extreme/admin
+ * @package    Wp-Fce
+ * @subpackage Wp-Fce/admin
  */
 
 /**
@@ -16,20 +16,20 @@
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the admin-specific stylesheet and JavaScript.
  *
- * @package    Wp_Fluent_Community_Extreme
- * @subpackage Wp_Fluent_Community_Extreme/admin
+ * @package    Wp-Fce
+ * @subpackage Wp-Fce/admin
  * @author     Your Name <email@example.com>
  */
-class Wp_Fluent_Community_Extreme_Admin {
+class Wp-Fce_Admin {
 
 	/**
 	 * The ID of this plugin.
 	 *
 	 * @since    1.0.0
 	 * @access   private
-	 * @var      string    $wp_fluent_community_extreme    The ID of this plugin.
+	 * @var      string    $wp_fce    The ID of this plugin.
 	 */
-	private $wp_fluent_community_extreme;
+	private $wp_fce;
 
 	/**
 	 * The version of this plugin.
@@ -44,12 +44,12 @@ class Wp_Fluent_Community_Extreme_Admin {
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
-	 * @param      string    $wp_fluent_community_extreme       The name of this plugin.
+	 * @param      string    $wp_fce       The name of this plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
-	public function __construct( $wp_fluent_community_extreme, $version ) {
+	public function __construct( $wp_fce, $version ) {
 
-		$this->wp_fluent_community_extreme = $wp_fluent_community_extreme;
+		$this->wp_fce = $wp_fce;
 		$this->version = $version;
 
 	}
@@ -65,15 +65,15 @@ class Wp_Fluent_Community_Extreme_Admin {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in Wp_Fluent_Community_Extreme_Loader as all of the hooks are defined
+		 * defined in Wp-Fce_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The Wp_Fluent_Community_Extreme_Loader will then create the relationship
+		 * The Wp-Fce_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->wp_fluent_community_extreme, plugin_dir_url( __FILE__ ) . 'css/wp-fluent-community-extreme-admin.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->wp_fce, plugin_dir_url( __FILE__ ) . 'css/wp-fce-admin.css', array(), $this->version, 'all' );
 
 	}
 
@@ -88,15 +88,15 @@ class Wp_Fluent_Community_Extreme_Admin {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in Wp_Fluent_Community_Extreme_Loader as all of the hooks are defined
+		 * defined in Wp-Fce_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The Wp_Fluent_Community_Extreme_Loader will then create the relationship
+		 * The Wp-Fce_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->wp_fluent_community_extreme, plugin_dir_url( __FILE__ ) . 'js/wp-fluent-community-extreme-admin.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->wp_fce, plugin_dir_url( __FILE__ ) . 'js/wp-fce-admin.js', array( 'jquery' ), $this->version, false );
 
 	}
 

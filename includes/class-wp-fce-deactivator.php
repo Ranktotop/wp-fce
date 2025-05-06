@@ -6,8 +6,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    Wp_Fluent_Community_Extreme
- * @subpackage Wp_Fluent_Community_Extreme/includes
+ * @package    Wp-Fce
+ * @subpackage Wp-Fce/includes
  */
 
 /**
@@ -16,11 +16,11 @@
  * This class defines all code necessary to run during the plugin's deactivation.
  *
  * @since      1.0.0
- * @package    Wp_Fluent_Community_Extreme
- * @subpackage Wp_Fluent_Community_Extreme/includes
+ * @package    Wp-Fce
+ * @subpackage Wp-Fce/includes
  * @author     Your Name <email@example.com>
  */
-class Wp_Fluent_Community_Extreme_Deactivator {
+class Wp-Fce_Deactivator {
 
 	/**
 	 * Short Description. (use period)

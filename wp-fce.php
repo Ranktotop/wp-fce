@@ -1,7 +1,5 @@
 <?php
-if (file_exists(__DIR__ . '/vendor/autoload.php')) {
-	require_once __DIR__ . '/vendor/autoload.php';
-}
+
 /**
  * The plugin bootstrap file
  *
@@ -12,18 +10,18 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
  *
  * @link              http://example.com
  * @since             1.0.0
- * @package           Wp_Fluent_Community_Extreme
+ * @package           Wp-Fce
  *
  * @wordpress-plugin
  * Plugin Name:       WordPress Plugin Boilerplate
- * Plugin URI:        http://example.com/wp-fluent-community-extreme-uri/
+ * Plugin URI:        http://example.com/wp-fce-uri/
  * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
  * Version:           1.0.0
  * Author:            Your Name or Your Company
  * Author URI:        http://example.com/
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       wp-fluent-community-extreme
+ * Text Domain:       wp-fce
  * Domain Path:       /languages
  */
 
@@ -37,36 +35,41 @@ if (! defined('WPINC')) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('WP_FLUENT_COMMUNITY_EXTREME_VERSION', '1.0.0');
+define('WP_FCE_VERSION', '1.0.0');
 
 /**
  * The code that runs during plugin activation.
- * This action is documented in includes/class-wp-fluent-community-extreme-activator.php
+ * This action is documented in includes/class-wp-fce-activator.php
  */
-function activate_wp_fluent_community_extreme()
+function activate_wp_fce()
 {
-	require_once plugin_dir_path(__FILE__) . 'includes/class-wp-fluent-community-extreme-activator.php';
-	Wp_Fluent_Community_Extreme_Activator::activate();
+	require_once plugin_dir_path(__FILE__) . 'includes/class-wp-fce-activator.php';
+	Wp-Fce_Activator::activate();
 }
 
 /**
  * The code that runs during plugin deactivation.
- * This action is documented in includes/class-wp-fluent-community-extreme-deactivator.php
+ * This action is documented in includes/class-wp-fce-deactivator.php
  */
-function deactivate_wp_fluent_community_extreme()
+function deactivate_wp_fce()
 {
-	require_once plugin_dir_path(__FILE__) . 'includes/class-wp-fluent-community-extreme-deactivator.php';
-	Wp_Fluent_Community_Extreme_Deactivator::deactivate();
+	require_once plugin_dir_path(__FILE__) . 'includes/class-wp-fce-deactivator.php';
+	Wp-Fce_Deactivator::deactivate();
 }
 
-register_activation_hook(__FILE__, 'activate_wp_fluent_community_extreme');
-register_deactivation_hook(__FILE__, 'deactivate_wp_fluent_community_extreme');
+register_activation_hook(__FILE__, 'activate_wp_fce');
+register_deactivation_hook(__FILE__, 'deactivate_wp_fce');
+
+//  Composer‑Autoloader laden (für Carbon Fields)
+if (file_exists(__DIR__ . '/vendor/autoload.php')) {
+	require_once __DIR__ . '/vendor/autoload.php';
+}
 
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path(__FILE__) . 'includes/class-wp-fluent-community-extreme.php';
+require plugin_dir_path(__FILE__) . 'includes/class-wp-fce.php';
 
 /**
  * Begins execution of the plugin.
@@ -77,10 +80,10 @@ require plugin_dir_path(__FILE__) . 'includes/class-wp-fluent-community-extreme.
  *
  * @since    1.0.0
  */
-function run_wp_fluent_community_extreme()
+function run_wp_fce()
 {
 
-	$plugin = new Wp_Fluent_Community_Extreme();
+	$plugin = new Wp-Fce();
 	$plugin->run();
 }
-run_wp_fluent_community_extreme();
+run_wp_fce();

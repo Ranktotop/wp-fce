@@ -9,7 +9,7 @@ The WordPress Plugin Boilerplate includes the following files:
 * `.gitignore`. Used to exclude certain files from the repository.
 * `CHANGELOG.md`. The list of changes to the core project.
 * `README.md`. The file that you’re currently reading.
-* A `wp-fluent-community-extreme` directory that contains the source code - a fully executable WordPress plugin.
+* A `wp-fce` directory that contains the source code - a fully executable WordPress plugin.
 
 ## Features
 
@@ -22,11 +22,11 @@ The WordPress Plugin Boilerplate includes the following files:
 
 The Boilerplate can be installed directly into your plugins folder "as-is". You will want to rename it and the classes inside of it to fit your needs. For example, if your plugin is named 'example-me' then:
 
-* rename files from `wp-fluent-community-extreme` to `example-me`
-* change `wp_fluent_community_extreme` to `example_me`
-* change `wp-fluent-community-extreme` to `example-me`
-* change `Wp_Fluent_Community_Extreme` to `Example_Me`
-* change `WP_FLUENT_COMMUNITY_EXTREME_` to `EXAMPLE_ME_`
+* rename files from `wp-fce` to `example-me`
+* change `wp_fce` to `example_me`
+* change `wp-fce` to `example-me`
+* change `Wp-Fce` to `Example_Me`
+* change `WP_FCE_` to `EXAMPLE_ME_`
 
 It's safe to activate the plugin at this point. Because the Boilerplate has no real functionality there will be no menu items, meta boxes, or custom post types added until you write the code.
 
@@ -70,11 +70,11 @@ For reference, [here's a discussion](http://make.wordpress.org/themes/2013/03/04
 
 Note that if you include your own classes, or third-party libraries, there are three locations in which said files may go:
 
-* `wp-fluent-community-extreme/includes` is where functionality shared between the admin area and the public-facing parts of the site reside
-* `wp-fluent-community-extreme/admin` is for all admin-specific functionality
-* `wp-fluent-community-extreme/public` is for all public-facing functionality
+* `wp-fce/includes` is where functionality shared between the admin area and the public-facing parts of the site reside
+* `wp-fce/admin` is for all admin-specific functionality
+* `wp-fce/public` is for all public-facing functionality
 
-Note that previous versions of the Boilerplate did not include `Wp_Fluent_Community_Extreme_Loader` but this class is used to register all filters and actions with WordPress.
+Note that previous versions of the Boilerplate did not include `Wp-Fce_Loader` but this class is used to register all filters and actions with WordPress.
 
 The example code provided shows how to register your hooks with the Loader class.
 

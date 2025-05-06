@@ -8,8 +8,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    Wp_Fluent_Community_Extreme
- * @subpackage Wp_Fluent_Community_Extreme/public/partials
+ * @package    Wp-Fce
+ * @subpackage Wp-Fce/public/partials
  */
 ?>
 
