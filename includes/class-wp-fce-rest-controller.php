@@ -136,6 +136,16 @@ class WP_FCE_REST_Controller
             ? sanitize_text_field($params['product']['id'])
             : '';
 
+        $paid_until = isset($params['transaction']['paid_until'])
+            ? $params['transaction']['paid_until']
+            : '';
+        //if paid_until is null, use current time + 100 years
+        if ($paid_until === '') {
+            $paid_until = (new DateTime())
+                ->modify('+100 years')
+                ->format('Y-m-d H:i:s');
+        }
+
         if (empty($email) || empty($externalId)) {
             return new \WP_REST_Response(
                 ['error' => 'Missing parameters: customer.email and product.id are required'],
@@ -155,64 +165,38 @@ class WP_FCE_REST_Controller
                 $event = 'test';
             }
         }
-        // Fallback, falls andere Provider ein 'event' mitliefern
-        if (empty($event) && isset($params['event'])) {
-            $event = sanitize_text_field($params['event']);
-        }
-
-        // 4) Unser Produkt-Post finden
-        $query = new \WP_Query([
-            'post_type'   => 'product',
-            'meta_query'  => [[
-                'key'     => 'fce_external_id',
-                'value'   => $externalId,
-                'compare' => '=',
-            ]],
-            'fields'      => 'ids',
-            'posts_per_page' => 1,
-        ]);
-        if (empty($query->posts)) {
+        // Error if event is unknown
+        if (empty($event)) {
             return new \WP_REST_Response(
-                ['error' => sprintf('No product found for external ID %s', $externalId)],
-                404
+                ['error' => 'Missing parameters: transaction.event is required'],
+                400
             );
         }
-        $product_id = (int) $query->posts[0];
 
-        // 5) Mapping auslesen
-        $spaces  = WP_FCE_CPT_Product::get_spaces($product_id);
-        $courses = WP_FCE_CPT_Product::get_courses($product_id);
-
-        // 6) User anlegen oder abrufen
-        if (email_exists($email)) {
-            $user = get_user_by('email', $email);
-        } else {
-            $username = sanitize_user(strstr($email, '@', true), true);
-            $password = wp_generate_password();
-            $user_id  = wp_create_user($username, $password, $email);
-            if (is_wp_error($user_id)) {
-                return new \WP_REST_Response(
-                    ['error' => $user_id->get_error_message()],
-                    500
-                );
-            }
-            $user = get_user_by('id', $user_id);
+        // User anlegen oder abrufen
+        $helper_user = new WP_FCE_Helper_User();
+        $user = $helper_user->get_or_create_user($email);
+        if ($user === False) {
+            return new \WP_REST_Response(
+                ['error' => "Could not create or find user with email $email"],
+                500
+            );
         }
 
         // 7) Zugriff gewähren oder entziehen
         if (in_array($event, ['sale', 'test'], true)) {
-            foreach ($spaces as $space_id) {
-                \FluentCommunity\App\Services\Helper::addToSpace($space_id, $user->ID, 'member', 'by_automation');
-            }
-            if (! empty($courses)) {
-                \FluentCommunity\Modules\Course\Services\CourseHelper::enrollCourses($courses, $user->ID);
+            if (!$helper_user->grant_access($user->ID, $externalId, $paid_until)) {
+                return new \WP_REST_Response(
+                    ['error' => "Could not grant user $user->ID access to product $externalId"],
+                    500
+                );
             }
         } elseif ('refund' === $event) {
-            foreach ($spaces as $space_id) {
-                \FluentCommunity\App\Services\Helper::removeFromSpace($space_id, $user->ID, 'by_automation');
-            }
-            if (! empty($courses)) {
-                \FluentCommunity\Modules\Course\Services\CourseHelper::leaveCourses($courses, $user->ID);
+            if (!$helper_user->revoke_access($user->ID, $externalId)) {
+                return new \WP_REST_Response(
+                    ['error' => "Could not revoke user $user->ID access to product $externalId"],
+                    500
+                );
             }
         }
 

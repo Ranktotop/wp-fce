@@ -17,6 +17,7 @@ class WP_FCE_Subscription_Expiration_Handler
     {
         global $wpdb;
         $table     = $wpdb->prefix . 'fce_user_product_subscriptions';
+        //Add 3 buffer days to expiration date
         $threshold = date('Y-m-d H:i:s', strtotime('-3 days'));
 
         $expired = $wpdb->get_results($wpdb->prepare(

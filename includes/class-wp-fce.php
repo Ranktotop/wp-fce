@@ -159,6 +159,16 @@ class Wp_Fce
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-fce-subscription-expiration-handler.php';
 
+		/**
+		 * Helper class for products
+		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-fce-helper-product.php';
+
+		/**
+		 * Helper class for user
+		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-fce-helper-user.php';
+
 
 		$this->loader = new Wp_Fce_Loader();
 	}
@@ -202,6 +212,15 @@ class Wp_Fce
 		$this->loader->add_action('after_setup_theme',       $options, 'boot');
 		// Feld-Definitionen
 		$this->loader->add_action('carbon_fields_register_fields', $options, 'fields');
+		//Add product tables on user views
+		$this->loader->add_action('show_user_profile', $plugin_admin, 'render_user_products_table');
+		$this->loader->add_action('edit_user_profile', $plugin_admin, 'render_user_products_table');
+		// Ausgabe des Formulars zum manuellen Grant
+		$this->loader->add_action('show_user_profile', $plugin_admin, 'render_manual_access_form');
+		$this->loader->add_action('edit_user_profile',   $plugin_admin, 'render_manual_access_form');
+		// Speichern nach Klick auf „Profile aktualisieren“
+		$this->loader->add_action('personal_options_update', $plugin_admin, 'save_manual_access');
+		$this->loader->add_action('edit_user_profile_update', $plugin_admin, 'save_manual_access');
 	}
 
 	/**

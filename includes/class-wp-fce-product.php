@@ -43,48 +43,4 @@ class WP_FCE_CPT_Product
 
         register_post_type('product', $args);
     }
-
-    /**
-     * Get all FluentCommunity Space IDs mapped to this product.
-     *
-     * @param int $product_id
-     * @return int[] Array of space IDs
-     */
-    public static function get_spaces(int $product_id): array
-    {
-        if (function_exists('carbon_get_post_meta')) {
-            $spaces = carbon_get_post_meta($product_id, 'fce_spaces');
-        } else {
-            $spaces = get_post_meta($product_id, 'fce_spaces', true);
-        }
-
-        // Sicherstellen, dass wir ein Array haben
-        if (! is_array($spaces)) {
-            return [];
-        }
-
-        // Alle IDs als Integer zurückgeben
-        return array_map('intval', $spaces);
-    }
-
-    /**
-     * Get all FluentCommunity Course IDs mapped to this product.
-     *
-     * @param int $product_id
-     * @return int[] Array of course IDs
-     */
-    public static function get_courses(int $product_id): array
-    {
-        if (function_exists('carbon_get_post_meta')) {
-            $courses = carbon_get_post_meta($product_id, 'fce_courses');
-        } else {
-            $courses = get_post_meta($product_id, 'fce_courses', true);
-        }
-
-        if (! is_array($courses)) {
-            return [];
-        }
-
-        return array_map('intval', $courses);
-    }
 }
