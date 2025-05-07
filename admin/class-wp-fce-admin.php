@@ -247,4 +247,37 @@ class Wp_Fce_Admin
 			$helper_user->grant_access($user_id, $external, $grant_until_timestamp, false);
 		}
 	}
+
+	/**
+	 * Löscht beim Entfernen eines Produkts (CST) alle zugehörigen Zeilen
+	 * in wp_fce_user_product_subscriptions.
+	 *
+	 * @param int $post_id Die ID des gerade gelöschten Posts.
+	 */
+	public function cleanup_subscriptions_on_product_delete(int $post_id): void
+	{
+		// 1) Nur für unseren Produkt-CPT
+		if (get_post_type($post_id) !== 'product') {
+			return;
+		}
+
+		global $wpdb;
+		$table = $wpdb->prefix . 'fce_user_product_subscriptions';
+
+		// 2) Alle Subscriptions mit dieser product_id löschen
+		$deleted = $wpdb->delete(
+			$table,
+			['product_id' => $post_id],
+			['%d']
+		);
+
+		// optional: Debug-Log, falls Du WP_DEBUG_LOG eingeschaltet hast
+		if (defined('WP_DEBUG') && WP_DEBUG && $deleted !== false) {
+			error_log(sprintf(
+				'wp_fce: %d Subscriptions for product %d removed.',
+				$deleted,
+				$post_id
+			));
+		}
+	}
 }

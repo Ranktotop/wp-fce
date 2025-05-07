@@ -27,7 +27,7 @@ class WP_FCE_Helper_Product
      *     'course_ids'             => int[],         // Course-IDs
      *   ]
      */
-    public function get_product_mapping_by_external_product_id(int $externalId): array|null
+    public function get_product_mapping_by_external_product_id(string $externalId): array|null
     {
         $query = new \WP_Query([
             'post_type'   => 'product',

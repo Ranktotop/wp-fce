@@ -43,12 +43,12 @@ class WP_FCE_Helper_User
      * Grants access to a user for a given external product ID
      *
      * @param int $user_id The ID of the user to grant access to
-     * @param int $externalId The external ID of the product to grant access to
+     * @param string $externalId The external ID of the product to grant access to
      * @param bool   $prevent_downgrade Whether to block setting an earlier date.
      *
      * @return bool True if access was granted, false otherwise
      */
-    public function grant_access(int $user_id, int $externalId, int $grant_until_timestamp, bool $prevent_downgrade = true): bool
+    public function grant_access(int $user_id, string $externalId, int $grant_until_timestamp, bool $prevent_downgrade = true): bool
     {
         //Get the user as object
         $user = get_user_by('id', $user_id);

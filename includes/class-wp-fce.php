@@ -212,6 +212,7 @@ class Wp_Fce
 		$this->loader->add_action('after_setup_theme',       $options, 'boot');
 		// Feld-Definitionen
 		$this->loader->add_action('carbon_fields_register_fields', $options, 'fields');
+		$this->loader->add_action('before_delete_post', $plugin_admin, 'cleanup_subscriptions_on_product_delete');
 		//Add product tables on user views
 		$this->loader->add_action('show_user_profile', $plugin_admin, 'render_user_products_table');
 		$this->loader->add_action('edit_user_profile', $plugin_admin, 'render_user_products_table');
