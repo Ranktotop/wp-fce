@@ -59,6 +59,20 @@ class Wp_Fce
 	protected $version;
 
 	/**
+	 * Instance of our REST controller.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var WP_FCE_REST_Controller
+	 */
+	protected $rest_controller;
+
+	/**
+	 * @var WP_FCE_CPT_Product
+	 */
+	protected $product_cpt;
+
+	/**
 	 * Define the core functionality of the plugin.
 	 *
 	 * Set the plugin name and the plugin version that can be used throughout the plugin.
@@ -77,9 +91,8 @@ class Wp_Fce
 		$this->wp_fce = 'wp-fce';
 
 		$this->load_dependencies();
-		$product_cpt = new WP_FCE_CPT_Product();
 		$this->set_locale();
-		$this->define_carbon_fields_hooks();
+		$this->define_global_hooks();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
 	}
@@ -131,6 +144,22 @@ class Wp_Fce
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-fce-product.php';
 
+		/**
+		 * The admin options class
+		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-wp-fce-options.php';
+
+		/**
+		 * The REST API controller for handling IPN callbacks
+		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-fce-rest-controller.php';
+
+		/**
+		 * The class responsible for handling subscription expiration
+		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-fce-subscription-expiration-handler.php';
+
+
 		$this->loader = new Wp_Fce_Loader();
 	}
 
@@ -166,9 +195,12 @@ class Wp_Fce
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
 
-		require_once plugin_dir_path(__FILE__) . '../admin/class-wp-fce-options.php';
+		// Options‐Klasse instanziieren
 		$options = new \WP_Fluent_Community_Extreme_Options();
-		$this->loader->add_action('after_setup_theme',             $options, 'boot');
+
+		// Carbon Fields booten (falls Du das hier und nicht global machst)
+		$this->loader->add_action('after_setup_theme',       $options, 'boot');
+		// Feld-Definitionen
 		$this->loader->add_action('carbon_fields_register_fields', $options, 'fields');
 	}
 
@@ -189,14 +221,26 @@ class Wp_Fce
 	}
 
 	/**
-	 * Register hook for booting Carbon Fields.
+	 * Register all global hooks (Carbon Fields, REST, u. Ä.).
 	 *
 	 * @since 1.0.0
 	 * @access private
 	 */
-	private function define_carbon_fields_hooks()
+	private function define_global_hooks()
 	{
+		// 1) Custom Post Type registrieren
+		$this->product_cpt = new WP_FCE_CPT_Product();
+		$this->loader->add_action('init', $this->product_cpt, 'register_post_type');
+
+		// 2) REST-Controller initialisieren und Route registrieren
+		$this->rest_controller = new WP_FCE_REST_Controller();
+		$this->loader->add_action('rest_api_init', $this->rest_controller, 'register_routes');
+
+		// 3) Carbon Fields booten
 		$this->loader->add_action('after_setup_theme', $this, 'boot_carbon_fields', 0);
+
+		// Cron-Job für Ablaufprüfung für Mitglieder (static, daher keine instanzierung notwendig)
+		$this->loader->add_action('wp_fce_cron_check_expirations', 'WP_FCE_Subscription_Expiration_Handler', 'check_expirations');
 	}
 
 	/**

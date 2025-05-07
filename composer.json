@@ -13,5 +13,9 @@
     ],
     "require": {
         "htmlburger/carbon-fields": "3.6"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.5",
+        "wp-phpunit/wp-phpunit": "^6.8"
     }
 }
