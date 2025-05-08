@@ -14,10 +14,7 @@ if (! class_exists('WP_Fluent_Community_Extreme_Options')) {
     class WP_Fluent_Community_Extreme_Options
     {
 
-        public function boot()
-        {
-            error_log('✅ Carbon Fields wurde gebootet');
-        }
+        public function boot() {}
 
         /**
          * Registriere alle Carbon Fields Container und Felder.
@@ -26,7 +23,6 @@ if (! class_exists('WP_Fluent_Community_Extreme_Options')) {
          */
         public function fields()
         {
-            error_log('✅ Carbon Fields Container werden geladen');
             // Hauptcontainer – notwendig für Menüstruktur
             $main = Container::make('theme_options', 'FluentCommunity Extreme')
                 ->add_fields([
