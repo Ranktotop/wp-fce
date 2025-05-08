@@ -46,7 +46,7 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
 $updateChecker = PucFactory::buildUpdateChecker(
-	'https://github.com/Ranktotop/wp_fce/', // <-- HIER ANPASSEN
+	'https://github.com/Ranktotop/wp-fce/', // <-- HIER ANPASSEN
 	__FILE__,
 	'wp-fluent-community-extreme'
 );

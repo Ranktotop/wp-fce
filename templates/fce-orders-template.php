@@ -13,7 +13,7 @@ $bg_image_url = function_exists('carbon_get_theme_option')
     ? carbon_get_theme_option('fce_orders_bg_image')
     : '';
 if (empty($bg_image_url)) {
-    $bg_image_url = plugins_url('wp_fce/public/assets/membership_bg.png', dirname(__DIR__));
+    $bg_image_url = plugins_url('wp-fce/public/assets/membership_bg.png', dirname(__DIR__));
 }
 
 
@@ -42,7 +42,7 @@ $links = $wpdb->get_results($wpdb->prepare(
     <meta charset="UTF-8">
     <title><?php esc_html_e('Meine Bestellungen', 'wp_fce'); ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="<?= esc_url(plugins_url('wp_fce/public/css/fce-orders.css', dirname(__DIR__))) ?>" media="all">
+    <link rel="stylesheet" href="<?= esc_url(plugins_url('wp-fce/public/css/fce-orders.css', dirname(__DIR__))) ?>" media="all">
 </head>
 
 <body style="background-image: url('<?= esc_url($bg_image_url); ?>'); background-size: cover;">
