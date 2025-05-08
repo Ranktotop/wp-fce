@@ -126,7 +126,7 @@ class Wp_Fce_Public
 
 	public function enqueue_profile_link_css(): void
 	{
-		$css_url = plugins_url('wp_fce/public/css/fce-profile-link.css', dirname(__DIR__));
+		$css_url = plugins_url('wp-fce/public/css/fce-profile-link.css', dirname(__DIR__));
 		echo '<link rel="stylesheet" href="' . esc_url($css_url) . '" media="all">';
 		// Font Awesome 5 CDN
 		echo '<script src="https://kit.fontawesome.com/8b4c7209d4.js" crossorigin="anonymous"></script>';
