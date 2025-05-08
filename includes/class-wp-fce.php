@@ -27,6 +27,9 @@
  * @subpackage Wp_Fce/includes
  * @author     Your Name <email@example.com>
  */
+
+use Carbon_Fields\Carbon_Fields;
+
 class Wp_Fce
 {
 
@@ -290,7 +293,22 @@ class Wp_Fce
 	 */
 	public function boot_carbon_fields()
 	{
-		\Carbon_Fields\Carbon_Fields::boot();
+		// 1) Verzeichnis-Pfad zum build-Ordner
+		$this->loader->add_filter(
+			'carbon_fields_plugin_dir',
+			$this,
+			'filter_carbon_fields_dir'
+		);
+
+		// 2) Öffentliche URL zum build-Ordner
+		$this->loader->add_filter(
+			'carbon_fields_plugin_url',
+			$this,
+			'filter_carbon_fields_url'
+		);
+
+		// 3) Finally: Carbon Fields booten
+		Carbon_Fields::boot();
 	}
 
 	/**
