@@ -24,7 +24,7 @@ jobs:
       - name: 🗜️ Create Plugin ZIP
         run: |
           mkdir -p release
-          zip -r release/wp-fluent-community-extreme.zip . \
+          zip -r release/wp_fce.zip . \
             -x ".git*" ".github/*" "tests/*" "*.md" "composer.*" "phpunit.*"
 
       - name: 🚀 Create GitHub Release
@@ -32,6 +32,6 @@ jobs:
         with:
           tag_name: ${{ github.ref_name }}
           name: ${{ github.ref_name }}
-          files: release/wp-fluent-community-extreme.zip
+          files: release/wp_fce.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
