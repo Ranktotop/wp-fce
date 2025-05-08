@@ -1,0 +1,79 @@
+body {
+    margin: 0;
+    font-family: 'Open Sans', Arial, sans-serif;
+    color: #f0f0f0;
+}
+
+.fce-orders-wrapper {
+    max-width: 900px;
+    margin: 60px auto;
+    padding: 40px;
+    background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.27) 1%, rgba(255, 255, 255, 0.15) 10%, rgba(255, 255, 255, 0.05) 19%, rgba(255, 255, 255, 0) 32%, rgba(255, 255, 255, 0.09) 100%);
+    border-radius: 35px;
+    border-width: 1px 1px 3px 2px;
+    border-color: rgba(255, 255, 255, 0.15) rgba(255, 255, 255, 0.15) rgba(255, 255, 255, 0.15) rgba(255, 255, 255, 0.27);
+    backdrop-filter: blur(8.5px);
+    box-shadow: 6px 6px 18px 0px rgba(0, 0, 0, 0.3);
+}
+
+.fce-orders-wrapper h1 {
+    font-size: 28px;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #fff;
+}
+
+.fce-orders-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.fce-orders-table th,
+.fce-orders-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e0e0e0;
+}
+
+.fce-orders-table th {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+}
+
+.fce-orders-table a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    transition: transform 0.1s ease;
+}
+
+.fce-orders-table a:hover {
+    transform: scale(1.1);
+}
+
+.fce-back-btn {
+    display: inline-block;
+    margin-top: 40px;
+    text-align: center;
+    background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.27) 1%, rgba(255, 255, 255, 0.15) 10%, rgba(255, 255, 255, 0.05) 19%, rgba(255, 255, 255, 0) 32%, rgba(255, 255, 255, 0.09) 100%);
+    border-radius: 10px;
+    border-width: 1px 1px 3px 2px;
+    border-color: rgba(255, 255, 255, 0.15) rgba(255, 255, 255, 0.15) rgba(255, 255, 255, 0.15) rgba(255, 255, 255, 0.27);
+    backdrop-filter: blur(8.5px);
+    box-shadow: 2px 2px 9px 0px rgba(0, 0, 0, 0.3);
+    color: #fff;
+    padding: 12px 24px;
+    text-decoration: none;
+    font-size: 15px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.fce-back-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.02);
+}

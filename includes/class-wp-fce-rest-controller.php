@@ -139,6 +139,15 @@ class WP_FCE_REST_Controller
         $paid_until = isset($params['transaction']['paid_until'])
             ? $params['transaction']['paid_until']
             : '';
+        $order_date = isset($params['transaction']['order_date'])
+            ? $params['transaction']['order_date']
+            : '';
+        $management_url = isset($params['transaction']['management_url'])
+            ? sanitize_text_field($params['transaction']['management_url'])
+            : '';
+        $payment_source = isset($params['source'])
+            ? sanitize_text_field($params['source'])
+            : '';
         //if paid_until is null, use current time + 100 years
         if ($paid_until === '') {
             $paid_until = (new DateTime())
@@ -191,6 +200,8 @@ class WP_FCE_REST_Controller
                     500
                 );
             }
+            // save management url
+            $helper_user->save_management_link($user->ID, $externalId, $payment_source, $management_url, $order_date);
         } elseif ('refund' === $event) {
             if (!$helper_user->revoke_access($user->ID, $externalId)) {
                 return new \WP_REST_Response(

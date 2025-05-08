@@ -238,6 +238,25 @@ class Wp_Fce
 
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
+
+		//load style for profile page link
+		$this->loader->add_action(
+			'fluent_community/portal_head',
+			$plugin_public,
+			'enqueue_profile_link_css'
+		);
+
+		//add profile page link
+		$this->loader->add_filter(
+			'fluent_community/profile_view_data',
+			$plugin_public,
+			'add_profile_management_link',
+			10,
+			2
+		);
+
+		//register orders route
+		$this->loader->add_action('init', $plugin_public, 'register_routes');
 	}
 
 	/**

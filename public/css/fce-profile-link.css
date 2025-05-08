@@ -1,0 +1,32 @@
+/* Stil für den Menüpunkt "Meine Bestellungen" */
+.fce-link-orders {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    text-decoration: none !important;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: background 0.3s ease;
+}
+
+.fce-link-orders:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.fce-link-orders:visited {
+    color: inherit;
+    /* oder z. B. #00d084 */
+}
+
+.fce-link-orders::before {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    /* 900 = solid */
+    content: "\f09d";
+    /* Unicode für fa-credit-card */
+    display: inline-block;
+    margin-right: 8px;
+    font-size: 16px;
+    vertical-align: middle;
+}

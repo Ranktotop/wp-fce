@@ -164,4 +164,62 @@ class WP_FCE_Helper_User
 
         return $wpdb->replace($this->expiration_table, $data, $format);
     }
+
+    /**
+     * Save a management link for a user, product and source, if not already existing
+     *
+     * @param int $user_id WordPress user ID
+     * @param string $product_id Product identifier from IPN
+     * @param string $source Payment provider (e.g. copecart, digistore24)
+     * @param string $management_url Management link URL
+     * @param int $order_date Unix timestamp of the original order date
+     * @return bool True if inserted, false if duplicate or error
+     */
+    public static function save_management_link(int $user_id, string $product_id, string $source, string $management_url, int $order_date): bool
+    {
+        global $wpdb;
+
+        $table = $wpdb->prefix . 'fce_management_links';
+
+        // Check for duplicate entry
+        $existing = $wpdb->get_var($wpdb->prepare(
+            "SELECT id FROM {$table} WHERE user_id = %d AND product_id = %s AND source = %s AND management_url = %s",
+            $user_id,
+            $product_id,
+            $source,
+            $management_url
+        ));
+
+        if ($existing) {
+            return false; // Entry already exists
+        }
+
+        // Convert Unix timestamp to MySQL DATETIME format
+        $created_at = (new DateTime("@$order_date"))
+            ->setTimezone(new DateTimeZone(wp_timezone_string()))
+            ->format('Y-m-d H:i:s');
+
+        // Insert new entry
+        $inserted = $wpdb->insert(
+            $table,
+            [
+                'user_id'        => $user_id,
+                'product_id'     => $product_id,
+                'source'         => $source,
+                'management_url' => $management_url,
+                'created_at'     => $created_at, // aus order_date
+                'updated_at'     => current_time('mysql', 1)
+            ],
+            [
+                '%d',
+                '%s',
+                '%s',
+                '%s',
+                '%s',
+                '%s'
+            ]
+        );
+
+        return (bool) $inserted;
+    }
 }

@@ -33,6 +33,7 @@ class Wp_Fce_Activator
 	public static function activate()
 	{
 		self::db_user_product_subscriptions();
+		self::create_db_user_management_links();
 	}
 
 	/**
@@ -67,5 +68,33 @@ class Wp_Fce_Activator
 		if (! wp_next_scheduled('wp_fce_cron_check_expirations')) {
 			wp_schedule_event(time(), 'hourly', 'wp_fce_cron_check_expirations');
 		}
+	}
+
+	/**
+	 * Create the custom table to store user management URLs linked to products
+	 *
+	 * @return void
+	 */
+	private static function create_db_user_management_links(): void
+	{
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . 'fce_management_links';
+
+		$charset_collate = $wpdb->get_charset_collate();
+
+		$sql = "CREATE TABLE {$table_name} (
+        id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        user_id BIGINT UNSIGNED NOT NULL,
+        product_id VARCHAR(100) NOT NULL,
+        source VARCHAR(100) NOT NULL,
+        management_url TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP NULL DEFAULT NULL,
+        UNIQUE KEY idx_unique_entry (user_id, product_id, source, management_url(255))
+    ) $charset_collate;";
+
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		dbDelta($sql);
 	}
 }

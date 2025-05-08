@@ -6,6 +6,9 @@
  * @package WP_Fluent_Community_Extreme
  */
 
+use Carbon_Fields\Container;
+use Carbon_Fields\Field;
+
 if (! class_exists('WP_Fluent_Community_Extreme_Options')) {
 
     class WP_Fluent_Community_Extreme_Options
@@ -20,43 +23,46 @@ if (! class_exists('WP_Fluent_Community_Extreme_Options')) {
          */
         public function fields()
         {
-            //Admin-Einstellungen
-            \Carbon_Fields\Container::make(
-                'theme_options',
-                'FluentCommunity Extreme'
-            )
-                ->set_page_parent('options-general.php')
+            // Hauptcontainer – notwendig für Menüstruktur
+            $main = Container::make('theme_options', 'FluentCommunity Extreme')
                 ->add_fields([
-                    // IPN-Secret-Key
-                    \Carbon_Fields\Field::make('text', 'ipn_secret_key', __('IPN Secret Key', 'wp-fce'))
+                    Field::make('html', 'fce_dummy', '<p><em>' . __('Bitte wähle eine Unterseite.', 'wp-fce') . '</em></p>')
+                ]);
+
+            // Unterseite: API
+            Container::make('theme_options', 'API')
+                ->set_page_parent($main)
+                ->add_fields([
+                    Field::make('text', 'ipn_secret_key', __('IPN Secret Key', 'wp-fce'))
                         ->set_attribute('type', 'password')
                         ->set_help_text(__('Geheimer Schlüssel zur Absicherung des IPN-Callbacks.', 'wp-fce')),
                 ]);
 
-            // Product mapping meta box
-            \Carbon_Fields\Container::make(
-                'post_meta',
-                __('Produkt-Mapping', 'wp-fce')
-            )
+            // Unterseite: Darstellung
+            Container::make('theme_options', 'Darstellung')
+                ->set_page_parent($main)
+                ->add_fields([
+                    Field::make('image', 'fce_orders_bg_image', __('Zahlungsseite-Hintergrund', 'wp-fce'))
+                        ->set_value_type('url')
+                        ->set_help_text(__('Wird als Hintergrundbild auf der Zahlungen-Seite angezeigt.')),
+                ]);
+
+            // Bestehende Metabox bleibt 1:1 erhalten
+            Container::make('post_meta', __('Produkt-Mapping', 'wp-fce'))
                 ->where('post_type', '=', 'product')
                 ->add_fields([
-                    // Externe Produkt-ID des Zahlungsanbieters
-                    \Carbon_Fields\Field::make('text', 'fce_external_id', __('Externe Produkt-ID', 'wp-fce'))
+                    Field::make('text', 'fce_external_id', __('Externe Produkt-ID', 'wp-fce'))
                         ->set_help_text(__('Hier die Produkt-ID eintragen, die der Zahlungsanbieter sendet (z.B. Digistore24 oder CopeCart).', 'wp-fce'))
                         ->set_required(true),
 
-                    // Use a set of checkboxes for Spaces (allows clearing all selections)
-                    \Carbon_Fields\Field::make('set', 'fce_spaces', __('FluentCommunity Spaces zuordnen', 'wp-fce'))
+                    Field::make('set', 'fce_spaces', __('FluentCommunity Spaces zuordnen', 'wp-fce'))
                         ->set_options([$this, 'get_space_options'])
-                        ->set_help_text(__('Wähle die Spaces, die durch den Kauf freigeschaltet werden sollen.', 'wp-fce'))
-                        ->set_required(false)
+                        ->set_help_text(__('Wähle die Spaces, die durch den Kauf freigeschaltet werden sollen.'))
                         ->set_default_value([]),
 
-                    // Use a set of checkboxes for Courses
-                    \Carbon_Fields\Field::make('set', 'fce_courses', __('FluentCommunity Courses zuordnen', 'wp-fce'))
+                    Field::make('set', 'fce_courses', __('FluentCommunity Courses zuordnen', 'wp-fce'))
                         ->set_options([$this, 'get_course_options'])
-                        ->set_help_text(__('Wähle die Kurse, die durch den Kauf freigeschaltet werden sollen.', 'wp-fce'))
-                        ->set_required(false)
+                        ->set_help_text(__('Wähle die Kurse, die durch den Kauf freigeschaltet werden sollen.'))
                         ->set_default_value([]),
                 ]);
         }

@@ -20,7 +20,8 @@
  * @subpackage Wp_Fce/public
  * @author     Your Name <email@example.com>
  */
-class Wp_Fce_Public {
+class Wp_Fce_Public
+{
 
 	/**
 	 * The ID of this plugin.
@@ -47,11 +48,11 @@ class Wp_Fce_Public {
 	 * @param      string    $wp_fce       The name of the plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
-	public function __construct( $wp_fce, $version ) {
+	public function __construct($wp_fce, $version)
+	{
 
 		$this->wp_fce = $wp_fce;
 		$this->version = $version;
-
 	}
 
 	/**
@@ -59,7 +60,8 @@ class Wp_Fce_Public {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_styles() {
+	public function enqueue_styles()
+	{
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -73,8 +75,7 @@ class Wp_Fce_Public {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->wp_fce, plugin_dir_url( __FILE__ ) . 'css/wp-fce-public.css', array(), $this->version, 'all' );
-
+		wp_enqueue_style($this->wp_fce, plugin_dir_url(__FILE__) . 'css/wp-fce-public.css', array(), $this->version, 'all');
 	}
 
 	/**
@@ -82,7 +83,8 @@ class Wp_Fce_Public {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_scripts() {
+	public function enqueue_scripts()
+	{
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -96,8 +98,64 @@ class Wp_Fce_Public {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->wp_fce, plugin_dir_url( __FILE__ ) . 'js/wp-fce-public.js', array( 'jquery' ), $this->version, false );
-
+		wp_enqueue_script($this->wp_fce, plugin_dir_url(__FILE__) . 'js/wp-fce-public.js', array('jquery'), $this->version, false);
 	}
 
+	/**
+	 * Add a custom link to the FluentCommunity profile menu
+	 *
+	 * @param array $data
+	 * @param object $xprofile
+	 * @return array
+	 */
+	public function add_profile_management_link($data, $xprofile): array
+	{
+		if (!is_user_logged_in() || get_current_user_id() !== (int) $xprofile->user_id) {
+			return $data;
+		}
+
+		$data['profile_nav_actions'][] = [
+			'css_class' => 'fce-link-orders',
+			'title'     => __('Zahlungen', 'wp_fce'),
+			'svg_icon'  => '',
+			'url'       => site_url('/wp-fce/orders'),
+		];
+
+		return $data;
+	}
+
+	public function enqueue_profile_link_css(): void
+	{
+		$css_url = plugins_url('wp_fce/public/css/fce-profile-link.css', dirname(__DIR__));
+		echo '<link rel="stylesheet" href="' . esc_url($css_url) . '" media="all">';
+		// Font Awesome 5 CDN
+		echo '<script src="https://kit.fontawesome.com/8b4c7209d4.js" crossorigin="anonymous"></script>';
+		echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-2uM0o5lYPBTf9A7vmV+ELW8WquKQ0c/XY8JWhXnYWSFV+kn9vYcy6jOq+CtFOPWqZm4p5yxHRPjXynD9v+Fm9g==" crossorigin="anonymous" referrerpolicy="no-referrer" />';
+	}
+
+	/**
+	 * Registriert eine benutzerdefinierte Route für /wp-fce/bestellungen
+	 */
+	public function register_routes(): void
+	{
+		add_rewrite_rule('^wp-fce/orders/?$', 'index.php?wp_fce_page=orders', 'top');
+		add_filter('query_vars', function ($vars) {
+			$vars[] = 'wp_fce_page';
+			return $vars;
+		});
+
+		add_filter('template_include', [$this, 'load_custom_template']);
+	}
+
+	/**
+	 * Liefert das Template für unsere Bestellseite
+	 */
+	public function load_custom_template($template)
+	{
+		if (get_query_var('wp_fce_page') === 'orders') {
+			return plugin_dir_path(dirname(__FILE__)) . 'templates/fce-orders-template.php';
+		}
+
+		return $template;
+	}
 }
