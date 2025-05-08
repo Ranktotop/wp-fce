@@ -32,6 +32,21 @@ class Wp_Fce_Activator
 	 */
 	public static function activate()
 	{
+		// Check if FluentCommunity is active
+		include_once(ABSPATH . 'wp-admin/includes/plugin.php');
+		if (!is_plugin_active('fluent-community/fluent-community.php')) {
+			// Prevent activation
+			deactivate_plugins(plugin_basename(__FILE__));
+
+			// Show error message
+			wp_die(
+				'Dieses Plugin erfordert das Plugin "Fluent Community". Bitte installiere und aktiviere es zuerst.',
+				'Plugin-Anforderung nicht erfüllt',
+				['back_link' => true]
+			);
+		}
+
+
 		self::db_user_product_subscriptions();
 		self::create_db_user_management_links();
 	}
