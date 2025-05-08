@@ -1,9 +1,9 @@
-name: Build & Release Plugin on Push to Main
+name: Build & Release Plugin
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'v*'
 
 jobs:
   release:
@@ -27,11 +27,11 @@ jobs:
           zip -r release/wp-fluent-community-extreme.zip . \
             -x ".git*" ".github/*" "tests/*" "*.md" "composer.*" "phpunit.*"
 
-      - name: 🚀 Create GitHub Release (latest)
+      - name: 🚀 Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: latest
-          name: FluentCommunity Extreme (latest)
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
           files: release/wp-fluent-community-extreme.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
