@@ -99,15 +99,16 @@ class Wp_Fce_Activator
 		$charset_collate = $wpdb->get_charset_collate();
 
 		$sql = "CREATE TABLE {$table_name} (
-        id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-        user_id BIGINT UNSIGNED NOT NULL,
-        product_id VARCHAR(100) NOT NULL,
-        source VARCHAR(100) NOT NULL,
-        management_url TEXT NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP NULL DEFAULT NULL,
-        UNIQUE KEY idx_unique_entry (user_id, product_id, source, management_url(255))
-    ) $charset_collate;";
+			id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+			user_id BIGINT UNSIGNED NOT NULL,
+			product_id VARCHAR(100) NOT NULL,
+			source VARCHAR(100) NOT NULL,
+			management_url TEXT NOT NULL,
+			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			updated_at TIMESTAMP NULL DEFAULT NULL,
+			UNIQUE KEY idx_unique_entry (user_id, product_id, source, management_url(255)),
+			PRIMARY KEY (id)
+		) $charset_collate;";
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta($sql);
