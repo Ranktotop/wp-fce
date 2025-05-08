@@ -293,21 +293,6 @@ class Wp_Fce
 	 */
 	public function boot_carbon_fields()
 	{
-		// 1) Verzeichnis-Pfad zum build-Ordner
-		$this->loader->add_filter(
-			'carbon_fields_plugin_dir',
-			$this,
-			'filter_carbon_fields_dir'
-		);
-
-		// 2) Öffentliche URL zum build-Ordner
-		$this->loader->add_filter(
-			'carbon_fields_plugin_url',
-			$this,
-			'filter_carbon_fields_url'
-		);
-
-		// 3) Finally: Carbon Fields booten
 		Carbon_Fields::boot();
 	}
 
