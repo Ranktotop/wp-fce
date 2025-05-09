@@ -46,69 +46,99 @@ class Wp_Fce_Activator
 			);
 		}
 
-
-		self::db_user_product_subscriptions();
-		self::create_db_user_management_links();
+		self::create_db_ipn_log();
+		self::create_db_product_access_overrides();
+		self::create_db_products();
+		self::create_db_product_space();
+		flush_rewrite_rules();
 	}
 
-	/**
-	 * Legt die Tabelle wp_fce_user_product_subscriptions an (oder aktualisiert sie) und plant den Cron-Job.
-	 *
-	 * @since 1.0.0
-	 */
-	private static function db_user_product_subscriptions()
+	private static function create_db_products(): void
 	{
 		global $wpdb;
 
-		$table_name      = $wpdb->prefix . 'fce_user_product_subscriptions';
-		$charset_collate = $wpdb->get_charset_collate();
-
-		$sql = "
-			CREATE TABLE {$table_name} (
-			id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-			user_id BIGINT UNSIGNED NOT NULL,
-			product_id BIGINT UNSIGNED NOT NULL,
-			paid_until DATETIME NOT NULL,
-			expired_flag TINYINT(1) NOT NULL DEFAULT 0,
-			created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-			PRIMARY KEY  (id),
-			UNIQUE KEY user_product (user_id, product_id)
-			) {$charset_collate};
-			";
-
-		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-		dbDelta($sql);
-
-		if (! wp_next_scheduled('wp_fce_cron_check_expirations')) {
-			wp_schedule_event(time(), 'hourly', 'wp_fce_cron_check_expirations');
-		}
-	}
-
-	/**
-	 * Create the custom table to store user management URLs linked to products
-	 *
-	 * @return void
-	 */
-	private static function create_db_user_management_links(): void
-	{
-		global $wpdb;
-
-		$table_name = $wpdb->prefix . 'fce_management_links';
-
+		$table_name = $wpdb->prefix . 'fce_products';
 		$charset_collate = $wpdb->get_charset_collate();
 
 		$sql = "CREATE TABLE {$table_name} (
-			id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-			user_id BIGINT UNSIGNED NOT NULL,
-			product_id VARCHAR(100) NOT NULL,
-			source VARCHAR(100) NOT NULL,
-			management_url TEXT NOT NULL,
-			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-			updated_at TIMESTAMP NULL DEFAULT NULL,
-			UNIQUE KEY idx_unique_entry (user_id, product_id, source, management_url(255)),
-			PRIMARY KEY (id)
-		) $charset_collate;";
+		id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+		product_id VARCHAR(100) NOT NULL,
+		title VARCHAR(255) NOT NULL,
+		description TEXT NULL,
+		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		updated_at DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+		UNIQUE KEY idx_product_id (product_id),
+		PRIMARY KEY (id)
+	) $charset_collate;";
+
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		dbDelta($sql);
+	}
+
+	private static function create_db_product_space(): void
+	{
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . 'fce_product_space';
+		$charset_collate = $wpdb->get_charset_collate();
+
+		$sql = "CREATE TABLE {$table_name} (
+		id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+		fce_product_id BIGINT UNSIGNED NOT NULL,
+		space_id BIGINT UNSIGNED NOT NULL,
+		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		UNIQUE KEY idx_product_space (fce_product_id, space_id),
+		INDEX idx_space_id (space_id),
+		PRIMARY KEY (id)
+	) $charset_collate;";
+
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		dbDelta($sql);
+	}
+
+	private static function create_db_ipn_log(): void
+	{
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . 'fce_ipn_log';
+		$charset_collate = $wpdb->get_charset_collate();
+
+		$sql = "CREATE TABLE {$table_name} (
+		id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+		user_email VARCHAR(255) NOT NULL,
+		transaction_id VARCHAR(100) NOT NULL,
+		ipn_date DATETIME NOT NULL,
+		external_product_id VARCHAR(100) NOT NULL,
+		source VARCHAR(100) NOT NULL,
+		ipn LONGTEXT NOT NULL,
+		UNIQUE KEY idx_unique_entry (transaction_id),
+		KEY idx_user_product (user_email, external_product_id),
+		PRIMARY KEY (id)
+	) $charset_collate;";
+
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		dbDelta($sql);
+	}
+
+	private static function create_db_product_access_overrides(): void
+	{
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . 'fce_product_access_overrides';
+		$charset_collate = $wpdb->get_charset_collate();
+
+		$sql = "CREATE TABLE {$table_name} (
+		id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+		user_id BIGINT UNSIGNED NOT NULL,
+		external_product_id VARCHAR(100) NOT NULL,
+		granted_until DATETIME NOT NULL,
+		reason TEXT NULL,
+		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		updated_at DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+		UNIQUE KEY idx_unique_override (user_id, external_product_id),
+		INDEX idx_granted_until (granted_until),
+		PRIMARY KEY (id)
+	) $charset_collate;";
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta($sql);

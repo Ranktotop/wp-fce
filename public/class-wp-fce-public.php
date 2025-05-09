@@ -130,7 +130,6 @@ class Wp_Fce_Public
 		echo '<link rel="stylesheet" href="' . esc_url($css_url) . '" media="all">';
 		// Font Awesome 5 CDN
 		echo '<script src="https://kit.fontawesome.com/8b4c7209d4.js" crossorigin="anonymous"></script>';
-		echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-2uM0o5lYPBTf9A7vmV+ELW8WquKQ0c/XY8JWhXnYWSFV+kn9vYcy6jOq+CtFOPWqZm4p5yxHRPjXynD9v+Fm9g==" crossorigin="anonymous" referrerpolicy="no-referrer" />';
 	}
 
 	/**

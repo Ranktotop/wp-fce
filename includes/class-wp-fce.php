@@ -28,8 +28,6 @@
  * @author     Your Name <email@example.com>
  */
 
-use Carbon_Fields\Carbon_Fields;
-
 class Wp_Fce
 {
 
@@ -132,6 +130,11 @@ class Wp_Fce
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-fce-i18n.php';
 
 		/**
+		 * Load Redux Framework
+		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/redux/redux-core/framework.php';
+
+		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-wp-fce-admin.php';
@@ -141,17 +144,6 @@ class Wp_Fce
 		 * side of the site.
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wp-fce-public.php';
-
-		/**
-		 * The custom post type responsible for handling products
-		 */
-		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-fce-product.php';
-
-		/**
-		 * The admin options class
-		 */
-		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-wp-fce-options.php';
-
 		/**
 		 * The REST API controller for handling IPN callbacks
 		 */
@@ -171,6 +163,20 @@ class Wp_Fce
 		 * Helper class for user
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-fce-helper-user.php';
+
+		/**
+		 * Helper class for ipn
+		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-fce-helper-ipn.php';
+
+		/**
+		 * Model class for ipn
+		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/models/class-wp-fce-model-ipn.php';
+		/**
+		 * Model class for user
+		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/models/class-wp-fce-model-user.php';
 
 
 		$this->loader = new Wp_Fce_Loader();
@@ -208,23 +214,35 @@ class Wp_Fce
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
 
-		// Options‐Klasse instanziieren
-		$options = new \WP_Fluent_Community_Extreme_Options();
+		//Redux
+		$this->loader->add_action('after_setup_theme', $plugin_admin, 'wp_fce_register_redux_options');
 
-		// Carbon Fields booten (falls Du das hier und nicht global machst)
-		$this->loader->add_action('after_setup_theme',       $options, 'boot');
-		// Feld-Definitionen
-		$this->loader->add_action('carbon_fields_register_fields', $options, 'fields');
-		$this->loader->add_action('before_delete_post', $plugin_admin, 'cleanup_subscriptions_on_product_delete');
-		//Add product tables on user views
+		// Product UI
+		$this->loader->add_action('admin_menu', $plugin_admin, 'register_products_admin_page');
+		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_products_assets');
+		$this->loader->add_action('wp_ajax_fce_get_products',    $plugin_admin, 'ajax_get_products');
+		$this->loader->add_action('wp_ajax_fce_create_product', $plugin_admin, 'ajax_create_product');
+		$this->loader->add_action('wp_ajax_fce_update_product', $plugin_admin, 'ajax_update_product');
+		$this->loader->add_action('wp_ajax_fce_delete_product', $plugin_admin, 'ajax_delete_product');
+
+
+		// Validate unique external ids
+		$this->loader->add_action('save_post_fce_product_mapping', $plugin_admin, 'validate_external_product_id_on_save', 10, 3);
+		// If product mappings are changed
+		$this->loader->add_action('before_delete_post', $plugin_admin, 'revoke_access_to_deleted_product_mapping');
+		$this->loader->add_action('pre_post_update', $plugin_admin, 'cache_product_mapping', 10, 2);
+		$this->loader->add_action('carbon_fields_post_meta_container_saved', $plugin_admin, 'update_product_access_after_cf', 10, 1);
+
+		//Add product tables on user views and add form to grant access
 		$this->loader->add_action('show_user_profile', $plugin_admin, 'render_user_products_table');
 		$this->loader->add_action('edit_user_profile', $plugin_admin, 'render_user_products_table');
-		// Ausgabe des Formulars zum manuellen Grant
 		$this->loader->add_action('show_user_profile', $plugin_admin, 'render_manual_access_form');
 		$this->loader->add_action('edit_user_profile',   $plugin_admin, 'render_manual_access_form');
-		// Speichern nach Klick auf „Profile aktualisieren“
 		$this->loader->add_action('personal_options_update', $plugin_admin, 'save_manual_access');
 		$this->loader->add_action('edit_user_profile_update', $plugin_admin, 'save_manual_access');
+
+		//Add notice handler
+		$this->loader->add_action('admin_notices', $plugin_admin, 'display_admin_notices');
 	}
 
 	/**
@@ -243,20 +261,12 @@ class Wp_Fce
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
 
 		//load style for profile page link
-		$this->loader->add_action(
-			'fluent_community/portal_head',
-			$plugin_public,
-			'enqueue_profile_link_css'
-		);
+		$this->loader->add_action('fluent_community/portal_head', $plugin_public, 'enqueue_profile_link_css');
+
+		//TODO continue here
 
 		//add profile page link
-		$this->loader->add_filter(
-			'fluent_community/profile_view_data',
-			$plugin_public,
-			'add_profile_management_link',
-			10,
-			2
-		);
+		$this->loader->add_filter('fluent_community/profile_view_data', $plugin_public, 'add_profile_management_link', 10, 2);
 
 		//register orders route
 		$this->loader->add_action('init', $plugin_public, 'register_routes');
@@ -270,30 +280,13 @@ class Wp_Fce
 	 */
 	private function define_global_hooks()
 	{
-		// 1) Custom Post Type registrieren
-		$this->product_cpt = new WP_FCE_CPT_Product();
-		$this->loader->add_action('init', $this->product_cpt, 'register_post_type');
 
 		// 2) REST-Controller initialisieren und Route registrieren
 		$this->rest_controller = new WP_FCE_REST_Controller();
 		$this->loader->add_action('rest_api_init', $this->rest_controller, 'register_routes');
 
-		// 3) Carbon Fields booten
-		$this->loader->add_action('after_setup_theme', $this, 'boot_carbon_fields', 0);
-
 		// Cron-Job für Ablaufprüfung für Mitglieder (static, daher keine instanzierung notwendig)
 		$this->loader->add_action('wp_fce_cron_check_expirations', 'WP_FCE_Subscription_Expiration_Handler', 'check_expirations');
-	}
-
-	/**
-	 * Actually boot Carbon Fields.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 */
-	public function boot_carbon_fields()
-	{
-		Carbon_Fields::boot();
 	}
 
 	/**

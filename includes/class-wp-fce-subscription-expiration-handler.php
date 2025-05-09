@@ -15,66 +15,48 @@ class WP_FCE_Subscription_Expiration_Handler
      */
     public static function check_expirations(): void
     {
-        global $wpdb;
-        $table     = $wpdb->prefix . 'fce_user_product_subscriptions';
-        //Add 3 buffer days to expiration date
-        $threshold = date('Y-m-d H:i:s', strtotime('-3 days'));
+        $threshold = strtotime('-3 days');
 
-        $expired = $wpdb->get_results($wpdb->prepare(
-            "SELECT * FROM {$table} WHERE paid_until <= %s AND expired_flag = 0",
-            $threshold
-        ));
+        $helper_ipn = new WP_FCE_Helper_Ipn();
 
-        foreach ($expired as $sub) {
-            $user_id    = (int) $sub->user_id;
-            $product_id = (int) $sub->product_id;
+        $combinations = $helper_ipn->get_distinct_ipn_email_product_combinations();
 
-            // Spaces entziehen
-            $space_ids = WP_FCE_CPT_Product::get_spaces($product_id);
-            foreach ($space_ids as $space_id) {
-                $count = $wpdb->get_var($wpdb->prepare(
-                    "SELECT COUNT(*) FROM {$table} AS s
-                     JOIN {$wpdb->prefix}fce_product_space_map AS m
-                       ON s.product_id = m.product_id
-                     WHERE s.user_id = %d
-                       AND m.space_id = %d
-                       AND s.paid_until > %s
-                       AND s.expired_flag = 0",
-                    $user_id,
-                    $space_id,
-                    current_time('mysql')
-                ));
-                if (0 === (int) $count) {
-                    \FluentCommunity\App\Services\Helper::removeFromSpace($space_id, $user_id, 'by_automation');
-                }
+        foreach ($combinations as $entry) {
+            $email = $entry['user_email'];
+            $product_id = $entry['external_product_id'];
+
+            $ipns = $helper_ipn->get_ipns_by_product_and_email($product_id, $email);
+            if (empty($ipns)) {
+                continue;
             }
 
-            // Kurse entziehen
-            $course_ids = WP_FCE_CPT_Product::get_courses($product_id);
-            foreach ($course_ids as $course_id) {
-                $count = $wpdb->get_var($wpdb->prepare(
-                    "SELECT COUNT(*) FROM {$table} AS s
-                     JOIN {$wpdb->prefix}fce_product_course_map AS m
-                       ON s.product_id = m.product_id
-                     WHERE s.user_id = %d
-                       AND m.course_id = %d
-                       AND s.paid_until > %s
-                       AND s.expired_flag = 0",
-                    $user_id,
-                    $course_id,
-                    current_time('mysql')
-                ));
-                if (0 === (int) $count) {
-                    \FluentCommunity\Modules\Course\Services\CourseHelper::leaveCourse($course_id, $user_id);
-                }
+            /** @var WP_FCE_Model_Ipn $latest_ipn */
+            $latest_ipn = $ipns[0];
+
+            // überspringen, wenn IPN bezahlt ist
+            $paid_until = $latest_ipn->get_paid_until_timestamp();
+            if ($paid_until === null || $paid_until > $threshold) {
+                continue;
             }
 
-            // Markiere verarbeitet
-            $wpdb->update(
-                $table,
-                ['expired_flag' => 1, 'updated_at' => current_time('mysql')],
-                ['id'           => $sub->id]
-            );
+            // Zugriff entziehen
+            $user = get_user_by('email', $email);
+            if (!$user) {
+                continue;
+            }
+
+            $mapping = $latest_ipn->get_product_mapping();
+            if (!$mapping) {
+                continue;
+            }
+
+            foreach ($mapping['space_ids'] as $space_id) {
+                \FluentCommunity\App\Services\Helper::removeFromSpace($space_id, $user->ID, 'by_automation');
+            }
+
+            foreach ($mapping['course_ids'] as $course_id) {
+                \FluentCommunity\Modules\Course\Services\CourseHelper::leaveCourse($course_id, $user->ID);
+            }
         }
     }
 }

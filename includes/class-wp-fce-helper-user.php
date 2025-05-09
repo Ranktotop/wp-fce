@@ -15,7 +15,7 @@ class WP_FCE_Helper_User
     public function __construct()
     {
         global $wpdb;
-        $this->expiration_table = $wpdb->prefix . 'fce_user_product_subscriptions';
+        $this->expiration_table = $wpdb->prefix . 'fce_user_subscriptions';
     }
 
     /**
@@ -40,186 +40,141 @@ class WP_FCE_Helper_User
     }
 
     /**
-     * Grants access to a user for a given external product ID
+     * Grant a single user access to a single Space.
      *
-     * @param int $user_id The ID of the user to grant access to
-     * @param string $externalId The external ID of the product to grant access to
-     * @param bool   $prevent_downgrade Whether to block setting an earlier date.
+     * @param int $user_id  The user ID.
+     * @param int $space_id The Space ID.
      *
-     * @return bool True if access was granted, false otherwise
+     * @return void
      */
-    public function grant_access(int $user_id, string $externalId, int $grant_until_timestamp, bool $prevent_downgrade = true): bool
+    public function grant_space_access(int $user_id, int $space_id): void
     {
-        //Get the user as object
-        $user = get_user_by('id', $user_id);
-        if ($user === false) {
-            return false;
-        }
-
-        //Get the mapping for given product
-        $helper_product = new WP_FCE_Helper_Product();
-        $mapping = $helper_product->get_product_mapping_by_external_product_id($externalId);
-        if ($mapping == null) {
-            return false;
-        }
-
-        //Add user to spaces and courses
-        foreach ($mapping['space_ids'] as $space_id) {
-            \FluentCommunity\App\Services\Helper::addToSpace($space_id, $user->ID, 'member', 'by_automation');
-        }
-        if (! empty($mapping['course_ids'])) {
-            \FluentCommunity\Modules\Course\Services\CourseHelper::enrollCourses($mapping['course_ids'], $user->ID);
-        }
-
-        // Set the expiration date in the database
-        $paid_until = date('Y-m-d H:i:s', $grant_until_timestamp);
-        $this->update_user_expiration($user->ID, $mapping['id'], $paid_until, 0, $prevent_downgrade);
-        return true;
-    }
-
-    /**
-     * Revokes access to a user for a given external product ID
-     *
-     * @param int $user_id The ID of the user to revoke access from
-     * @param int $externalId The external ID of the product to revoke access from
-     *
-     * @return bool True if access was revoked, false otherwise
-     */
-    public function revoke_access(int $user_id, int $externalId): bool
-    {
-        //Get the user as object
-        $user = get_user_by('id', $user_id);
-        if ($user === false) {
-            return false;
-        }
-
-        //Get the mapping for given product
-        $helper_product = new WP_FCE_Helper_Product();
-        $mapping = $helper_product->get_product_mapping_by_external_product_id($externalId);
-        if ($mapping == null) {
-            return false;
-        }
-
-        //Add user to spaces and courses
-        foreach ($mapping['space_ids'] as $space_id) {
-            \FluentCommunity\App\Services\Helper::removeFromSpace($space_id, $user->ID, 'by_automation');
-        }
-        if (! empty($mapping['course_ids'])) {
-            \FluentCommunity\Modules\Course\Services\CourseHelper::leaveCourses($mapping['course_ids'], $user->ID);
-        }
-        // Set the expiration date to now
-        $paid_until = date('Y-m-d H:i:s', current_time('timestamp'));
-        $this->update_user_expiration($user->ID, $mapping['id'], $paid_until, 1, false);
-        return true;
-    }
-
-    /**
-     * Insert or update a user's subscription expiration.
-     *
-     * If $prevent_downgrade is true, will refuse to set an earlier expiration date
-     * than the one already stored.
-     *
-     * @param int    $user_id           The WP_User ID.
-     * @param int    $product_id        The internal product ID.
-     * @param string $paid_until        MySQL datetime string for new expiration.
-     * @param int    $expired_flag      Flag (0 = active, 1 = expired).
-     * @param bool   $prevent_downgrade Whether to block setting an earlier date.
-     * @return int|false Rows affected or false on failure.
-     */
-    public function update_user_expiration(int $user_id, int $product_id, string $paid_until, int $expired_flag = 0, bool $prevent_downgrade = true): int|false
-    {
-        global $wpdb;
-
-        // 1) Altes Ablaufdatum auslesen
-        $old_paid_until = $wpdb->get_var(
-            $wpdb->prepare(
-                "SELECT paid_until
-             FROM {$this->expiration_table}
-             WHERE user_id = %d
-               AND product_id = %d",
-                $user_id,
-                $product_id
-            )
-        );
-
-        // 2) Downgrade-Check nur wenn gewünscht
-        if ($prevent_downgrade && $old_paid_until) {
-            $old_ts = strtotime($old_paid_until);
-            $new_ts = strtotime($paid_until);
-
-            // neues Datum ist gleich oder früher -> abbrechen
-            if ($new_ts <= $old_ts) {
-                return false;
-            }
-        }
-
-        // 3) Anlegen oder updaten
-        $data   = [
-            'user_id'      => $user_id,
-            'product_id'   => $product_id,
-            'paid_until'   => $paid_until,
-            'expired_flag' => $expired_flag,
-        ];
-        $format = ['%d', '%d', '%s', '%d'];
-
-        return $wpdb->replace($this->expiration_table, $data, $format);
-    }
-
-    /**
-     * Save a management link for a user, product and source, if not already existing
-     *
-     * @param int $user_id WordPress user ID
-     * @param string $product_id Product identifier from IPN
-     * @param string $source Payment provider (e.g. copecart, digistore24)
-     * @param string $management_url Management link URL
-     * @param int $order_date Unix timestamp of the original order date
-     * @return bool True if inserted, false if duplicate or error
-     */
-    public static function save_management_link(int $user_id, string $product_id, string $source, string $management_url, int $order_date): bool
-    {
-        global $wpdb;
-
-        $table = $wpdb->prefix . 'fce_management_links';
-
-        // Check for duplicate entry
-        $existing = $wpdb->get_var($wpdb->prepare(
-            "SELECT id FROM {$table} WHERE user_id = %d AND product_id = %s AND source = %s AND management_url = %s",
+        \FluentCommunity\App\Services\Helper::addToSpace(
+            $space_id,
             $user_id,
-            $product_id,
-            $source,
-            $management_url
-        ));
+            'member',
+            'by_automation'
+        );
+    }
 
-        if ($existing) {
-            return false; // Entry already exists
+    /**
+     * Revoke a single user’s access to a single Space.
+     *
+     * @param int $user_id  The user ID.
+     * @param int $space_id The Space ID.
+     *
+     * @return void
+     */
+    public function revoke_space_access(int $user_id, int $space_id): void
+    {
+        \FluentCommunity\App\Services\Helper::removeFromSpace(
+            $space_id,
+            $user_id,
+            'by_automation'
+        );
+    }
+
+    /**
+     * Enroll a single user in a single Course.
+     *
+     * @param int $user_id   The user ID.
+     * @param int $course_id The Course ID.
+     *
+     * @return void
+     */
+    public function grant_course_access(int $user_id, int $course_id): void
+    {
+        \FluentCommunity\Modules\Course\Services\CourseHelper::enrollCourses(
+            [$course_id],
+            $user_id
+        );
+    }
+
+    /**
+     * Remove a single user from a single Course.
+     *
+     * @param int $user_id   The user ID.
+     * @param int $course_id The Course ID.
+     *
+     * @return void
+     */
+    public function revoke_course_access(int $user_id, int $course_id): void
+    {
+        \FluentCommunity\Modules\Course\Services\CourseHelper::leaveCourse(
+            $course_id,
+            $user_id
+        );
+    }
+
+    /**
+     * Get all user IDs that have an subscription to a given product mapping.
+     *
+     * @param int $product_mapping_id The internal product ID.
+     * @param bool $include_expired Include expired subscriptions?
+     *
+     * @return int[] Array of user IDs.
+     */
+    public function get_users_for_product_mapping(int $product_mapping_id, bool $include_expired = false): array
+    {
+        global $wpdb;
+        $table = $wpdb->prefix . 'fce_user_subscriptions';
+        $now   = current_time('mysql');
+
+        // Basis-SQL
+        $sql = "SELECT DISTINCT user_id
+            FROM {$table}
+            WHERE product_mapping_id = %d";
+
+        // Bedingungen für nicht abgelaufene Abos (nur wenn $include_expired false ist)
+        if (!$include_expired) {
+            $sql .= " AND expired_flag = 0 AND paid_until >= %s";
+            $query = $wpdb->prepare($sql, $product_mapping_id, $now);
+        } else {
+            $query = $wpdb->prepare($sql, $product_mapping_id);
         }
 
-        // Convert Unix timestamp to MySQL DATETIME format
-        $created_at = (new DateTime("@$order_date"))
-            ->setTimezone(new DateTimeZone(wp_timezone_string()))
-            ->format('Y-m-d H:i:s');
+        // Ausführen und Ergebnisse zurückgeben
+        $user_ids = $wpdb->get_col($query);
+        return $user_ids;
+    }
 
-        // Insert new entry
-        $inserted = $wpdb->insert(
-            $table,
-            [
-                'user_id'        => $user_id,
-                'product_id'     => $product_id,
-                'source'         => $source,
-                'management_url' => $management_url,
-                'created_at'     => $created_at, // aus order_date
-                'updated_at'     => current_time('mysql', 1)
-            ],
-            [
-                '%d',
-                '%s',
-                '%s',
-                '%s',
-                '%s',
-                '%s'
-            ]
+    /**
+     * Check if a user has any active subscriptions among given product mappings.
+     *
+     * @param int   $user_id             The WP_User ID.
+     * @param int[] $product_mapping_ids List of product-mapping post IDs to check.
+     *
+     * @return bool True if at least one active subscription exists, false otherwise.
+     */
+    public function has_access_to_product_mapping(int $user_id, array $product_mapping_ids): bool
+    {
+        // nothing to check
+        if (empty($product_mapping_ids)) {
+            return false;
+        }
+
+        global $wpdb;
+        $table = $this->expiration_table;
+        $now   = current_time('mysql');
+
+        // build placeholders for the IN(…) clause
+        $placeholders = implode(',', array_fill(0, count($product_mapping_ids), '%d'));
+
+        //TODO
+
+        // count active, non-expired subscriptions
+        $sql = $wpdb->prepare(
+            "
+        SELECT COUNT(1)
+        FROM {$table}
+        WHERE user_id      = %d
+          AND product_mapping_id   IN ({$placeholders})
+          AND expired_flag = 0
+          AND paid_until   >= %s
+        ",
+            array_merge([$user_id], $product_mapping_ids, [$now])
         );
 
-        return (bool) $inserted;
+        return (int) $wpdb->get_var($sql) > 0;
     }
 }

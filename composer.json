@@ -12,7 +12,26 @@
         }
     ],
     "require": {
-        "htmlburger/carbon-fields": "3.6",
-        "yahnis-elsts/plugin-update-checker": "^5.5"
+        "wpackagist-plugin/redux-framework": "*",
+        "yahnis-elsts/plugin-update-checker": "^5.5",
+        "composer/installers": "^2.3"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://wpackagist.org"
+        }
+    ],
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
+    },
+    "extra": {
+        "installer-paths": {
+            "admin/redux/": [
+                "wpackagist-plugin/redux-framework"
+            ]
+        }
     }
 }

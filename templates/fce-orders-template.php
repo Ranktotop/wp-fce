@@ -6,7 +6,7 @@ if (!is_user_logged_in()) {
 
 global $wpdb;
 $user_id = get_current_user_id();
-$table = $wpdb->prefix . 'fce_management_links';
+$table = $wpdb->prefix . 'fce_user_payment_links';
 
 // Get background image
 $bg_image_url = function_exists('carbon_get_theme_option')
@@ -64,7 +64,7 @@ $links = $wpdb->get_results($wpdb->prepare(
                     <?php foreach ($links as $link): ?>
                         <tr>
                             <td><?= esc_html(date_i18n('d.m.Y H:i', strtotime($link->created_at))); ?></td>
-                            <td><?= esc_html($link->product_id); ?></td>
+                            <td><?= esc_html($link->external_product_id); ?></td>
                             <td><?= esc_html($link->source); ?></td>
                             <td><a href="<?= esc_url($link->management_url); ?>" target="_blank" rel="noopener"><?php esc_html_e('Details', 'wp_fce'); ?></a></td>
                         </tr>

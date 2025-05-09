@@ -37,15 +37,6 @@ if (! defined('WPINC')) {
  */
 define('WP_FCE_VERSION', '1.0.0');
 
-// Damit Carbon Fields seine URLs richtig aufbaut, statt auf /build/... zu fallen:
-if (! defined('Carbon_Fields\\URL')) {
-	define(
-		'Carbon_Fields\\URL',
-		// Basis-URL zur Carbon Fields Library:
-		trailingslashit(plugin_dir_url(__FILE__) . 'vendor/htmlburger/carbon-fields')
-	);
-}
-
 //  Composer‑Autoloader laden (für Carbon Fields)
 if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 	require_once __DIR__ . '/vendor/autoload.php';
