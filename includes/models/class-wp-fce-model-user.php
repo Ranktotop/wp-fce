@@ -6,6 +6,11 @@ class WP_FCE_Model_User
     private WP_FCE_Helper_Ipn $ipn_helper;
     private WP_FCE_Helper_Product $product_helper;
 
+    /**
+     * Constructor
+     *
+     * @param \WP_User $user The user model
+     */
     public function __construct(\WP_User $user)
     {
         $this->user = $user;

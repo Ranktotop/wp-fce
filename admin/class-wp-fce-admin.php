@@ -124,6 +124,7 @@ class Wp_Fce_Admin
 			 */
 			'_nonce' => wp_create_nonce('security_wp-fce'),
 			'msg_confirm_delete_product' => __('Möchtest du das Produkt wirklich entfernen? Dieser Schritt kann nicht rückgängig gemacht werden!', 'wp-fce'),
+			'msg_confirm_delete_product_mapping' => __('Möchtest du wirklich alle Zuweisungen dieses Produkts entfernen? Dieser Schritt kann nicht rückgängig gemacht werden!', 'wp-fce'),
 			'notice_success' => __('Änderung erfolgreich!', 'wp-fce'),
 			'notice_error' => __('Änderung fehlgeschlagen!', 'wp-fce'),
 			'label_edit' => __('Bearbeiten', 'wp-fce'),
@@ -191,10 +192,15 @@ class Wp_Fce_Admin
 			'desc'   => __('Hier kannst du Produkte hinzufügen oder bearbeiten.', 'wp-fce'),
 			'fields' => [
 				[
-					'id'       => 'product_admin_html',
+					'id'       => 'product_admin_manage_products',
 					'type'     => 'raw',
-					'content'  => '<a href="' . admin_url('admin.php?page=fce_admin_manage_products') . '" class="button button-primary">' . __('Zur Produktverwaltung', 'wp-fce') . '</a>',
+					'content'  => '<a href="' . admin_url('admin.php?page=fce_admin_manage_products') . '" class="button button-primary">' . __('Produkte verwalten', 'wp-fce') . '</a>',
 				],
+				[
+					'id'       => 'product_admin_map_products',
+					'type'     => 'raw',
+					'content'  => '<a href="' . admin_url('admin.php?page=fce_admin_map_products') . '" class="button button-primary">' . __('Zuweisungen verwalten', 'wp-fce') . '</a>',
+				]
 			],
 		]);
 	}
@@ -225,6 +231,44 @@ class Wp_Fce_Admin
 			null                            // Position
 		);
 	}
+
+	/**
+	 * Register the page for mapping products.
+	 *
+	 * This function registers a new top-level menu page in the WordPress admin area.
+	 * The page is accessible for users with the 'manage_options' capability, and is
+	 * rendered by the 'render_page_map_products' method of this class.
+	 *
+	 * The CSS code added in the 'admin_head' action is used to hide the menu item
+	 * from the admin menu, so that the page is only accessible via the link in the
+	 * FluentCommunity Extreme settings page.
+	 */
+	public function register_page_map_products(): void
+	{
+		add_action('admin_head', function () {
+			echo '<style>#toplevel_page_fce_admin_map_products { display: none !important; }</style>';
+		});
+		add_menu_page(
+			'Produkte zuweisen',           // Page Title
+			'Produkte zuweisen',           // Menu Title
+			'manage_options',               // Capability
+			'fce_admin_map_products',                 // Menu Slug
+			[$this, 'render_page_map_products'], // Callback
+			'',                             // Icon
+			null                            // Position
+		);
+	}
+
+	/**
+	 * Injects global admin UI components for FCE pages.
+	 *
+	 * This function includes specific UI components, such as a notice box and
+	 * a modal confirmation dialog, only on pages related to FluentCommunity Extreme (FCE).
+	 * It checks the current screen identifier to ensure these components are
+	 * loaded exclusively on FCE-related admin pages.
+	 *
+	 * @since 1.0.0
+	 */
 
 	public function inject_global_admin_ui(): void
 	{
@@ -260,6 +304,24 @@ class Wp_Fce_Admin
 	public function render_page_manage_products(): void
 	{
 		$view = plugin_dir_path(dirname(__FILE__)) . 'templates/wp-fce-admin-manage-products.php';
+		if (file_exists($view)) {
+			include $view;
+		}
+	}
+
+	/**
+	 * Renders the page for mapping products.
+	 *
+	 * This function renders the page used for mapping products. It is called
+	 * when the 'fce_admin_map_products' page is accessed in the WordPress admin area.
+	 *
+	 * The page is rendered by including the 'templates/wp-fce-admin-map-products.php'
+	 * file, which contains the HTML code for the page.
+	 */
+
+	public function render_page_map_products(): void
+	{
+		$view = plugin_dir_path(dirname(__FILE__)) . 'templates/wp-fce-admin-map-products.php';
 		if (file_exists($view)) {
 			include $view;
 		}

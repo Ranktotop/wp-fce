@@ -151,11 +151,13 @@ class Wp_Fce
 		 * The model classes
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/models/class-wp-fce-model-product.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/models/class-wp-fce-model-fluent-community-entity.php';
 
 		/**
 		 * The helper classes
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-product.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-fluent-community-entity.php';
 
 
 
@@ -240,6 +242,7 @@ class Wp_Fce
 		// Register Admin Pages
 		$this->loader->add_action('in_admin_footer', $plugin_admin, 'inject_global_admin_ui');
 		$this->loader->add_action('admin_menu', $plugin_admin, 'register_page_manage_products');
+		$this->loader->add_action('admin_menu', $plugin_admin, 'register_page_map_products');
 		$this->loader->add_action('admin_init', $plugin_admin, 'register_form_handler');
 
 

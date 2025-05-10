@@ -8,7 +8,6 @@ if (!defined('ABSPATH') || !is_user_logged_in() || !current_user_can('manage_opt
 
 $helper_product = new WP_FCE_Helper_Product();
 $products = $helper_product->get_all_products();
-$test = "abc";
 ?>
 
 <div class="wrap fce-admin-page">
@@ -63,7 +62,7 @@ $test = "abc";
                                         <button
                                             type="button"
                                             class="button button-primary delete wpfce_delete_product_btn">
-                                            <?php esc_html_e('✕ Löschen', 'wp-fce'); ?>
+                                            ✕ <?php esc_html_e('Löschen', 'wp-fce'); ?>
                                         </button>
                                     </td>
                                 </tr>

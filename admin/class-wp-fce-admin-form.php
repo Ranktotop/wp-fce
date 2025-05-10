@@ -22,17 +22,34 @@ class Wp_Fce_Admin_Form_Handler
 
         // Zentrale Routing-Logik
         if (isset($_POST['wp_fce_form_action']) && $_POST['wp_fce_form_action'] === 'create_product') {
-            $this->handle_product_form_submission();
+            $this->handle_create_product();
+        }
+        if (isset($_POST['wp_fce_form_action']) && $_POST['wp_fce_form_action'] === 'create_product_mapping') {
+            $this->handle_create_product_mapping();
+        }
+        if (isset($_POST['wp_fce_form_action']) && $_POST['wp_fce_form_action'] === 'update_product_mapping') {
+            $this->handle_update_product_mapping();
         }
 
         // weitere: elseif ($_POST['wp_fce_form_action'] === '...') ...
     }
 
+
     /**
-     * Verarbeitet ein Formular-Submission für ein neues Produkt,
-     * prüft Nonce und Pflichtfelder und speichert dann das Produkt.
+     * Handles the creation of new products.
+     *
+     * This function is called when the form submission contains the
+     * 'wp_fce_form_action' parameter with the value 'create_product'.
+     *
+     * It checks the nonce and verifies that the product ID and title are
+     * not empty. If the checks pass, it creates a new product using the
+     * WP_FCE_Helper_Product class and redirects the user to the same page
+     * with a success message. If the checks fail, it adds an error message
+     * to the admin notices.
+     *
+     * @since 1.0.0
      */
-    private function handle_product_form_submission(): void
+    private function handle_create_product(): void
     {
         if (
             !isset($_POST['wp_fce_nonce']) ||
@@ -57,6 +74,97 @@ class Wp_Fce_Admin_Form_Handler
             $helper->create_product($product_id, $title, $description);
 
             wp_safe_redirect(add_query_arg('fce_success', urlencode(__('Produkt wurde angelegt.', 'wp-fce')), $_SERVER['REQUEST_URI']));
+            exit;
+        } catch (\Exception $e) {
+            add_action('admin_notices', function () use ($e) {
+                echo '<div class="notice notice-error"><p>' . esc_html($e->getMessage()) . '</p></div>';
+            });
+        }
+    }
+
+    /**
+     * Handles the creation of product mappings.
+     *
+     * This function is called when the form submission contains the
+     * 'wp_fce_form_action' parameter with the value 'create_product_mapping'.
+     * It verifies the nonce and checks if a product has been selected.
+     * If so, it merges space and course IDs and assigns them to the product.
+     * Successful operations redirect the user with a success message, 
+     * while errors are displayed as admin notices.
+     *
+     * @since 1.0.0
+     */
+
+    private function handle_create_product_mapping(): void
+    {
+        if (
+            ! isset($_POST['wp_fce_nonce']) ||
+            ! wp_verify_nonce($_POST['wp_fce_nonce'], 'wp_fce_map_product')
+        ) {
+            return;
+        }
+
+        $product_id = sanitize_text_field($_POST['fce_product_id'] ?? '');
+        $space_ids  = array_map('intval', $_POST['fce_spaces'] ?? []);
+        $course_ids = array_map('intval', $_POST['fce_courses'] ?? []);
+
+        if ($product_id === '') {
+            add_action('admin_notices', function () {
+                echo '<div class="notice notice-error"><p>' . esc_html__('Bitte wähle ein Produkt.', 'wp-fce') . '</p></div>';
+            });
+            return;
+        }
+
+        try {
+            $product = WP_FCE_Model_Product::load_by_id($product_id);
+            $merged_ids = array_merge($space_ids, $course_ids);
+            $product->set_spaces($merged_ids);
+
+            wp_safe_redirect(add_query_arg('fce_success', urlencode(__('Produktzuweisung gespeichert.', 'wp-fce')), $_SERVER['REQUEST_URI']));
+            exit;
+        } catch (\Exception $e) {
+            add_action('admin_notices', function () use ($e) {
+                echo '<div class="notice notice-error"><p>' . esc_html($e->getMessage()) . '</p></div>';
+            });
+        }
+    }
+
+    /**
+     * Handles the update of a product mapping.
+     *
+     * This function is called when the form submission contains the
+     * 'wp_fce_form_action' parameter with the value 'update_product_mapping'.
+     * It verifies the nonce and checks if a product has been selected.
+     * If so, it merges space and course IDs and assigns them to the product.
+     * Successful operations redirect the user with a success message, 
+     * while errors are displayed as admin notices.
+     *
+     * @since 1.0.0
+     */
+    private function handle_update_product_mapping(): void
+    {
+        if (
+            !isset($_POST['wp_fce_nonce']) ||
+            !wp_verify_nonce($_POST['wp_fce_nonce'], 'wp_fce_update_product_mapping')
+        ) {
+            return;
+        }
+
+        $product_id = isset($_POST['product_id']) ? (int) $_POST['product_id'] : 0;
+        $new_space_ids = isset($_POST['fce_edit_entities']) ? array_map('intval', $_POST['fce_edit_entities']) : [];
+
+        if (!$product_id) {
+            add_action('admin_notices', function () {
+                echo '<div class="notice notice-error"><p>' . esc_html__('Ungültige Produkt-ID.', 'wp-fce') . '</p></div>';
+            });
+            return;
+        }
+
+        try {
+            $product = WP_FCE_Model_Product::load_by_id($product_id);
+            $product->set_spaces($new_space_ids);
+
+            wp_safe_redirect(add_query_arg('fce_success', urlencode(__('Zuweisung gespeichert.', 'wp-fce')), $_SERVER['REQUEST_URI']));
             exit;
         } catch (\Exception $e) {
             add_action('admin_notices', function () use ($e) {

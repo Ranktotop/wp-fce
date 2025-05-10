@@ -32,11 +32,13 @@ class Wp_Fce_Admin_Ajax_Handler
     }
 
     /**
-     * Löscht ein Produkt anhand der ID.
+     * Deletes a product by its ID.
      *
-     * @param array $data Muss den Key 'id' enthalten.
-     * @param array $meta Optional, wird hier ignoriert.
-     * @return array JSON-Antwort (success/fail)
+     * @param array $data Must contain key 'product_id'.
+     * @param array $meta Optional, ignored.
+     * @return array JSON response (success/fail)
+     *
+     * @throws \Exception If an error occurs, an Exception object is thrown.
      */
     private function delete_product(array $data, array $meta): array
     {
@@ -53,6 +55,15 @@ class Wp_Fce_Admin_Ajax_Handler
         }
     }
 
+    /**
+     * Updates a product by its ID.
+     *
+     * @param array $data Must contain key 'product_id'.
+     * @param array $meta Optional, ignored.
+     * @return array JSON response (success/fail)
+     *
+     * @throws \Exception If an error occurs, an Exception object is thrown.
+     */
     private function update_product(array $data, array $meta): array
     {
         if (!isset($data['product_id']) || !is_numeric($data['product_id'])) {
@@ -69,5 +80,65 @@ class Wp_Fce_Admin_Ajax_Handler
         } catch (\Exception $e) {
             return ['state' => false, 'message' => $e->getMessage()];
         }
+    }
+
+    /**
+     * Returns the assignment of Spaces and Courses for a product.
+     *
+     * @param array $data Must contain the key 'product_id'.
+     * @param array $meta Optional, ignored here.
+     * @return array JSON response (success/fail)
+     *
+     * @throws \Exception When an error occurs, an exception object is thrown.
+     */
+    private function get_product_mapping(array $data, array $meta): array
+    {
+        if (empty($data['product_id']) || !is_numeric($data['product_id'])) {
+            return ['state' => false, 'message' => __('Ungültige Produkt-ID', 'wp-fce')];
+        }
+
+        try {
+            $helper  = new WP_FCE_Helper_Product();
+            $product = $helper->get_product_by_id((int) $data['product_id']);
+
+            $spaces = $product->get_mapped_spaces();
+
+            // Rückgabe als einfache Datenstruktur (nicht Objekte)
+            $mapping = array_map(function (WP_FCE_Model_Fluent_Community_Entity $space) {
+                return [
+                    'id'    => $space->get_id(),
+                    'title' => $space->get_title(),
+                    'type'  => $space->get_type(),
+                ];
+            }, $spaces);
+
+            return ['state' => true, 'mapping' => $mapping, 'message' => __('Mapping erfolgreich geladen', 'wp-fce')];
+        } catch (\Exception $e) {
+            return ['state' => false, 'message' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Deletes all assignments (spaces/courses) of a product.
+     *
+     * @param array $data Must contain the key 'product_id'.
+     * @param array $meta Optional, ignored here.
+     * @return array JSON response (success/fail)
+     */
+    private function delete_product_mapping(array $data, array $meta): array
+    {
+        if (empty($data['product_id']) || !is_numeric($data['product_id'])) {
+            return ['state' => false, 'message' => __('Ungültige Produkt-ID', 'wp-fce')];
+        }
+
+        global $wpdb;
+        $table = $wpdb->prefix . 'fce_product_space';
+        $deleted = $wpdb->delete($table, ['fce_product_id' => (int) $data['product_id']]);
+
+        if ($deleted === false) {
+            return ['state' => false, 'message' => __('Fehler beim Löschen.', 'wp-fce')];
+        }
+
+        return ['state' => true, 'message' => __('Alle Zuweisungen gelöscht.', 'wp-fce')];
     }
 }

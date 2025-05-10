@@ -37,14 +37,16 @@
     display: none;
 }
 
-.delete.wpfce_delete_product_btn {
+.delete.wpfce_delete_product_btn,
+.delete.wpfce_delete_product_mapping_btn {
     color: #fff;
     background-color: #dc3232;
     border-color: #dc3232;
     transition: all 0.2s ease-in-out;
 }
 
-.delete.wpfce_delete_product_btn:hover {
+.delete.wpfce_delete_product_btn:hover,
+.delete.wpfce_delete_product_mapping_btn:hover {
     color: #fff;
     background-color: #f36060;
     border-color: #f36060;
@@ -79,4 +81,15 @@
 
 #wpfce-notice-area .wpfce-notice-success {
     background-color: #81d381;
+}
+
+.wpfce-checkbox-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+.wpfce-checkbox-grid label {
+    min-width: 200px;
+    display: block;
 }
