@@ -41,12 +41,8 @@ class Wp_Fce_Admin
 	 */
 	private $version;
 
-	/**
-	 * Cache for old mapping values during save_post.
-	 *
-	 * @var array<int, array{spaces: int[], courses: int[]}>
-	 */
-	private static array $oldMappings = [];
+	private Wp_Fce_Admin_Ajax_Handler $admin_ajax_handler;
+	private Wp_Fce_Admin_Form_Handler $admin_form_handler;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -105,12 +101,45 @@ class Wp_Fce_Admin
 		 * class.
 		 */
 
+		wp_enqueue_script($this->wp_fce . '-modal', plugin_dir_url(__FILE__) . 'js/wpfce-modal.js', array('jquery'), $this->version, false);
 		wp_enqueue_script($this->wp_fce, plugin_dir_url(__FILE__) . 'js/wp-fce-admin.js', array('jquery'), $this->version, false);
+
+		/**
+		 * In backend there is global ajaxurl variable defined by WordPress itself.
+		 *
+		 * This variable is not created by WP in frontend. It means that if you want to use AJAX calls in frontend, then you have to define such variable by yourself.
+		 * Good way to do this is to use wp_localize_script.
+		 *
+		 * @link http://wordpress.stackexchange.com/a/190299/90212
+		 *      
+		 *       You could also pass this datas with the "data" attribute somewhere in your form.
+		 */
+		//TODO remove if not needed
+		wp_localize_script($this->wp_fce, 'wp_fce', array(
+			'ajax_url' => admin_url('admin-ajax.php'),
+			/**
+			 * Create nonce for security.
+			 *
+			 * @link https://codex.wordpress.org/Function_Reference/wp_create_nonce
+			 */
+			'_nonce' => wp_create_nonce('security_wp-fce'),
+			'msg_confirm_delete_product' => __('Möchtest du das Produkt wirklich entfernen? Dieser Schritt kann nicht rückgängig gemacht werden!', 'wp-fce'),
+			'notice_success' => __('Änderung erfolgreich!', 'wp-fce'),
+			'notice_error' => __('Änderung fehlgeschlagen!', 'wp-fce'),
+			'label_edit' => __('Bearbeiten', 'wp-fce'),
+			'label_save' => __('Speichern', 'wp-fce')
+		));
 	}
 
+	/**
+	 * Register options for Redux Admin Page
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
 	function wp_fce_register_redux_options(): void
 	{
-		error_log('Redux-Klasse vorhanden: ' . (class_exists('Redux') ? 'JA' : 'NEIN'));
 		if (!class_exists('Redux')) {
 			return;
 		}
@@ -164,39 +193,73 @@ class Wp_Fce_Admin
 				[
 					'id'       => 'product_admin_html',
 					'type'     => 'raw',
-					'content'  => '<a href="' . admin_url('admin.php?page=fce_products') . '" class="button button-primary">' . __('Zur Produktverwaltung', 'wp-fce') . '</a>',
+					'content'  => '<a href="' . admin_url('admin.php?page=fce_admin_manage_products') . '" class="button button-primary">' . __('Zur Produktverwaltung', 'wp-fce') . '</a>',
 				],
 			],
 		]);
 	}
 
 	/**
-	 * Registriert die „Produkte verwalten“-Seite im WP-Admin.
+	 * Register the page for managing products.
+	 *
+	 * This function registers a new top-level menu page in the WordPress admin area.
+	 * The page is accessible for users with the 'manage_options' capability, and is
+	 * rendered by the 'render_page_manage_products' method of this class.
+	 *
+	 * The CSS code added in the 'admin_head' action is used to hide the menu item
+	 * from the admin menu, so that the page is only accessible via the link in the
+	 * FluentCommunity Extreme settings page.
 	 */
-	public function register_products_admin_page(): void
+	public function register_page_manage_products(): void
 	{
 		add_action('admin_head', function () {
-			echo '<style>#toplevel_page_fce_products { display: none !important; }</style>';
+			echo '<style>#toplevel_page_fce_admin_manage_products { display: none !important; }</style>';
 		});
 		add_menu_page(
 			'Produkte verwalten',           // Page Title
 			'Produkte verwalten',           // Menu Title
 			'manage_options',               // Capability
-			'fce_products',                 // Menu Slug
-			[$this, 'render_products_admin_page'], // Callback
+			'fce_admin_manage_products',                 // Menu Slug
+			[$this, 'render_page_manage_products'], // Callback
 			'',                             // Icon
 			null                            // Position
 		);
 	}
 
-	/**
-	 * Render the „Produkte verwalten“-Admin-Page.
-	 *
-	 * @return void
-	 */
-	public function render_products_admin_page(): void
+	public function inject_global_admin_ui(): void
 	{
-		$view = plugin_dir_path(__FILE__) . 'partials/wp-fce-admin-product-ui.php';
+		//only on FCE pages
+		$current_screen = get_current_screen();
+		if (strpos($current_screen->id, 'fce_') === false) {
+			return; // Nur für FCE-Seiten
+		}
+
+		// Hinweis-Box
+		$notice_path = plugin_dir_path(dirname(__FILE__)) . 'admin/partials/wp-fce-admin-notice.php';
+		if (file_exists($notice_path)) {
+			include $notice_path;
+		}
+
+		// Modal
+		$modal_path = plugin_dir_path(dirname(__FILE__)) . 'templates/partials/html-modal-confirm.php';
+		if (file_exists($modal_path)) {
+			include $modal_path;
+		}
+	}
+
+
+	/**
+	 * Renders the page for managing products.
+	 *
+	 * This function renders the page used for managing products. It is called
+	 * when the 'fce_admin_manage_products' page is accessed in the WordPress admin area.
+	 *
+	 * The page is rendered by including the 'partials/wp-fce-admin-product-ui.php'
+	 * file, which contains the HTML code for the page.
+	 */
+	public function render_page_manage_products(): void
+	{
+		$view = plugin_dir_path(dirname(__FILE__)) . 'templates/wp-fce-admin-manage-products.php';
 		if (file_exists($view)) {
 			include $view;
 		}
@@ -242,30 +305,32 @@ class Wp_Fce_Admin
 		);
 	}
 
+
+
+
 	/**
 	 * AJAX-Handler: Liste aller Produkte zurückgeben.
 	 *
 	 * @return void
 	 */
-	public function ajax_get_products(): void
+	public function register_ajax_handler(): void
 	{
-		// Capability & Nonce prüfen
-		if (
-			! current_user_can('manage_options') ||
-			! isset($_POST['nonce']) ||
-			! wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'fce_products_nonce')
-		) {
-			wp_send_json_error('Unauthorized', 403);
+		//Make sure its initialized
+		if (!isset($this->admin_ajax_handler)) {
+			$this->admin_ajax_handler = new Wp_Fce_Admin_Ajax_Handler();
 		}
 
-		global $wpdb;
-		$table = $wpdb->prefix . 'fce_products';
+		$this->admin_ajax_handler->handle_admin_ajax_callback();
+	}
 
-		// Alle Produkte aus der DB holen
-		$rows = $wpdb->get_results("SELECT id, product_id, title, description FROM {$table} ORDER BY created_at DESC", ARRAY_A);
+	public function register_form_handler(): void
+	{
+		//Make sure its initialized
+		if (!isset($this->admin_form_handler)) {
+			$this->admin_form_handler = new Wp_Fce_Admin_Form_Handler();
+		}
 
-		// JSON-Antwort
-		wp_send_json_success($rows);
+		$this->admin_form_handler->handle_admin_form_callback();
 	}
 
 
