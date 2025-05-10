@@ -305,13 +305,14 @@ class Wp_Fce_Admin
 		);
 	}
 
-
-
-
 	/**
-	 * AJAX-Handler: Liste aller Produkte zurückgeben.
+	 * Registers the Ajax handler for the admin area.
 	 *
-	 * @return void
+	 * This function ensures that the Wp_Fce_Admin_Ajax_Handler class is initialized
+	 * and calls the handle_admin_ajax_callback method of that class to register the
+	 * form processing callback functions.
+	 *
+	 * @since 1.0.0
 	 */
 	public function register_ajax_handler(): void
 	{
@@ -323,6 +324,15 @@ class Wp_Fce_Admin
 		$this->admin_ajax_handler->handle_admin_ajax_callback();
 	}
 
+	/**
+	 * Registers the form handler for the admin area.
+	 *
+	 * This function ensures that the Wp_Fce_Admin_Form_Handler class is initialized
+	 * and calls the handle_admin_form_callback method of that class to register the
+	 * form processing callback functions.
+	 *
+	 * @since 1.0.0
+	 */
 	public function register_form_handler(): void
 	{
 		//Make sure its initialized

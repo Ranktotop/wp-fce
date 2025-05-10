@@ -1,8 +1,18 @@
 <?php
 class Wp_Fce_Admin_Form_Handler
 {
+
     /**
-     * Hauptmethode für alle Formular-POSTs
+     * Handles form submissions in the admin area.
+     *
+     * This function is attached to the 'admin_init' action hook and is called
+     * on every admin page load. It is responsible for handling form submissions
+     * and redirecting the user to the appropriate page after submission.
+     *
+     * It currently handles the creation of new products, but could be extended
+     * to handle other types of form submissions in the future.
+     *
+     * @since 1.0.0
      */
     public function handle_admin_form_callback(): void
     {
@@ -19,7 +29,8 @@ class Wp_Fce_Admin_Form_Handler
     }
 
     /**
-     * Speichert ein neues Produkt über klassisches Formular
+     * Verarbeitet ein Formular-Submission für ein neues Produkt,
+     * prüft Nonce und Pflichtfelder und speichert dann das Produkt.
      */
     private function handle_product_form_submission(): void
     {
