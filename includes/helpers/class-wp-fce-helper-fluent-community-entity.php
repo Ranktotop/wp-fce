@@ -1,10 +1,96 @@
 <?php
 
-/**
- * Helper to fetch FluentCommunity entities (spaces, courses) from wp_fcom_spaces.
- */
-class WP_FCE_Helper_Fluent_Community_Entity
+class WP_FCE_Helper_Fluent_Community_Entity implements WP_FCE_Helper_Interface
 {
+
+    //******************************** */
+    //************ GETTER ************ */
+    //******************************** */
+
+    /**
+     * Lade mehrere Space-/Course-Entities anhand ihrer IDs.
+     *
+     * @param int[] $ids
+     * @return WP_FCE_Model_Space[]
+     */
+    public function get_by_ids(array $ids): array
+    {
+        global $wpdb;
+        if (empty($ids)) {
+            return [];
+        }
+
+        $placeholders = implode(',', array_fill(0, count($ids), '%d'));
+
+        $rows = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT id, title, slug, type FROM {$wpdb->prefix}fcom_spaces WHERE id IN ($placeholders)",
+                ...$ids
+            ),
+            ARRAY_A
+        );
+
+        return array_map(fn($row) => new WP_FCE_Model_Fluent_Community_Entity(
+            (int) $row['id'],
+            $row['title'],
+            $row['slug'],
+            $row['type']
+        ), $rows);
+    }
+
+    /**
+     * Lade eine einzelne Space-/Course-Entity anhand ihrer ID.
+     *
+     * @param int $id
+     * @return WP_FCE_Model_Fluent_Community_Entity
+     * @throws \Exception Wenn keine Entity gefunden wurde.
+     */
+    public function get_by_id(int $id): WP_FCE_Model_Fluent_Community_Entity
+    {
+        global $wpdb;
+
+        $row = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT id, title, slug, type FROM {$wpdb->prefix}fcom_spaces WHERE id = %d",
+                $id
+            ),
+            ARRAY_A
+        );
+
+        if (!$row) {
+            throw new \Exception(__('Eintrag wurde nicht gefunden.', 'wp-fce'));
+        }
+
+        return new WP_FCE_Model_Fluent_Community_Entity(
+            (int) $row['id'],
+            $row['title'],
+            $row['slug'],
+            $row['type']
+        );
+    }
+
+    /**
+     * Lade alle Space-/Course-Entities.
+     *
+     * @return WP_FCE_Model_Fluent_Community_Entity[]
+     */
+    public function get_all(): array
+    {
+        global $wpdb;
+
+        $rows = $wpdb->get_results(
+            "SELECT id, title, slug, type FROM {$wpdb->prefix}fcom_spaces ORDER BY title ASC",
+            ARRAY_A
+        );
+
+        return array_map(fn($row) => new WP_FCE_Model_Fluent_Community_Entity(
+            (int) $row['id'],
+            $row['title'],
+            $row['slug'],
+            $row['type']
+        ), $rows);
+    }
+
     /**
      * Fetch all FluentCommunity entities of type "space".
      *
@@ -44,37 +130,6 @@ class WP_FCE_Helper_Fluent_Community_Entity
 			WHERE type = 'course'
 			ORDER BY title ASC
 		", ARRAY_A);
-
-        return array_map(fn($row) => new WP_FCE_Model_Fluent_Community_Entity(
-            (int) $row['id'],
-            $row['title'],
-            $row['slug'],
-            $row['type']
-        ), $rows);
-    }
-
-    /**
-     * Lade mehrere Space-/Course-Entities anhand ihrer IDs.
-     *
-     * @param int[] $ids
-     * @return WP_FCE_Model_Space[]
-     */
-    public function get_spaces_by_ids(array $ids): array
-    {
-        global $wpdb;
-        if (empty($ids)) {
-            return [];
-        }
-
-        $placeholders = implode(',', array_fill(0, count($ids), '%d'));
-
-        $rows = $wpdb->get_results(
-            $wpdb->prepare(
-                "SELECT id, title, slug, type FROM {$wpdb->prefix}fcom_spaces WHERE id IN ($placeholders)",
-                ...$ids
-            ),
-            ARRAY_A
-        );
 
         return array_map(fn($row) => new WP_FCE_Model_Fluent_Community_Entity(
             (int) $row['id'],

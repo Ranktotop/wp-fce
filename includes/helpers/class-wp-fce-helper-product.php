@@ -1,6 +1,6 @@
 <?php
 
-class WP_FCE_Helper_Product
+class WP_FCE_Helper_Product implements WP_FCE_Helper_Interface
 {
 
     //******************************** */
@@ -8,11 +8,113 @@ class WP_FCE_Helper_Product
     //******************************** */
 
     /**
+     * Retrieve multiple product entities based on their IDs.
+     *
+     * @param int[] $ids List of product IDs.
+     * @return WP_FCE_Model_Product[] Array of WP_FCE_Model_Product objects.
+     */
+
+    public function get_by_ids(array $ids): array
+    {
+        global $wpdb;
+
+        if (empty($ids)) {
+            return [];
+        }
+
+        $table = $wpdb->prefix . 'fce_products';
+        $placeholders = implode(',', array_fill(0, count($ids), '%d'));
+
+        $rows = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT id, product_id, title, description 
+             FROM {$table} 
+             WHERE id IN ($placeholders)",
+                ...$ids
+            ),
+            ARRAY_A
+        );
+
+        return array_map(fn($row) => new WP_FCE_Model_Product(
+            (int) $row['id'],
+            $row['product_id'],
+            $row['title'],
+            $row['description']
+        ), $rows);
+    }
+
+
+    /**
+     * Get a product by its ID.
+     *
+     * @param int $id The ID of the product to retrieve.
+     *
+     * @return WP_FCE_Model_Product The product with the given ID, or throw an exception if no product was found.
+     *
+     * @throws \Exception If the product was not found.
+     */
+    public function get_by_id(int $id): WP_FCE_Model_Product
+    {
+        global $wpdb;
+
+        $table = $wpdb->prefix . 'fce_products';
+
+        $row = $wpdb->get_row(
+            $wpdb->prepare("SELECT * FROM {$table} WHERE id = %d", $id),
+            ARRAY_A
+        );
+
+        if (!$row) {
+            throw new \Exception(__('Produkt wurde nicht gefunden.', 'wp-fce'));
+        }
+
+        return new WP_FCE_Model_Product(
+            (int) $row['id'],
+            $row['product_id'],
+            $row['title'],
+            $row['description']
+        );
+    }
+
+    /**
+     * Lade ein Produkt anhand der externen Produkt-ID.
+     *
+     * @param string $external_id Die externe Produkt-ID (z. B. von Digistore24/CopeCart).
+     * @return WP_FCE_Model_Product
+     * @throws \Exception Wenn kein Produkt gefunden wurde.
+     */
+    public function get_by_external_product_id(string $external_id): WP_FCE_Model_Product
+    {
+        global $wpdb;
+        $table_products = $wpdb->prefix . 'fce_products';
+
+        $row = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT * FROM {$table_products} WHERE product_id = %s",
+                $external_id
+            ),
+            ARRAY_A
+        );
+
+        if (!$row) {
+            throw new \Exception(__('Produkt mit dieser externen ID wurde nicht gefunden.', 'wp-fce'));
+        }
+
+        return new WP_FCE_Model_Product(
+            (int) $row['id'],
+            $row['product_id'],
+            $row['title'],
+            $row['description']
+        );
+    }
+
+
+    /**
      * Get all products (WP_FCE_Model_Product objects)
      *
      * @return WP_FCE_Model_Product[] Array of WP_FCE_Model_Product objects
      */
-    public function get_all_products(): array
+    public function get_all(): array
     {
         global $wpdb;
         $table = $wpdb->prefix . 'fce_products';
@@ -35,39 +137,6 @@ class WP_FCE_Helper_Product
         }
 
         return $products;
-    }
-
-
-    /**
-     * Get a product by its ID.
-     *
-     * @param int $id The ID of the product to retrieve.
-     *
-     * @return WP_FCE_Model_Product The product with the given ID, or throw an exception if no product was found.
-     *
-     * @throws \Exception If the product was not found.
-     */
-    public function get_product_by_id(int $id): WP_FCE_Model_Product
-    {
-        global $wpdb;
-
-        $table = $wpdb->prefix . 'fce_products';
-
-        $row = $wpdb->get_row(
-            $wpdb->prepare("SELECT * FROM {$table} WHERE id = %d", $id),
-            ARRAY_A
-        );
-
-        if (!$row) {
-            throw new \Exception(__('Produkt wurde nicht gefunden.', 'wp-fce'));
-        }
-
-        return new WP_FCE_Model_Product(
-            (int) $row['id'],
-            $row['product_id'],
-            $row['title'],
-            $row['description']
-        );
     }
 
     /**

@@ -50,6 +50,7 @@ class Wp_Fce_Activator
 		self::create_db_product_access_overrides();
 		self::create_db_products();
 		self::create_db_product_space();
+		self::create_db_product_user();
 		flush_rewrite_rules();
 	}
 
@@ -89,6 +90,31 @@ class Wp_Fce_Activator
 		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 		UNIQUE KEY idx_product_space (fce_product_id, space_id),
 		INDEX idx_space_id (space_id),
+		PRIMARY KEY (id)
+	) $charset_collate;";
+
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		dbDelta($sql);
+	}
+
+	private static function create_db_product_user(): void
+	{
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . 'fce_product_user';
+		$charset_collate = $wpdb->get_charset_collate();
+
+		$sql = "CREATE TABLE {$table_name} (
+		id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+		fce_product_id BIGINT UNSIGNED NOT NULL,
+		user_id BIGINT UNSIGNED NOT NULL,
+		is_active TINYINT(1) NOT NULL DEFAULT 1,
+		expires_on DATETIME DEFAULT NULL,
+		source VARCHAR(50) DEFAULT 'ipn',
+		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+		UNIQUE KEY idx_unique_assignment (fce_product_id, user_id),
+		KEY idx_user_product (user_id, fce_product_id),
 		PRIMARY KEY (id)
 	) $charset_collate;";
 

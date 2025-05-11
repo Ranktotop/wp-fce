@@ -101,7 +101,7 @@ class Wp_Fce_Admin_Ajax_Handler
             $helper  = new WP_FCE_Helper_Product();
             $product = $helper->get_product_by_id((int) $data['product_id']);
 
-            $spaces = $product->get_mapped_spaces();
+            $spaces = $product->get_spaces();
 
             // Rückgabe als einfache Datenstruktur (nicht Objekte)
             $mapping = array_map(function (WP_FCE_Model_Fluent_Community_Entity $space) {

@@ -144,7 +144,7 @@ class WP_FCE_REST_Controller
             );
         }
         $helper_ipn = new WP_FCE_Helper_Ipn();
-        $ipn = $helper_ipn->save_ipn(
+        $ipn = $helper_ipn->create_ipn(
             $ipn["customer"]['email'],
             $ipn["transaction"]['transaction_id'],
             $ipn["transaction"]['transaction_date'],

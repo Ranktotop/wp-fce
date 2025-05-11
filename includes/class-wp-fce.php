@@ -150,14 +150,20 @@ class Wp_Fce
 		/**
 		 * The model classes
 		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/models/class-wp-fce-model-base.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/models/class-wp-fce-model-user.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/models/class-wp-fce-model-product.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/models/class-wp-fce-model-fluent-community-entity.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/models/class-wp-fce-model-ipn.php';
 
 		/**
 		 * The helper classes
 		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-interface.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-user.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-product.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-fluent-community-entity.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-ipn.php';
 
 
 
