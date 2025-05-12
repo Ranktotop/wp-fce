@@ -38,7 +38,8 @@
 }
 
 .delete.wpfce_delete_product_btn,
-.delete.wpfce_delete_product_mapping_btn {
+.delete.wpfce_delete_product_mapping_btn,
+.delete.wpfce_delete_access_rule_btn {
     color: #fff;
     background-color: #dc3232;
     border-color: #dc3232;
@@ -46,7 +47,8 @@
 }
 
 .delete.wpfce_delete_product_btn:hover,
-.delete.wpfce_delete_product_mapping_btn:hover {
+.delete.wpfce_delete_product_mapping_btn:hover,
+.delete.wpfce_delete_access_rule_btn:hover {
     color: #fff;
     background-color: #f36060;
     border-color: #f36060;

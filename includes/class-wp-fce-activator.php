@@ -47,11 +47,15 @@ class Wp_Fce_Activator
 		}
 
 		self::create_db_ipn_log();
-		self::create_db_product_access_overrides();
 		self::create_db_products();
 		self::create_db_product_space();
 		self::create_db_product_user();
+		self::create_db_product_user_overrides();
 		flush_rewrite_rules();
+
+		if (! wp_next_scheduled('wp_fce_cron_check_expirations')) {
+			wp_schedule_event(time(), 'hourly', 'wp_fce_cron_check_expirations');
+		}
 	}
 
 	private static function create_db_products(): void
@@ -137,7 +141,8 @@ class Wp_Fce_Activator
 		external_product_id VARCHAR(100) NOT NULL,
 		source VARCHAR(100) NOT NULL,
 		ipn LONGTEXT NOT NULL,
-		UNIQUE KEY idx_unique_entry (transaction_id),
+    	ipn_hash CHAR(32) NOT NULL,
+		UNIQUE KEY idx_ipn_hash (ipn_hash),
 		KEY idx_user_product (user_email, external_product_id),
 		PRIMARY KEY (id)
 	) $charset_collate;";
@@ -146,25 +151,24 @@ class Wp_Fce_Activator
 		dbDelta($sql);
 	}
 
-	private static function create_db_product_access_overrides(): void
+	private static function create_db_product_user_overrides(): void
 	{
 		global $wpdb;
 
-		$table_name = $wpdb->prefix . 'fce_product_access_overrides';
+		$table = $wpdb->prefix . 'fce_product_access_overrides';
 		$charset_collate = $wpdb->get_charset_collate();
 
-		$sql = "CREATE TABLE {$table_name} (
-		id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-		user_id BIGINT UNSIGNED NOT NULL,
-		external_product_id VARCHAR(100) NOT NULL,
-		granted_until DATETIME NOT NULL,
-		reason TEXT NULL,
-		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-		updated_at DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-		UNIQUE KEY idx_unique_override (user_id, external_product_id),
-		INDEX idx_granted_until (granted_until),
-		PRIMARY KEY (id)
-	) $charset_collate;";
+		$sql = "CREATE TABLE {$table} (
+        id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+        user_id BIGINT UNSIGNED NOT NULL,
+        fce_product_id BIGINT UNSIGNED NOT NULL,
+        mode ENUM('grant', 'deny') NOT NULL,
+        valid_until DATETIME NOT NULL,
+        created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME NULL DEFAULT NULL,
+        PRIMARY KEY (id),
+        UNIQUE KEY user_product_unique (user_id, fce_product_id)
+    ) $charset_collate;";
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta($sql);

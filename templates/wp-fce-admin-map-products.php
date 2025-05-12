@@ -84,7 +84,7 @@ $courses             = $helper_fcom->get_all_courses();
                     <select name="fce_product_id" id="fce_product_id" required>
                         <option value=""><?php esc_html_e('-- Bitte wählen --', 'wp-fce'); ?></option>
                         <?php foreach ($ungemappte_produkte as $product): ?>
-                            <option value="<?php echo esc_attr($product->get_product_id()); ?>">
+                            <option value="<?php echo esc_attr($product->get_id()); ?>">
                                 <?php echo esc_html($product->get_title()); ?>
                             </option>
                         <?php endforeach; ?>

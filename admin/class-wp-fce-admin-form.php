@@ -30,6 +30,9 @@ class Wp_Fce_Admin_Form_Handler
         if (isset($_POST['wp_fce_form_action']) && $_POST['wp_fce_form_action'] === 'update_product_mapping') {
             $this->handle_update_product_mapping();
         }
+        if (isset($_POST['wp_fce_form_action']) && $_POST['wp_fce_form_action'] === 'create_override') {
+            $this->handle_override_access();
+        }
 
         // weitere: elseif ($_POST['wp_fce_form_action'] === '...') ...
     }
@@ -165,6 +168,65 @@ class Wp_Fce_Admin_Form_Handler
             $product->set_spaces($new_space_ids);
 
             wp_safe_redirect(add_query_arg('fce_success', urlencode(__('Zuweisung gespeichert.', 'wp-fce')), $_SERVER['REQUEST_URI']));
+            exit;
+        } catch (\Exception $e) {
+            add_action('admin_notices', function () use ($e) {
+                echo '<div class="notice notice-error"><p>' . esc_html($e->getMessage()) . '</p></div>';
+            });
+        }
+    }
+
+    /**
+     * Handles creation or update of admin-defined access overrides.
+     *
+     * @since 1.0.0
+     */
+    private function handle_override_access(): void
+    {
+        if (
+            !isset($_POST['wp_fce_nonce']) ||
+            !wp_verify_nonce($_POST['wp_fce_nonce'], 'wp_fce_create_override')
+        ) {
+            return;
+        }
+
+        $user_id     = (int) ($_POST['user_id'] ?? 0);
+        $product_id  = (int) ($_POST['product_id'] ?? 0);
+        $mode        = sanitize_text_field($_POST['mode'] ?? '');
+        $valid_until = sanitize_text_field($_POST['valid_until'] ?? '');
+
+        if (
+            !$user_id ||
+            !$product_id ||
+            !in_array($mode, ['grant', 'deny'], true) ||
+            empty($valid_until)
+        ) {
+            add_action('admin_notices', function () {
+                echo '<div class="notice notice-error"><p>' . esc_html__('Ungültige Eingaben für Override.', 'wp-fce') . '</p></div>';
+            });
+            return;
+        }
+
+        // Konvertiere ins externe Produkt-ID-Format
+        $product = WP_FCE_Model_Product::load_by_id($product_id);
+        $timestamp = strtotime($valid_until);
+
+        try {
+            $helper = new WP_FCE_Helper_Access_Override();
+
+            $existing = $helper->get_active_override($user_id, $product->get_id());
+
+            if ($existing) {
+                $helper->update_override_by_id($existing->get_id(), $mode, $timestamp);
+            } else {
+                $helper->create_override($user_id, $product->get_id(), $mode, $timestamp);
+            }
+
+            //update access
+            $access_manager = new WP_FCE_Access_Manager();
+            $access_manager->update_access($user_id, $product->get_id(), null, "admin");
+
+            wp_safe_redirect(add_query_arg('fce_success', urlencode(__('Zugriffsüberschreibung gespeichert.', 'wp-fce')), $_SERVER['REQUEST_URI']));
             exit;
         } catch (\Exception $e) {
             add_action('admin_notices', function () use ($e) {

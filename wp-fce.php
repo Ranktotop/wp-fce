@@ -42,13 +42,40 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 	require_once __DIR__ . '/vendor/autoload.php';
 }
 
+// ——— GLOBALER LOGGER ———
+if (! function_exists('fce_log')) {
+	/**
+	 * Einfacher Logger für WP_FCE.
+	 *
+	 * @param mixed  $message String, Array oder Objekt.
+	 * @param string $level   Optional. Log-Level (info, warning, error).
+	 */
+	function fce_log($message, string $level = 'info'): void
+	{
+		if (defined('WP_DEBUG') && WP_DEBUG && defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
+			// 1) Zeitstempel holen (WP-Lokalzeit)
+			$timestamp = date_i18n('Y-m-d H:i:s');
+			// 2) Prefix mit Datum, Plugin-Tag und Level
+			$prefix = sprintf('[%s] [WP_FCE][%s] ', $timestamp, strtoupper($level));
+
+			// 3) Loggen
+			if (is_array($message) || is_object($message)) {
+				error_log($prefix . print_r($message, true));
+			} else {
+				error_log($prefix . $message);
+			}
+		}
+	}
+}
+// ————————————————
+
 // Enable GitHub-based plugin updates using plugin-update-checker
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
 $updateChecker = PucFactory::buildUpdateChecker(
 	'https://github.com/Ranktotop/wp-fce/', // <-- HIER ANPASSEN
 	__FILE__,
-	'wp-fluent-community-extreme'
+	'wp-fce'
 );
 
 // Verwende GitHub Releases (nicht den Branch-Zip)

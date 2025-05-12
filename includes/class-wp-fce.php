@@ -93,7 +93,6 @@ class Wp_Fce
 
 		$this->load_dependencies();
 		$this->set_locale();
-		$this->define_global_hooks();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
 	}
@@ -155,52 +154,27 @@ class Wp_Fce
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/models/class-wp-fce-model-product.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/models/class-wp-fce-model-fluent-community-entity.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/models/class-wp-fce-model-ipn.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/models/class-wp-fce-model-access-override.php';
 
 		/**
 		 * The helper classes
 		 */
-		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-interface.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-base.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-user.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-product.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-fluent-community-entity.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-ipn.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-access-override.php';
 
-
+		/**
+		 * Controller classes
+		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-fce-access-manager.php';
 
 		/**
 		 * The REST API controller for handling IPN callbacks
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-fce-rest-controller.php';
-
-		/**
-		 * The class responsible for handling subscription expiration
-		 */
-		//require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-fce-subscription-expiration-handler.php';
-
-		/**
-		 * Helper class for products
-		 */
-		//require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-fce-helper-product.php';
-
-		/**
-		 * Helper class for user
-		 */
-		//require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-fce-helper-user.php';
-
-		/**
-		 * Helper class for ipn
-		 */
-		//require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-fce-helper-ipn.php';
-
-		/**
-		 * Model class for ipn
-		 */
-		//require_once plugin_dir_path(dirname(__FILE__)) . 'includes/models/class-wp-fce-model-ipn.php';
-		/**
-		 * Model class for user
-		 */
-		//require_once plugin_dir_path(dirname(__FILE__)) . 'includes/models/class-wp-fce-model-user.php';
-
 
 		$this->loader = new Wp_Fce_Loader();
 	}
@@ -249,26 +223,8 @@ class Wp_Fce
 		$this->loader->add_action('in_admin_footer', $plugin_admin, 'inject_global_admin_ui');
 		$this->loader->add_action('admin_menu', $plugin_admin, 'register_page_manage_products');
 		$this->loader->add_action('admin_menu', $plugin_admin, 'register_page_map_products');
+		$this->loader->add_action('admin_menu', $plugin_admin, 'register_page_manage_access');
 		$this->loader->add_action('admin_init', $plugin_admin, 'register_form_handler');
-
-
-		// Validate unique external ids
-		//$this->loader->add_action('save_post_fce_product_mapping', $plugin_admin, 'validate_external_product_id_on_save', 10, 3);
-		// If product mappings are changed
-		//$this->loader->add_action('before_delete_post', $plugin_admin, 'revoke_access_to_deleted_product_mapping');
-		//$this->loader->add_action('pre_post_update', $plugin_admin, 'cache_product_mapping', 10, 2);
-		//$this->loader->add_action('carbon_fields_post_meta_container_saved', $plugin_admin, 'update_product_access_after_cf', 10, 1);
-
-		//Add product tables on user views and add form to grant access
-		//$this->loader->add_action('show_user_profile', $plugin_admin, 'render_user_products_table');
-		//$this->loader->add_action('edit_user_profile', $plugin_admin, 'render_user_products_table');
-		//$this->loader->add_action('show_user_profile', $plugin_admin, 'render_manual_access_form');
-		//$this->loader->add_action('edit_user_profile',   $plugin_admin, 'render_manual_access_form');
-		//$this->loader->add_action('personal_options_update', $plugin_admin, 'save_manual_access');
-		//$this->loader->add_action('edit_user_profile_update', $plugin_admin, 'save_manual_access');
-
-		//Add notice handler
-		//$this->loader->add_action('admin_notices', $plugin_admin, 'display_admin_notices');
 	}
 
 	/**
@@ -286,34 +242,18 @@ class Wp_Fce
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
 
-		//load style for profile page link
-		//$this->loader->add_action('fluent_community/portal_head', $plugin_public, 'enqueue_profile_link_css');
+		//Register REST API Route
+		$this->loader->add_action('rest_api_init', $plugin_public, 'register_api_routes');
 
-		//TODO continue here
+		//Register cronjob
+		$this->loader->add_action('wp_fce_cron_check_expirations', $plugin_public, 'run_expiration_cron');
 
-		//add profile page link
-		//$this->loader->add_filter('fluent_community/profile_view_data', $plugin_public, 'add_profile_management_link', 10, 2);
+		//Register Front-End Routes#
+		$this->loader->add_action('init', $plugin_public, 'register_front_end_routes');
 
-		//register orders route
-		//$this->loader->add_action('init', $plugin_public, 'register_routes');
-	}
-
-	/**
-	 * Register all global hooks (Carbon Fields, REST, u. Ä.).
-	 *
-	 * @since 1.0.0
-	 * @access private
-	 */
-	private function define_global_hooks()
-	{
-		//TODO move to public
-
-		// 2) REST-Controller initialisieren und Route registrieren
-		//$this->rest_controller = new WP_FCE_REST_Controller();
-		//$this->loader->add_action('rest_api_init', $this->rest_controller, 'register_routes');
-
-		// Cron-Job für Ablaufprüfung für Mitglieder (static, daher keine instanzierung notwendig)
-		//$this->loader->add_action('wp_fce_cron_check_expirations', 'WP_FCE_Subscription_Expiration_Handler', 'check_expirations');
+		//Add payments link on user profiles
+		$this->loader->add_action('fluent_community/portal_head', $plugin_public, 'enqueue_profile_link_css');
+		$this->loader->add_filter('fluent_community/profile_view_data', $plugin_public, 'add_profile_management_link', 10, 2);
 	}
 
 	/**

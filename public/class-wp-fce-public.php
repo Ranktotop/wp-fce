@@ -118,7 +118,7 @@ class Wp_Fce_Public
 			'css_class' => 'fce-link-orders',
 			'title'     => __('Zahlungen', 'wp_fce'),
 			'svg_icon'  => '',
-			'url'       => site_url('/wp-fce/orders'),
+			'url'       => site_url('/wp-fce/payments'),
 		];
 
 		return $data;
@@ -135,9 +135,23 @@ class Wp_Fce_Public
 	/**
 	 * Registriert eine benutzerdefinierte Route für /wp-fce/bestellungen
 	 */
-	public function register_routes(): void
+	public function register_api_routes(): void
 	{
-		add_rewrite_rule('^wp-fce/orders/?$', 'index.php?wp_fce_page=orders', 'top');
+		// REST API
+		register_rest_route(
+			'wp-fce/v1',
+			'/ipn',
+			[
+				'methods'             => \WP_REST_Server::CREATABLE,      // POST
+				'callback'            => [$this, 'handle_ipn'],
+				'permission_callback' => '__return_true',                 // öffentlich, IPN-Provider authentifizieren selbst
+			]
+		);
+	}
+
+	public function register_front_end_routes(): void
+	{
+		add_rewrite_rule('^wp-fce/payments/?$', 'index.php?wp_fce_page=payments', 'top');
 		add_filter('query_vars', function ($vars) {
 			$vars[] = 'wp_fce_page';
 			return $vars;
@@ -151,10 +165,42 @@ class Wp_Fce_Public
 	 */
 	public function load_custom_template($template)
 	{
-		if (get_query_var('wp_fce_page') === 'orders') {
-			return plugin_dir_path(dirname(__FILE__)) . 'templates/fce-orders-template.php';
+		if (get_query_var('wp_fce_page') === 'payments') {
+			return plugin_dir_path(dirname(__FILE__)) . 'templates/wp-fce-payments.php';
 		}
 
 		return $template;
+	}
+
+	/**
+	 * IPN-Request verarbeiten.
+	 *
+	 * @since 1.0.0
+	 * @param \WP_REST_Request $request
+	 * @return \WP_REST_Response
+	 */
+	public function handle_ipn(\WP_REST_Request $request): \WP_REST_Response
+	{
+		$controller = new Wp_Fce_Rest_Controller();
+		return $controller->handle_ipn($request);
+	}
+
+	//******************************** */
+	//************* CRON ************* */
+	//******************************** */
+
+	/**
+	 * Wird vom Cronjob aufgerufen: entzieht abgelaufene Produkt-Zugriffe.
+	 *
+	 * @return void
+	 */
+	public static function cron_check_expirations(): void
+	{
+		fce_log('Starte Ablaufprüfung (Cron)', 'info');
+
+		$helper_product = new WP_FCE_Helper_Product();
+		$helper_product->revoke_expired_accesses();
+
+		fce_log('Ablaufprüfung abgeschlossen', 'info');
 	}
 }

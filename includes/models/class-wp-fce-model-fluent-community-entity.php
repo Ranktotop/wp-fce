@@ -8,7 +8,6 @@ class WP_FCE_Model_Fluent_Community_Entity extends WP_FCE_Model_Base
     private string $title;
     private string $slug;
     private string $type;
-    private WP_FCE_Helper_Product $product_helper;
 
     /**
      * Constructor for a FluentCommunity Entity (space, course, etc.)
@@ -24,7 +23,6 @@ class WP_FCE_Model_Fluent_Community_Entity extends WP_FCE_Model_Base
         $this->title = $title;
         $this->slug  = $slug;
         $this->type  = $type;
-        $this->product_helper = new WP_FCE_Helper_Product();
     }
 
     /**
@@ -192,5 +190,49 @@ class WP_FCE_Model_Fluent_Community_Entity extends WP_FCE_Model_Base
     {
         $product = $this->product_helper->get_by_id($product_id);
         return $product->add_space($this->id);
+    }
+
+    /**
+     * Revoke access to a product for this user.
+     *
+     * @param int $product_id The internal product ID (not external).
+     * @return bool True on success, false on failure.
+     */
+    public function remove_product(int $product_id): bool
+    {
+        $product = $this->product_helper->get_by_id($product_id);
+        return $product->remove_space($this->id);
+    }
+
+    /**
+     * Grant access to this FluentCommunity entity for a specific user.
+     *
+     * @param int $user_id The WordPress user ID.
+     *
+     * @return void
+     */
+    public function grant_access(int $user_id)
+    {
+        if ($this->is_course()) {
+            \FluentCommunity\Modules\Course\Services\CourseHelper::enrollCourse($this->get_id(), $user_id);
+        } else {
+            \FluentCommunity\App\Services\Helper::addToSpace($this->get_id(), $user_id, 'member', 'by_admin');
+        }
+    }
+
+    /**
+     * Revoke access to this FluentCommunity entity for a specific user.
+     *
+     * @param int $user_id The WordPress user ID.
+     *
+     * @return void
+     */
+    public function revoke_access(int $user_id)
+    {
+        if ($this->is_course()) {
+            \FluentCommunity\Modules\Course\Services\CourseHelper::leaveCourse($this->get_id(), $user_id);
+        } else {
+            \FluentCommunity\App\Services\Helper::removeFromSpace($this->get_id(), $user_id, 'by_admin');
+        }
     }
 }

@@ -7,7 +7,7 @@ if (!defined('ABSPATH') || !is_user_logged_in() || !current_user_can('manage_opt
 }
 
 $helper_product = new WP_FCE_Helper_Product();
-$products = $helper_product->get_all_products();
+$products = $helper_product->get_all();
 ?>
 
 <div class="wrap fce-admin-page">

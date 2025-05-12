@@ -8,8 +8,7 @@ class WP_FCE_Model_Ipn extends WP_FCE_Model_Base
     private string $external_product_id;
     private string $source;
     private array $ipn_data;
-    private WP_FCE_Helper_Product $product_helper;
-    private WP_FCE_Helper_User $user_helper;
+    private string $ipn_hash;
 
     public function __construct(
         int $id,
@@ -18,7 +17,8 @@ class WP_FCE_Model_Ipn extends WP_FCE_Model_Base
         string $ipn_date,
         string $external_product_id,
         string $source,
-        string $ipn_raw_json
+        string $ipn_raw_json,
+        string $ipn_hash
     ) {
         $this->id = $id;
         $this->user_email = $user_email;
@@ -35,9 +35,7 @@ class WP_FCE_Model_Ipn extends WP_FCE_Model_Base
 
         $data = json_decode($ipn_raw_json, true);
         $this->ipn_data = is_array($data) ? $data : [];
-
-        $this->product_helper = new WP_FCE_Helper_Product();
-        $this->user_helper = new WP_FCE_Helper_User();
+        $this->ipn_hash = $ipn_hash;
     }
 
     /**
@@ -70,7 +68,8 @@ class WP_FCE_Model_Ipn extends WP_FCE_Model_Base
             $row['ipn_date'],
             $row['external_product_id'],
             $row['source'],
-            $row['ipn']
+            $row['ipn'],
+            $row['ipn_hash']
         );
     }
 
@@ -133,6 +132,11 @@ class WP_FCE_Model_Ipn extends WP_FCE_Model_Base
         return $this->transaction_id;
     }
 
+    public function get_ipn_hash(): string
+    {
+        return $this->ipn_hash;
+    }
+
     public function get_ipn_date(): DateTime
     {
         return $this->ipn_date;
@@ -161,6 +165,11 @@ class WP_FCE_Model_Ipn extends WP_FCE_Model_Base
     public function get_paid_until_timestamp(): ?int
     {
         return $this->ipn_data['transaction']['paid_until'] ?? null;
+    }
+
+    public function get_management_link(): ?string
+    {
+        return $this->ipn_data['transaction']['management_url'] ?? null;
     }
 
     /**

@@ -99,7 +99,7 @@ class Wp_Fce_Admin_Ajax_Handler
 
         try {
             $helper  = new WP_FCE_Helper_Product();
-            $product = $helper->get_product_by_id((int) $data['product_id']);
+            $product = $helper->get_by_id((int) $data['product_id']);
 
             $spaces = $product->get_spaces();
 
@@ -140,5 +140,55 @@ class Wp_Fce_Admin_Ajax_Handler
         }
 
         return ['state' => true, 'message' => __('Alle Zuweisungen gelöscht.', 'wp-fce')];
+    }
+
+    private function delete_access_rule(array $data, array $meta): array
+    {
+        if (!isset($data['rule_id']) || !is_numeric($data['rule_id'])) {
+            return ['state' => false, 'message' => __('Ungültige Regel-ID', 'wp-fce')];
+        }
+
+        try {
+            $helper = new WP_FCE_Helper_Access_Override();
+            $rule = $helper->get_by_id((int) $data['rule_id']);
+            $helper->delete_override_by_id((int) $data['rule_id']);
+
+            //update access
+            $access_manager = new WP_FCE_Access_Manager();
+            $access_manager->update_access($rule->get_user_id(), $rule->get_product_id(), null, "admin");
+
+            return ['state' => true, 'message' => __('Regel erfolgreich gelöscht', 'wp-fce')];
+        } catch (\Exception $e) {
+            return ['state' => false, 'message' => $e->getMessage()];
+        }
+    }
+
+    private function update_access_rule(array $data, array $meta): array
+    {
+        if (!isset($data['rule_id']) || !is_numeric($data['rule_id'])) {
+            return ['state' => false, 'message' => __('Ungültige Regel-ID', 'wp-fce')];
+        }
+
+        $mode = sanitize_text_field($data['mode'] ?? '');
+        $valid_until_raw = sanitize_text_field($data['valid_until'] ?? '');
+        $valid_until_ts  = strtotime($valid_until_raw);
+
+        if (!$valid_until_ts) {
+            return ['state' => false, 'message' => __('Ungültiges Datum', 'wp-fce')];
+        }
+
+        try {
+            $helper = new WP_FCE_Helper_Access_Override();
+            $rule = $helper->get_by_id((int) $data['rule_id']);
+            $helper->update_override_by_id((int) $data['rule_id'], $mode, $valid_until_ts);
+
+            //update access
+            $access_manager = new WP_FCE_Access_Manager();
+            $access_manager->update_access($rule->get_user_id(), $rule->get_product_id(), null, "admin");
+
+            return ['state' => true, 'message' => __('Regel erfolgreich aktualisiert', 'wp-fce')];
+        } catch (\Exception $e) {
+            return ['state' => false, 'message' => $e->getMessage()];
+        }
     }
 }

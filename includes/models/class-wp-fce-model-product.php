@@ -5,9 +5,6 @@ class WP_FCE_Model_Product extends WP_FCE_Model_Base
     private string $product_id;
     private string $title;
     private string $description;
-    private WP_FCE_Helper_Fluent_Community_Entity $fcom_helper;
-    private WP_FCE_Helper_User $user_helper;
-
 
     /**
      * Constructor for the WP_FCE_Model_Product class.
@@ -24,8 +21,6 @@ class WP_FCE_Model_Product extends WP_FCE_Model_Base
         $this->product_id = $product_id;
         $this->title = $title;
         $this->description = $description;
-        $this->fcom_helper = new WP_FCE_Helper_Fluent_Community_Entity();
-        $this->user_helper = new WP_FCE_Helper_User();
     }
 
     /**
@@ -123,7 +118,7 @@ class WP_FCE_Model_Product extends WP_FCE_Model_Base
             return [];
         }
 
-        return $this->fcom_helper->get_by_ids($ids);
+        return $this->space_helper()->get_by_ids($ids);
     }
 
     /**
@@ -146,7 +141,30 @@ class WP_FCE_Model_Product extends WP_FCE_Model_Base
             return [];
         }
 
-        return $this->user_helper->get_by_ids($ids);
+        return $this->user_helper()->get_by_ids($ids);
+    }
+
+    /**
+     * Get all IPNs saved for this product's external ID.
+     *
+     * @return WP_FCE_Model_IPN[] Array of ipns.
+     */
+    public function get_ipns(): array
+    {
+        global $wpdb;
+
+        $table = $wpdb->prefix . 'fce_ipn_log';
+
+        $ids = $wpdb->get_col($wpdb->prepare(
+            "SELECT id FROM {$table} WHERE external_product_id = %d",
+            $this->get_product_id()
+        ));
+
+        if (empty($ids)) {
+            return [];
+        }
+
+        return $this->ipn_helper()->get_by_ids($ids);
     }
 
     //******************************** */
@@ -245,29 +263,70 @@ class WP_FCE_Model_Product extends WP_FCE_Model_Base
      * Grant access to this product for a specific user.
      *
      * @param int $user_id The WordPress user ID.
-     * @param int|null $expires_on Optional expiration timestamp.
+     * @param int $expires_on expiration timestamp.
      * @param string $source The source of access (e.g., 'admin', 'ipn').
      * @return bool True on success, false on failure.
      */
-    public function add_user(int $user_id, ?int $expires_on = null, string $source = 'admin'): bool
+    public function add_user(int $user_id, int $expires_on, string $source = 'admin'): bool
     {
         global $wpdb;
-        $table = $wpdb->prefix . 'fce_user_product';
+        $table      = $wpdb->prefix . 'fce_product_user';
+        $product_id = $this->get_id();
+        $now        = current_time('mysql');
 
+        // Daten, die immer (neu) gesetzt werden
         $data = [
-            'user_id'    => $user_id,
-            'product_id' => $this->get_id(),
+            'expires_on' => date('Y-m-d H:i:s', $expires_on),
             'source'     => $source,
-            'is_active'  => 1,
-            'created_at' => current_time('mysql'),
-            'updated_at' => current_time('mysql')
+            'updated_at' => $now,
         ];
+        $data_formats = ['%s', '%s', '%s'];
 
-        if ($expires_on !== null) {
-            $data['expires_on'] = date('Y-m-d H:i:s', $expires_on);
+        // 1) Existiert schon ein Link? Dann updaten
+        $exists = (bool) $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*) FROM {$table} WHERE user_id = %d AND fce_product_id = %d",
+                $user_id,
+                $product_id
+            )
+        );
+        if ($exists) {
+            $where        = ['user_id' => $user_id, 'fce_product_id' => $product_id];
+            $where_formats = ['%d', '%d'];
+            return false !== $wpdb->update($table, $data, $where, $data_formats, $where_formats);
         }
 
-        $result = $wpdb->insert($table, $data);
-        return $result !== false;
+        // 2) Neuer Link anlegen
+        $insert_data = array_merge($data, [
+            'user_id'         => $user_id,
+            'fce_product_id'  => $product_id,
+            'created_at'      => $now,
+        ]);
+        $insert_formats = array_merge($data_formats, ['%d', '%d', '%s']);
+        return false !== $wpdb->insert($table, $insert_data, $insert_formats);
+    }
+
+    /**
+     * Remove access to this product for a specific user (delete link).
+     *
+     * @param int $user_id The WordPress user ID.
+     * @return bool        True if the row was deleted or didn't exist, false on failure.
+     */
+    public function remove_user(int $user_id): bool
+    {
+        global $wpdb;
+        $table = $wpdb->prefix . 'fce_product_user';
+
+        // Eintrag löschen (wenn keiner da ist, affected_rows bleibt 0 und wir geben true zurück)
+        $deleted = $wpdb->delete(
+            $table,
+            [
+                'user_id'        => $user_id,
+                'fce_product_id' => $this->get_id(),
+            ],
+            ['%d', '%d']
+        );
+
+        return $deleted !== false;
     }
 }

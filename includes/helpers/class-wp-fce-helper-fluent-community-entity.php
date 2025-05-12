@@ -1,6 +1,6 @@
 <?php
 
-class WP_FCE_Helper_Fluent_Community_Entity implements WP_FCE_Helper_Interface
+class WP_FCE_Helper_Fluent_Community_Entity extends WP_FCE_Helper_Base
 {
 
     //******************************** */
@@ -30,6 +30,10 @@ class WP_FCE_Helper_Fluent_Community_Entity implements WP_FCE_Helper_Interface
             ARRAY_A
         );
 
+        if (empty($rows) || !is_array($rows)) {
+            return [];
+        }
+
         return array_map(fn($row) => new WP_FCE_Model_Fluent_Community_Entity(
             (int) $row['id'],
             $row['title'],
@@ -47,26 +51,7 @@ class WP_FCE_Helper_Fluent_Community_Entity implements WP_FCE_Helper_Interface
      */
     public function get_by_id(int $id): WP_FCE_Model_Fluent_Community_Entity
     {
-        global $wpdb;
-
-        $row = $wpdb->get_row(
-            $wpdb->prepare(
-                "SELECT id, title, slug, type FROM {$wpdb->prefix}fcom_spaces WHERE id = %d",
-                $id
-            ),
-            ARRAY_A
-        );
-
-        if (!$row) {
-            throw new \Exception(__('Eintrag wurde nicht gefunden.', 'wp-fce'));
-        }
-
-        return new WP_FCE_Model_Fluent_Community_Entity(
-            (int) $row['id'],
-            $row['title'],
-            $row['slug'],
-            $row['type']
-        );
+        return WP_FCE_Model_Fluent_Community_Entity::load_by_id($id);
     }
 
     /**

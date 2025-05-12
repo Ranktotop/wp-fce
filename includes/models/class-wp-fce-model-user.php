@@ -5,9 +5,6 @@ class WP_FCE_Model_User extends WP_FCE_Model_Base
     private string $login;
     private string $email;
     private string $display_name;
-    private WP_FCE_Helper_Ipn $ipn_helper;
-    private WP_FCE_Helper_Fluent_Community_Entity $fcom_helper;
-    private WP_FCE_Helper_Product $product_helper;
 
     /**
      * Constructor
@@ -20,9 +17,6 @@ class WP_FCE_Model_User extends WP_FCE_Model_Base
         $this->login = $login;
         $this->email = $email;
         $this->display_name = $display_name;
-        $this->ipn_helper = new WP_FCE_Helper_Ipn();
-        $this->product_helper = new WP_FCE_Helper_Product();
-        $this->fcom_helper = new WP_FCE_Helper_Fluent_Community_Entity();
     }
 
     /**
@@ -70,6 +64,16 @@ class WP_FCE_Model_User extends WP_FCE_Model_Base
         return $this->email;
     }
 
+    public function get_name(): string
+    {
+        return $this->display_name;
+    }
+
+    public function get_login(): string
+    {
+        return $this->login;
+    }
+
     /**
      * Get all space entities assigned to this user via FluentCommunity.
      *
@@ -85,7 +89,7 @@ class WP_FCE_Model_User extends WP_FCE_Model_Base
             $this->get_id()
         ));
 
-        return $this->fcom_helper->get_by_ids($space_ids);
+        return $this->space_helper()->get_by_ids($space_ids);
     }
 
     /**
@@ -127,5 +131,11 @@ class WP_FCE_Model_User extends WP_FCE_Model_Base
     {
         $product = $this->product_helper->get_by_id($product_id);
         return $product->add_user($this->get_id(), $expires_on, $source);
+    }
+
+    public function remove_product(int $product_id): bool
+    {
+        $product = $this->product_helper->get_by_id($product_id);
+        return $product->remove_user($this->get_id());
     }
 }
