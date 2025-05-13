@@ -48,6 +48,7 @@ class WP_FCE_Helper_Product_User extends WP_FCE_Helper_Base
 
     /**
      * Retrieve all active product‐user entries for a given user.
+     * Active means: start_date <= now AND (expiry_date IS NULL OR expiry_date > now)
      *
      * Returns an array of arrays with keys:
      *  - product_id  (int)
@@ -93,6 +94,7 @@ class WP_FCE_Helper_Product_User extends WP_FCE_Helper_Base
 
     /**
      * Retrieve all active product IDs for a given user.
+     * Active means: start_date <= now AND (expiry_date IS NULL OR expiry_date > now)
      *
      * @param  int   $user_id
      * @return int[] Array of product_id

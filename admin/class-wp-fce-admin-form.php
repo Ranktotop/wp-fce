@@ -61,22 +61,22 @@ class Wp_Fce_Admin_Form_Handler
             return;
         }
 
-        $product_id  = sanitize_text_field($_POST['fce_new_product_id'] ?? '');
-        $title       = sanitize_text_field($_POST['fce_new_product_title'] ?? '');
-        $description = sanitize_textarea_field($_POST['fce_new_product_description'] ?? '');
+        $sku  = sanitize_text_field($_POST['fce_new_product_sku'] ?? '');
+        $name = sanitize_text_field($_POST['fce_new_product_name'] ?? '');
+        $desc = sanitize_textarea_field($_POST['fce_new_product_description'] ?? '');
 
-        if (!$product_id || !$title) {
+        if (!$sku || !$name) {
             add_action('admin_notices', function () {
-                echo '<div class="notice notice-error"><p>' . esc_html__('Produkt-ID und Titel sind Pflichtfelder.', 'wp-fce') . '</p></div>';
+                echo '<div class="notice notice-error"><p>' . esc_html__('Product ID and title are required.', 'wp-fce') . '</p></div>';
             });
             return;
         }
 
         try {
             $helper = new WP_FCE_Helper_Product();
-            $helper->create_product($product_id, $title, $description);
+            $helper->create($sku, $name, $desc);
 
-            wp_safe_redirect(add_query_arg('fce_success', urlencode(__('Produkt wurde angelegt.', 'wp-fce')), $_SERVER['REQUEST_URI']));
+            wp_safe_redirect(add_query_arg('fce_success', urlencode(__('Product created successfully.', 'wp-fce')), $_SERVER['REQUEST_URI']));
             exit;
         } catch (\Exception $e) {
             add_action('admin_notices', function () use ($e) {
@@ -179,7 +179,7 @@ class Wp_Fce_Admin_Form_Handler
         if ($product_id <= 0) {
             add_action('admin_notices', function () {
                 echo '<div class="notice notice-error"><p>'
-                    . esc_html__('Ungültige Produkt-ID.', 'wp-fce')
+                    . esc_html__('Invalid product ID.', 'wp-fce')
                     . '</p></div>';
             });
             return;
@@ -197,7 +197,7 @@ class Wp_Fce_Admin_Form_Handler
             // 6) Erfolg – Redirect mit Hinweis
             $redirect_url = add_query_arg(
                 'fce_success',
-                urlencode(__('Zuweisung gespeichert.', 'wp-fce')),
+                urlencode(__('Successfully updated product mappings.', 'wp-fce')),
                 $_SERVER['REQUEST_URI']
             );
             wp_safe_redirect($redirect_url);

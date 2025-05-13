@@ -62,8 +62,7 @@ erDiagram
     wp_fce_product_access_overrides {
         int id PK
         int user_id FK
-        enum entity_type
-        int entity_id FK
+        int product_id FK
         enum override_type
         enum source
         text comment
@@ -81,12 +80,12 @@ erDiagram
         int source_id
     }
 
-    wp_users ||--o{ wp_fce_product_user      : has_access_records
-    wp_users ||--o{ wp_fce_product_access_overrides          : has_overrides
-    wp_users ||--o{ wp_fce_access_log               : has_access_logs
+    wp_users ||--o{ wp_fce_product_user               : has_access_records
+    wp_users ||--o{ wp_fce_product_access_overrides   : has_overrides
+    wp_users ||--o{ wp_fce_access_log                 : has_access_logs
 
-    wp_fce_products ||--o{ wp_fce_product_user   : access_for_product
-    wp_fce_products ||--o{ wp_fce_product_space      : mappings_for_product
+    wp_fce_products ||--o{ wp_fce_product_user         : access_for_product
+    wp_fce_products ||--o{ wp_fce_product_space        : mappings_for_product
+    wp_fce_products ||--o{ wp_fce_product_access_overrides : overrides_for_product
 
-    wp_fcom_spaces ||--o{ wp_fce_product_space     : mappings_for_space
-    wp_fcom_spaces ||--o{ wp_fce_product_access_overrides      : has_space_overrides
+    wp_fcom_spaces ||--o{ wp_fce_product_space         : mappings_for_space

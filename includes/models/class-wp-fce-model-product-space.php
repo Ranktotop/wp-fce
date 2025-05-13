@@ -55,6 +55,17 @@ class WP_FCE_Model_Product_Space extends WP_FCE_Model_Base
     }
 
     /**
+     * Retrieve the product associated with this product-space mapping.
+     *
+     * @return WP_FCE_Model_Product The product entity.
+     */
+
+    public function get_product(): WP_FCE_Model_Product
+    {
+        return WP_FCE_Model_Product::load_by_id($this->product_id);
+    }
+
+    /**
      * Get the space ID.
      *
      * @return int
@@ -62,5 +73,16 @@ class WP_FCE_Model_Product_Space extends WP_FCE_Model_Base
     public function get_space_id(): int
     {
         return $this->space_id;
+    }
+
+    /**
+     * Retrieve the space entity associated with this product-space mapping.
+     *
+     * @return WP_FCE_Model_Fcom The space entity.
+     */
+
+    public function get_space(): WP_FCE_Model_Fcom
+    {
+        return WP_FCE_Model_Fcom::load_by_id($this->space_id);
     }
 }

@@ -43,6 +43,17 @@ class WP_FCE_Helper_Product_Space extends WP_FCE_Helper_Base
     }
 
     /**
+     * Find all space mappings for a given product.
+     *
+     * @param  int  $product_id
+     * @return WP_FCE_Model_Product_Space[]
+     */
+    public static function get_for_product(int $product_id): array
+    {
+        return static::find(['product_id' => $product_id]);
+    }
+
+    /**
      * Create a new product-space mapping and then assign retroactive access.
      *
      * @param  int    $product_id

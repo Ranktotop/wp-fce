@@ -58,7 +58,9 @@ abstract class WP_FCE_Model_Base
     {
         global $wpdb;
         if ('' === static::$table) {
-            throw new \LogicException('Child class must set protected static $table');
+            throw new \LogicException(
+                __('Child class must set protected static $table', 'wp-fce')
+            );
         }
         $this->table_name = $wpdb->prefix . static::$table;
         $this->id         = $id;
@@ -109,30 +111,28 @@ abstract class WP_FCE_Model_Base
      */
     protected function hydrateRow(array $row): void
     {
-        // 1) Grund-Hydration: nur Properties, die wirklich existieren
-        foreach ($row as $col => $val) {
-            if (property_exists($this, $col)) {
-                $this->$col = $val;
-            }
-        }
-
-        // 2) Automatisches Casting (z.B. DATETIME → DateTime-Objekt)
-        foreach (static::$casts as $col => $type) {
-            if (! isset($this->$col)) {
+        foreach (static::$db_fields as $col => $_) {
+            if (! array_key_exists($col, $row) || ! property_exists($this, $col)) {
                 continue;
             }
 
-            if ('datetime' === $type && ! empty($this->$col)) {
-                $this->$col = new \DateTime($this->$col);
+            $raw = $row[$col];
+            $cast = static::$casts[$col] ?? null;
+
+            // 1) Casten
+            if ($cast === 'datetime' && ! empty($raw)) {
+                $value = new \DateTime((string) $raw);
+            } elseif ($cast === 'json' && is_string($raw)) {
+                $value = json_decode($raw, true);
+            } elseif ($cast === 'bool') {
+                $value = (bool) $raw;
+            } else {
+                // kein Cast oder unbekannt: rohen Wert übernehmen
+                $value = $raw;
             }
 
-            if ($type === 'json' && is_string($this->$col)) {
-                $this->$col = json_decode($this->$col, true);
-            }
-
-            if ('bool' === $type) {
-                $this->$col = (bool) $this->$col;
-            }
+            // 2) In die Eigenschaft schreiben (typisiert korrekt)
+            $this->$col = $value;
         }
     }
 
@@ -168,7 +168,7 @@ abstract class WP_FCE_Model_Base
 
         if (! $row) {
             throw new \RuntimeException(
-                "Record with ID {$id} not found in {$instance->table_name}"
+                sprintf(__('Record with ID %d not found in %s', 'wp-fce'), $id, $instance->table_name)
             );
         }
 
@@ -201,7 +201,9 @@ abstract class WP_FCE_Model_Base
 
         $ok = $wpdb->insert($this->table_name, $data, $formats);
         if (false === $ok) {
-            throw new \Exception("DB insert error: {$wpdb->last_error}");
+            throw new \Exception(
+                sprintf(__('DB insert error: %s', 'wp-fce'), $wpdb->last_error)
+            );
         }
         $this->id = (int) $wpdb->insert_id;
     }
@@ -216,7 +218,9 @@ abstract class WP_FCE_Model_Base
     protected function update(): void
     {
         if (null === $this->id) {
-            throw new \LogicException('Cannot update without an ID');
+            throw new \LogicException(
+                __('Cannot update without an ID', 'wp-fce')
+            );
         }
 
         global $wpdb;
@@ -230,7 +234,9 @@ abstract class WP_FCE_Model_Base
             ['%d'] // Format für WHERE id = %d
         );
         if (false === $ok) {
-            throw new \Exception("DB update error: {$wpdb->last_error}");
+            throw new \Exception(
+                sprintf(__('DB update error: %s', 'wp-fce'), $wpdb->last_error)
+            );
         }
     }
 
@@ -304,7 +310,9 @@ abstract class WP_FCE_Model_Base
             ['%d']
         );
         if (false === $ok) {
-            throw new \Exception("DB delete error: {$wpdb->last_error}");
+            throw new \Exception(
+                sprintf(__("DB delete error: %s", 'wp-fce'), $wpdb->last_error)
+            );
         }
         $this->id = null;
     }

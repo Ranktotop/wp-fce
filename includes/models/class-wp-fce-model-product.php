@@ -101,6 +101,56 @@ class WP_FCE_Model_Product extends WP_FCE_Model_Base
         return $this->description;
     }
 
+    /**
+     * Get all FluentCommunity "space" entities mapped to this product.
+     *
+     * @return WP_FCE_Model_Product_Space[]
+     */
+    private function get_mappings(): array
+    {
+        return WP_FCE_Helper_Product_Space::get_for_product($this->get_id());
+    }
+
+    /**
+     * Get all FluentCommunity "space" entities mapped to this product.
+     *
+     * @return WP_FCE_Model_Fcom[]
+     */
+    public function get_mapped_communities(): array
+    {
+        // Extract all space IDs
+        $space_ids = array_unique(array_map(fn($m) => $m->get_space_id(), $this->get_mappings()));
+
+        if (empty($space_ids)) {
+            return [];
+        }
+
+        // 3) Fetch only those spaces of type 'community'
+        return WP_FCE_Helper_Fcom::find(
+            ['id'   => $space_ids, 'type' => 'community'],
+            ['title' => 'ASC']
+        );
+    }
+
+    /**
+     * Get all FluentCommunity "course" entities mapped to this product.
+     *
+     * @return WP_FCE_Model_Fcom[]
+     */
+    public function get_mapped_courses(): array
+    {
+        $course_ids = array_unique(array_map(fn($m) => $m->get_space_id(), $this->get_mappings()));
+
+        if (empty($course_ids)) {
+            return [];
+        }
+
+        return WP_FCE_Helper_Fcom::find(
+            ['id'   => $course_ids, 'type' => 'course'],
+            ['title' => 'ASC']
+        );
+    }
+
     public function set_name(string $name): static
     {
         if ('' === trim($name)) {

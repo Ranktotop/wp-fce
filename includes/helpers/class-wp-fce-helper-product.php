@@ -107,4 +107,69 @@ class WP_FCE_Helper_Product extends WP_FCE_Helper_Base
         }
         return (bool)$ok;
     }
+
+    /**
+     * Retrieve all products that are not assigned to any space.
+     *
+     * @return WP_FCE_Model_Product[] Array of unassigned products.
+     */
+    public static function get_unmapped_products(): array
+    {
+        global $wpdb;
+
+        $product_table = static::getTableName();           // e.g. wp_fce_products
+        $space_table   = WP_FCE_Helper_Product_Space::getTableName();
+
+        // Left join to find products with no matching entry in product_space
+        $sql = "
+        SELECT p.*
+        FROM {$product_table} AS p
+        LEFT JOIN {$space_table} AS ps
+          ON p.id = ps.product_id
+        WHERE ps.product_id IS NULL
+    ";
+
+        $rows = $wpdb->get_results($sql, ARRAY_A);
+        if (empty($rows)) {
+            return [];
+        }
+
+        // Map raw rows to hydrated Product models
+        return array_map(
+            fn(array $row) => static::$model_class::load_by_row($row),
+            $rows
+        );
+    }
+
+    /**
+     * Return all products which have at least one mapping in fce_product_space.
+     *
+     * @return WP_FCE_Model_Product[]
+     */
+    public static function get_mapped_products(): array
+    {
+        global $wpdb;
+
+        $product_table = static::getTableName();           // e.g. wp_fce_products
+        $space_table   = WP_FCE_Helper_Product_Space::getTableName();
+
+        // Inner join to find products with at least one mapping,
+        // and DISTINCT to avoid duplicates if multiple spaces per product.
+        $sql = "
+        SELECT DISTINCT p.*
+        FROM {$product_table} AS p
+        INNER JOIN {$space_table} AS ps
+          ON p.id = ps.product_id
+    ";
+
+        $rows = $wpdb->get_results($sql, ARRAY_A);
+        if (empty($rows)) {
+            return [];
+        }
+
+        return array_map(
+            fn(array $row) => static::$model_class::load_by_row($row),
+            $rows
+        );
+    }
 }

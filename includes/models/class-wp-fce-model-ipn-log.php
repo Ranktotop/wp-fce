@@ -79,6 +79,10 @@ class WP_FCE_Model_Ipn_Log extends WP_FCE_Model_Base
     /** @var string Hash of the IPN payload for integrity */
     public string $ipn_hash = '';
 
+    /**********************************/
+    /* GETTER                         */
+    /**********************************/
+
     /**
      * Get the payer's email.
      *
@@ -147,5 +151,50 @@ class WP_FCE_Model_Ipn_Log extends WP_FCE_Model_Base
     public function get_ipn_hash(): string
     {
         return $this->ipn_hash;
+    }
+
+    /**********************************/
+    /* SETTER                         */
+    /**********************************/
+
+    /**
+     * Set the IPN payload hash.
+     *
+     * @param  string  $hash
+     * @return void
+     */
+    public function set_ipn_hash(string $hash): void
+    {
+        $this->ipn_hash = $hash;
+    }
+
+    public function set_user_email(string $email): void
+    {
+        $this->user_email = $email;
+    }
+
+    public function set_transaction_id(string $transaction_id): void
+    {
+        $this->transaction_id = $transaction_id;
+    }
+
+    public function set_source(string $source): void
+    {
+        $this->source = $source;
+    }
+
+    public function set_ipn(array $ipn): void
+    {
+        $this->ipn = $ipn;
+    }
+
+    public function set_ipn_date(DateTime $date): void
+    {
+        $this->ipn_date = $date;
+    }
+
+    public function set_external_product_id(string $product_id): void
+    {
+        $this->external_product_id = $product_id;
     }
 }

@@ -4,47 +4,51 @@ if (! defined('ABSPATH') || ! is_user_logged_in() || ! current_user_can('manage_
     exit;
 }
 
-$helper_product = new WP_FCE_Helper_Product();
-$helper_fcom    = new WP_FCE_Helper_Fluent_Community_Entity();
+$unmapped_products = WP_FCE_Helper_Product::get_unmapped_products();
+$mapped_products   = WP_FCE_Helper_Product::get_mapped_products();
 
-$ungemappte_produkte = $helper_product->get_unmapped_products();
-$mapped = $helper_product->get_all_mapped_products_with_entities();
-$spaces              = $helper_fcom->get_all_spaces();
-$courses             = $helper_fcom->get_all_courses();
+$spaces = WP_FCE_Helper_Fcom::get_all_spaces();
+$courses = WP_FCE_Helper_Fcom::get_all_courses();
 ?>
 
 <div class="wrap">
-    <h1><?php esc_html_e('Produktzuweisungen', 'wp-fce'); ?></h1>
+    <h1><?php esc_html_e('Product Mappings', 'wp-fce'); ?></h1>
 
-    <h2><?php esc_html_e('Bestehende Zuweisungen', 'wp-fce'); ?></h2>
+    <h2><?php esc_html_e('Existing Mappings', 'wp-fce'); ?></h2>
 
     <table class="widefat striped">
         <thead>
             <tr>
-                <th><?php esc_html_e('Produkt', 'wp-fce'); ?></th>
-                <th><?php esc_html_e('Zugewiesene Gruppen/Kurse', 'wp-fce'); ?></th>
-                <th><?php esc_html_e('Aktion', 'wp-fce'); ?></th>
+                <th><?php esc_html_e('Product', 'wp-fce'); ?></th>
+                <th><?php esc_html_e('Assigned Spaces', 'wp-fce'); ?></th>
+                <th><?php esc_html_e('Assigned Courses', 'wp-fce'); ?></th>
+                <th><?php esc_html_e('Action', 'wp-fce'); ?></th>
             </tr>
         </thead>
         <tbody>
             <?php
-            if (empty($mapped)) :
+            if (empty($mapped_products)) :
             ?>
                 <tr>
-                    <td colspan="3"><?php esc_html_e('Keine Zuweisungen gefunden.', 'wp-fce'); ?></td>
+                    <td colspan="4"><?php esc_html_e('No Mappings found', 'wp-fce'); ?></td>
                 </tr>
                 <?php
             else :
-                foreach ($mapped as $entry):
-                    $product = $entry['product'];
-                    $mapped_spaces  = $entry['spaces'];
+                foreach ($mapped_products as $mapped_product):
                 ?>
                     <tr>
-                        <td><?php echo esc_html($product->get_title()); ?></td>
+                        <td><?php echo esc_html($mapped_product->get_name()); ?></td>
                         <td>
                             <ul style="margin: 0; padding-left: 1.2em;">
-                                <?php foreach ($mapped_spaces as $space): ?>
-                                    <li><?php echo esc_html($space->get_title()); ?> <small>(<?php echo esc_html($space->get_type()); ?>)</small></li>
+                                <?php foreach ($mapped_product->get_mapped_communities() as $community): ?>
+                                    <li><?php echo esc_html($community->get_title()); ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul style="margin: 0; padding-left: 1.2em;">
+                                <?php foreach ($mapped_product->get_mapped_courses() as $course): ?>
+                                    <li><?php echo esc_html($course->get_title()); ?></li>
                                 <?php endforeach; ?>
                             </ul>
                         </td>
@@ -52,15 +56,15 @@ $courses             = $helper_fcom->get_all_courses();
                             <button
                                 type="button"
                                 class="button wpfce_edit_mapping_btn"
-                                data-product-id="<?php echo esc_attr($product->get_id()); ?>"
-                                data-product-title="<?php echo esc_attr($product->get_title()); ?>">
-                                <?php esc_html_e('Bearbeiten', 'wp-fce'); ?>
+                                data-product-id="<?php echo esc_attr($mapped_product->get_id()); ?>"
+                                data-product-title="<?php echo esc_attr($mapped_product->get_name()); ?>">
+                                <?php esc_html_e('Edit', 'wp-fce'); ?>
                             </button>
                             <button
                                 type="button"
                                 class="button button-primary delete wpfce_delete_product_mapping_btn"
-                                data-product-id="<?php echo esc_attr($product->get_id()); ?>">
-                                ✕ <?php esc_html_e('Löschen', 'wp-fce'); ?>
+                                data-product-id="<?php echo esc_attr($mapped_product->get_id()); ?>">
+                                ✕ <?php esc_html_e('Delete', 'wp-fce'); ?>
                             </button>
                         </td>
                     </tr>
@@ -71,7 +75,7 @@ $courses             = $helper_fcom->get_all_courses();
 
     <hr style="margin: 40px 0;">
 
-    <h2><?php esc_html_e('Neues Mapping anlegen', 'wp-fce'); ?></h2>
+    <h2><?php esc_html_e('Add a new mapping', 'wp-fce'); ?></h2>
 
     <form method="post" action="">
         <?php wp_nonce_field('wp_fce_map_product', 'wp_fce_nonce'); ?>
@@ -79,13 +83,13 @@ $courses             = $helper_fcom->get_all_courses();
 
         <table class="form-table">
             <tr>
-                <th><label for="fce_product_id"><?php esc_html_e('Produkt wählen', 'wp-fce'); ?></label></th>
+                <th><label for="fce_product_id"><?php esc_html_e('Choose Product', 'wp-fce'); ?></label></th>
                 <td>
                     <select name="fce_product_id" id="fce_product_id" required>
-                        <option value=""><?php esc_html_e('-- Bitte wählen --', 'wp-fce'); ?></option>
-                        <?php foreach ($ungemappte_produkte as $product): ?>
+                        <option value="">-- <?php esc_html_e('Please select', 'wp-fce'); ?> --</option>
+                        <?php foreach ($unmapped_products as $product): ?>
                             <option value="<?php echo esc_attr($product->get_id()); ?>">
-                                <?php echo esc_html($product->get_title()); ?>
+                                <?php echo esc_html($product->get_name()); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -93,17 +97,7 @@ $courses             = $helper_fcom->get_all_courses();
             </tr>
         </table>
 
-        <h3><?php esc_html_e('Zuweisung zu Kursen', 'wp-fce'); ?></h3>
-        <div>
-            <?php foreach ($courses as $course): ?>
-                <label style="display: block; margin-bottom: 6px;">
-                    <input type="checkbox" name="fce_spaces[]" value="<?php echo esc_attr($course->get_id()); ?>">
-                    <?php echo esc_html($course->get_title()); ?>
-                </label>
-            <?php endforeach; ?>
-        </div>
-
-        <h3 style="margin-top: 20px;"><?php esc_html_e('Zuweisung zu Spaces', 'wp-fce'); ?></h3>
+        <h3><?php esc_html_e('Assigned Spaces', 'wp-fce'); ?></h3>
         <div>
             <?php foreach ($spaces as $space): ?>
                 <label style="display: block; margin-bottom: 6px;">
@@ -113,7 +107,17 @@ $courses             = $helper_fcom->get_all_courses();
             <?php endforeach; ?>
         </div>
 
-        <p><button type="submit" class="button button-primary"><?php esc_html_e('Zuweisung speichern', 'wp-fce'); ?></button></p>
+        <h3 style="margin-top: 20px;"><?php esc_html_e('Assigned Courses', 'wp-fce'); ?></h3>
+        <div>
+            <?php foreach ($courses as $course): ?>
+                <label style="display: block; margin-bottom: 6px;">
+                    <input type="checkbox" name="fce_spaces[]" value="<?php echo esc_attr($course->get_id()); ?>">
+                    <?php echo esc_html($course->get_title()); ?>
+                </label>
+            <?php endforeach; ?>
+        </div>
+
+        <p><button type="submit" class="button button-primary"><?php esc_html_e('Save Mapping', 'wp-fce'); ?></button></p>
     </form>
 </div>
 <div id="wpfce-modal-edit-mapping" class="wpfce-modal hidden" data-modal-id="edit-mapping">
@@ -124,7 +128,7 @@ $courses             = $helper_fcom->get_all_courses();
             <input type="hidden" name="wp_fce_form_action" value="update_product_mapping">
             <input type="hidden" name="product_id" id="wpfce-edit-product-id" value="">
             <?php wp_nonce_field('wp_fce_update_product_mapping', 'wp_fce_nonce'); ?>
-            <h4><?php esc_html_e('Zugewiesene Kurse', 'wp-fce'); ?></h4>
+            <h4><?php esc_html_e('Assigned Courses', 'wp-fce'); ?></h4>
             <div id="wpfce-checkboxes-courses">
                 <?php foreach ($courses as $entity): ?>
                     <label style="display: block; margin-bottom: 6px;">
@@ -137,7 +141,7 @@ $courses             = $helper_fcom->get_all_courses();
                 <?php endforeach; ?>
             </div>
 
-            <h4 style="margin-top: 20px;"><?php esc_html_e('Zugewiesene Spaces', 'wp-fce'); ?></h4>
+            <h4 style="margin-top: 20px;"><?php esc_html_e('Assigned Spaces', 'wp-fce'); ?></h4>
             <div id="wpfce-checkboxes-spaces">
                 <?php foreach ($spaces as $entity): ?>
                     <label style="display: block; margin-bottom: 6px;">
@@ -150,8 +154,8 @@ $courses             = $helper_fcom->get_all_courses();
                 <?php endforeach; ?>
             </div>
             <div class="wpfce-modal-actions" style="margin-top: 20px;">
-                <button type="submit" class="button button-primary"><?php esc_html_e('Speichern', 'wp-fce'); ?></button>
-                <button type="button" class="button wpfce-modal-close"><?php esc_html_e('Abbrechen', 'wp-fce'); ?></button>
+                <button type="submit" class="button button-primary"><?php esc_html_e('Save', 'wp-fce'); ?></button>
+                <button type="button" class="button wpfce-modal-close"><?php esc_html_e('Cancel', 'wp-fce'); ?></button>
             </div>
         </form>
     </div>

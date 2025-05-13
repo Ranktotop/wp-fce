@@ -58,8 +58,6 @@
 		$('#wpfce-modal-' + modalId).addClass('hidden').hide();
 	}
 
-
-
 	function wpfce_handle_click_delete_product_btn() {
 		$(".wpfce_delete_product_btn").click(function () {
 			const $btn = $(this);
@@ -119,12 +117,12 @@
 			const $row = $btn.closest('tr');
 
 			// Felder holen
-			const $titleField = $row.find('input[name^="fce_product_edit_title"]');
-			const $descField = $row.find('textarea[name^="fce_product_edit_description"]');
+			const $nameField = $row.find('input[name^="fce_product_edit_product_name"]');
+			const $descField = $row.find('textarea[name^="fce_product_edit_product_description"]');
 
 			if ($btn.text().trim() === wp_fce.label_edit) {
 				// Felder aktivieren
-				$titleField.prop('disabled', false);
+				$nameField.prop('disabled', false);
 				$descField.prop('disabled', false);
 				$btn.text(wp_fce.label_save);
 			} else {
@@ -132,7 +130,7 @@
 				const dataItem = $row.data('value');
 				const metaData = wpfce_queryToJSON(dataItem);
 
-				metaData.title = $titleField.val();
+				metaData.name = $nameField.val();
 				metaData.description = $descField.val();
 
 				const dataJSON = {
@@ -155,7 +153,7 @@
 						console.log(result);
 						if (result.state) {
 							wpfce_show_notice(wp_fce.notice_success, 'success');
-							$titleField.prop('disabled', true);
+							$nameField.prop('disabled', true);
 							$descField.prop('disabled', true);
 							$btn.text(wp_fce.label_edit);
 						} else {

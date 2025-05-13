@@ -4,13 +4,10 @@ if (!defined('ABSPATH') || !is_user_logged_in() || !current_user_can('manage_opt
     exit;
 }
 
-$user_helper = new WP_FCE_Helper_User();
-$product_helper = new WP_FCE_Helper_Product();
-$access_helper = new WP_FCE_Helper_Access_Override();
+$users = WP_FCE_Helper_User::get_all();
+$products = WP_FCE_Helper_Product::get_all();
+$rules = WP_FCE_Helper_Access_Override::get_all();
 
-$users = $user_helper->get_all();
-$products = $product_helper->get_all();
-$rules = $access_helper->get_all();
 //sort by login name
 usort($rules, function ($a, $b) {
     $userA = WP_FCE_Model_User::load_by_id($a->get_user_id());
@@ -21,27 +18,27 @@ usort($rules, function ($a, $b) {
 ?>
 
 <div class="wrap fce-admin-page">
-    <h1 class="wp-heading-inline"><?php esc_html_e('Produktverwaltung', 'wp-fce'); ?></h1>
+    <h1 class="wp-heading-inline"><?php esc_html_e('Access Management', 'wp-fce'); ?></h1>
 
     <div class="fce-admin-sections">
         <!-- Bestehende Produkte -->
         <div class="fce-section fce-section-list">
-            <h2><?php esc_html_e('Bestehende Regeln', 'wp-fce'); ?></h2>
+            <h2><?php esc_html_e('Existing Rules', 'wp-fce'); ?></h2>
             <p class="description">
-                <?php esc_html_e('Verwalte hier bestehende Regeln zum Produkt-Zugang.', 'wp-fce'); ?>
+                <?php esc_html_e('Manage access rules for existing users and products', 'wp-fce'); ?>
             </p>
 
             <div id="fce-rules-list">
                 <?php if (empty($rules)) : ?>
-                    <p><?php esc_html_e('Keine Regeln vorhanden.', 'wp-fce'); ?></p>
+                    <p><?php esc_html_e('No rules found', 'wp-fce'); ?></p>
                 <?php else : ?>
                     <table class="wp-list-table widefat fixed striped">
                         <thead>
                             <tr>
-                                <th><?php esc_html_e('Benutzer', 'wp-fce'); ?></th>
-                                <th><?php esc_html_e('Produkt', 'wp-fce'); ?></th>
-                                <th><?php esc_html_e('Zugriffsmodus', 'wp-fce'); ?></th>
-                                <th><?php esc_html_e('Gültig bis', 'wp-fce'); ?></th>
+                                <th><?php esc_html_e('User', 'wp-fce'); ?></th>
+                                <th><?php esc_html_e('Product', 'wp-fce'); ?></th>
+                                <th><?php esc_html_e('Access/Type', 'wp-fce'); ?></th>
+                                <th><?php esc_html_e('Valid until', 'wp-fce'); ?></th>
                             </tr>
                         </thead>
                         <tbody>

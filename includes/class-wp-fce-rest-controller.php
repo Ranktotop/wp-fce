@@ -42,8 +42,8 @@ class WP_FCE_REST_Controller
             'permission_callback' => [$this, 'permission_check_access'],
             'args'                => [
                 'user_id'     => ['required' => true,  'validate_callback' => 'is_numeric'],
-                'entity_type' => ['required' => true,  'validate_callback' => [$this, 'validate_entity_type']],
                 'entity_id'   => ['required' => true,  'validate_callback' => 'is_numeric'],
+                'entity_type' => ['required' => true,  'validate_callback' => [$this, 'validate_entity_type']],
             ],
         ]);
 
@@ -54,8 +54,8 @@ class WP_FCE_REST_Controller
             'permission_callback' => [$this, 'permission_check_access'],
             'args'                => [
                 'user_id'     => ['required' => true,  'validate_callback' => 'is_numeric'],
-                'entity_type' => ['required' => true,  'validate_callback' => [$this, 'validate_entity_type']],
                 'entity_id'   => ['required' => true,  'validate_callback' => 'is_numeric'],
+                'entity_type' => ['required' => true,  'validate_callback' => [$this, 'validate_entity_type']],
             ],
         ]);
 
@@ -77,6 +77,32 @@ class WP_FCE_REST_Controller
             'permission_callback' => [$this, 'permission_check_manage'],
             'args'                => [
                 'product_id' => ['validate_callback' => 'is_numeric'],
+            ],
+        ]);
+
+        // 6) Admin-Override setzen
+        register_rest_route($ns, '/override', [
+            'methods'             => WP_REST_Server::CREATABLE,
+            'callback'            => [$this, 'create_override_endpoint'],
+            'permission_callback' => [$this, 'permission_check_manage'],
+            'args'                => [
+                'user_id'      => ['required' => true, 'validate_callback' => 'is_numeric'],
+                'product_id'   => ['required' => true, 'validate_callback' => 'is_numeric'],
+                'override_type' => ['required' => true, 'validate_callback' => function ($v) {
+                    return in_array($v, ['allow', 'deny'], true);
+                }],
+                'comment'      => ['required' => false],
+            ],
+        ]);
+
+        // 7) Admin-Override löschen
+        register_rest_route($ns, '/override', [
+            'methods'             => WP_REST_Server::DELETABLE,
+            'callback'            => [$this, 'delete_override_endpoint'],
+            'permission_callback' => [$this, 'permission_check_manage'],
+            'args'                => [
+                'user_id'    => ['required' => true, 'validate_callback' => 'is_numeric'],
+                'product_id' => ['required' => true, 'validate_callback' => 'is_numeric'],
             ],
         ]);
     }
@@ -157,6 +183,8 @@ class WP_FCE_REST_Controller
 
     /**
      * GET /access/status
+     *
+     * Gibt zurück, ob der Nutzer Zugriff auf den Space/Kurs hat.
      */
     public function get_access_status(WP_REST_Request $request)
     {
@@ -164,12 +192,21 @@ class WP_FCE_REST_Controller
         $entity_type = $request->get_param('entity_type');
         $entity_id   = (int) $request->get_param('entity_id');
 
-        $has = WP_FCE_Access_Evaluator::user_has_access($user_id, $entity_type, $entity_id);
-        return rest_ensure_response(['has_access' => $has]);
+        try {
+            $has = WP_FCE_Access_Evaluator::user_has_access($user_id, $entity_type, $entity_id);
+            return rest_ensure_response(['has_access' => $has]);
+        } catch (\Exception $e) {
+            return new WP_REST_Response(
+                ['error' => $e->getMessage()],
+                500
+            );
+        }
     }
 
     /**
      * GET /access/sources
+     *
+     * Liefert Details darüber, warum der Zugriff gewährt/verweigert wurde.
      */
     public function get_access_sources_endpoint(WP_REST_Request $request)
     {
@@ -177,8 +214,15 @@ class WP_FCE_REST_Controller
         $entity_type = $request->get_param('entity_type');
         $entity_id   = (int) $request->get_param('entity_id');
 
-        $sources = WP_FCE_Access_Evaluator::get_access_sources($user_id, $entity_type, $entity_id);
-        return rest_ensure_response($sources);
+        try {
+            $sources = WP_FCE_Access_Evaluator::get_access_sources($user_id, $entity_type, $entity_id);
+            return rest_ensure_response($sources);
+        } catch (\Exception $e) {
+            return new WP_REST_Response(
+                ['error' => $e->getMessage()],
+                500
+            );
+        }
     }
 
     /**

@@ -70,13 +70,13 @@ class WP_FCE_Helper_Ipn_Log extends WP_FCE_Helper_Base
         // 2) insert new IPN log
         /** @var WP_FCE_Model_Ipn_Log $ipnLog */
         $ipnLog = new static::$model_class();
-        $ipnLog->user_email           = $user_email;
-        $ipnLog->transaction_id       = $transaction_id;
-        $ipnLog->ipn_date             = $ipn_date;
-        $ipnLog->external_product_id  = $external_product_id;
-        $ipnLog->source               = $source;
-        $ipnLog->ipn                  = $ipn_payload;
-        $ipnLog->ipn_hash             = $hash;
+        $ipnLog->set_user_email($user_email);
+        $ipnLog->set_transaction_id($transaction_id);
+        $ipnLog->set_ipn_date($ipn_date);
+        $ipnLog->set_external_product_id($external_product_id);
+        $ipnLog->set_source($source);
+        $ipnLog->set_ipn($ipn_payload);
+        $ipnLog->set_ipn_hash($hash);
         $ipnLog->save();
 
         // 3) ensure WP user exists

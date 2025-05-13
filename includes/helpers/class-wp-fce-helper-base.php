@@ -59,7 +59,9 @@ abstract class WP_FCE_Helper_Base
 
         foreach ($criteria as $col => $val) {
             if (! isset($formatsMap[$col])) {
-                throw new \InvalidArgumentException("Unknown column '{$col}'");
+                throw new \InvalidArgumentException(
+                    sprintf(__("Unknown column %s", 'wp-fce'), $col)
+                );
             }
             $fmt = $formatsMap[$col];
 

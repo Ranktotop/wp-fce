@@ -125,20 +125,22 @@ class WP_FCE_Activator
 	private static function create_db_product_access_overrides(): void
 	{
 		global $wpdb;
+
 		$t = $wpdb->prefix . 'fce_product_access_overrides';
 		$c = $wpdb->get_charset_collate();
+
 		$sql = "CREATE TABLE `{$t}` (
-            `id`            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-            `user_id`       BIGINT UNSIGNED NOT NULL,
-            `entity_type`   ENUM('space','course') NOT NULL,
-            `entity_id`     BIGINT UNSIGNED NOT NULL,
-            `override_type` ENUM('allow','deny') NOT NULL,
-            `source`        ENUM('admin','import') NOT NULL DEFAULT 'admin',
-            `comment`       TEXT              NULL,
-            `created_at`    DATETIME          NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY (`id`),
-            KEY `idx_user_entity` (`user_id`,`entity_type`,`entity_id`)
-        ) ENGINE=InnoDB {$c};";
+		`id`            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+		`user_id`       BIGINT UNSIGNED NOT NULL,
+		`product_id`    BIGINT UNSIGNED NOT NULL,
+		`override_type` ENUM('allow','deny') NOT NULL,
+		`source`        ENUM('admin','import') NOT NULL DEFAULT 'admin',
+		`comment`       TEXT NULL,
+		`created_at`    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		PRIMARY KEY (`id`),
+		KEY `idx_user_product` (`user_id`, `product_id`)
+	) ENGINE=InnoDB {$c};";
+
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta($sql);
 	}
@@ -172,40 +174,40 @@ class WP_FCE_Activator
 	{
 		global $wpdb;
 		$p = $wpdb->prefix;
+
 		$fks = [
 			// product_user → users / products
 			"ALTER TABLE `{$p}fce_product_user`
-             ADD CONSTRAINT `fk_fcup_user`
-             FOREIGN KEY (`user_id`)    REFERENCES `{$p}users`(`ID`) ON DELETE CASCADE",
+         ADD CONSTRAINT `fk_fcup_user`
+         FOREIGN KEY (`user_id`)    REFERENCES `{$p}users`(`ID`) ON DELETE CASCADE",
 			"ALTER TABLE `{$p}fce_product_user`
-             ADD CONSTRAINT `fk_fcup_product`
-             FOREIGN KEY (`product_id`) REFERENCES `{$p}fce_products`(`id`) ON DELETE CASCADE",
+         ADD CONSTRAINT `fk_fcup_product`
+         FOREIGN KEY (`product_id`) REFERENCES `{$p}fce_products`(`id`) ON DELETE CASCADE",
 
 			// product_space → products / spaces
 			"ALTER TABLE `{$p}fce_product_space`
-             ADD CONSTRAINT `fk_fcps_product`
-             FOREIGN KEY (`product_id`) REFERENCES `{$p}fce_products`(`id`) ON DELETE CASCADE",
+         ADD CONSTRAINT `fk_fcps_product`
+         FOREIGN KEY (`product_id`) REFERENCES `{$p}fce_products`(`id`) ON DELETE CASCADE",
 			"ALTER TABLE `{$p}fce_product_space`
-             ADD CONSTRAINT `fk_fcps_space`
-             FOREIGN KEY (`space_id`)   REFERENCES `{$p}fcom_spaces`(`id`)  ON DELETE CASCADE",
+         ADD CONSTRAINT `fk_fcps_space`
+         FOREIGN KEY (`space_id`)   REFERENCES `{$p}fcom_spaces`(`id`)  ON DELETE CASCADE",
 
-			// access_overrides → users / spaces
+			// access_overrides → users / products (NEU)
 			"ALTER TABLE `{$p}fce_product_access_overrides`
-             ADD CONSTRAINT `fk_fcao_user`
-             FOREIGN KEY (`user_id`)    REFERENCES `{$p}users`(`ID`)       ON DELETE CASCADE",
+         ADD CONSTRAINT `fk_fcao_user`
+         FOREIGN KEY (`user_id`)    REFERENCES `{$p}users`(`ID`) ON DELETE CASCADE",
 			"ALTER TABLE `{$p}fce_product_access_overrides`
-             ADD CONSTRAINT `fk_fcao_entity`
-             FOREIGN KEY (`entity_id`)  REFERENCES `{$p}fcom_spaces`(`id`)  ON DELETE CASCADE",
+         ADD CONSTRAINT `fk_fcao_product`
+         FOREIGN KEY (`product_id`) REFERENCES `{$p}fce_products`(`id`) ON DELETE CASCADE",
 
 			// access_log → users
 			"ALTER TABLE `{$p}fce_access_log`
-             ADD CONSTRAINT `fk_fcal_user`
-             FOREIGN KEY (`user_id`)    REFERENCES `{$p}users`(`ID`)       ON DELETE CASCADE",
+         ADD CONSTRAINT `fk_fcal_user`
+         FOREIGN KEY (`user_id`)    REFERENCES `{$p}users`(`ID`) ON DELETE CASCADE",
 		];
 
 		foreach ($fks as $sql) {
-			// Falls Constraint schon existiert, schlägt query() still fehl und wird ignoriert.
-			$wpdb->query($sql);
+			$wpdb->query($sql); // Fehler ignorieren, falls Constraint bereits existiert
 		}
 	}
 }

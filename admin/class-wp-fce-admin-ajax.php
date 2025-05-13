@@ -43,13 +43,13 @@ class Wp_Fce_Admin_Ajax_Handler
     private function delete_product(array $data, array $meta): array
     {
         if (!isset($data['product_id']) || !is_numeric($data['product_id'])) {
-            return ['state' => false, 'message' => __('Ungültige Produkt-ID', 'wp-fce')];
+            return ['state' => false, 'message' => __('Invalid product ID', 'wp-fce')];
         }
 
         try {
             $helper = new WP_FCE_Helper_Product();
-            $helper->delete_product_by_id((int) $data['product_id']);
-            return ['state' => true, 'message' => __('Produkt erfolgreich gelöscht', 'wp-fce')];
+            $helper->delete((int) $data['product_id']);
+            return ['state' => true, 'message' => __('Product successfully deleted', 'wp-fce')];
         } catch (\Exception $e) {
             return ['state' => false, 'message' => $e->getMessage()];
         }
@@ -67,16 +67,16 @@ class Wp_Fce_Admin_Ajax_Handler
     private function update_product(array $data, array $meta): array
     {
         if (!isset($data['product_id']) || !is_numeric($data['product_id'])) {
-            return ['state' => false, 'message' => __('Ungültige Produkt-ID', 'wp-fce')];
+            return ['state' => false, 'message' => __('Invalid product ID', 'wp-fce')];
         }
 
-        $title = sanitize_text_field($data['title'] ?? '');
-        $description = sanitize_textarea_field($data['description'] ?? '');
+        $name = sanitize_text_field($data['name'] ?? '');
+        $desc = sanitize_textarea_field($data['description'] ?? '');
 
         try {
             $helper = new WP_FCE_Helper_Product();
-            $helper->update_product_by_id((int) $data['product_id'], $title, $description);
-            return ['state' => true, 'message' => __('Produkt erfolgreich aktualisiert', 'wp-fce')];
+            $helper->update((int) $data['product_id'], $name, $desc);
+            return ['state' => true, 'message' => __('Product successfully updated', 'wp-fce')];
         } catch (\Exception $e) {
             return ['state' => false, 'message' => $e->getMessage()];
         }
@@ -94,17 +94,19 @@ class Wp_Fce_Admin_Ajax_Handler
     private function get_product_mapping(array $data, array $meta): array
     {
         if (empty($data['product_id']) || !is_numeric($data['product_id'])) {
-            return ['state' => false, 'message' => __('Ungültige Produkt-ID', 'wp-fce')];
+            return ['state' => false, 'message' => __('Invalid product ID', 'wp-fce')];
         }
 
         try {
-            $helper  = new WP_FCE_Helper_Product();
-            $product = $helper->get_by_id((int) $data['product_id']);
+            $product_id = (int) $data['product_id'];
+            $product = WP_FCE_Helper_Product::get_by_id($product_id);
 
-            $spaces = $product->get_spaces();
+            $communities = $product->get_mapped_communities();
+            $courses = $product->get_mapped_courses();
+            $spaces = array_merge($communities, $courses);
 
             // Rückgabe als einfache Datenstruktur (nicht Objekte)
-            $mapping = array_map(function (WP_FCE_Model_Fluent_Community_Entity $space) {
+            $mapping = array_map(function (WP_FCE_Model_Fcom $space) {
                 return [
                     'id'    => $space->get_id(),
                     'title' => $space->get_title(),
@@ -112,7 +114,7 @@ class Wp_Fce_Admin_Ajax_Handler
                 ];
             }, $spaces);
 
-            return ['state' => true, 'mapping' => $mapping, 'message' => __('Mapping erfolgreich geladen', 'wp-fce')];
+            return ['state' => true, 'mapping' => $mapping, 'message' => __('Sucessfully retrieved product mapping', 'wp-fce')];
         } catch (\Exception $e) {
             return ['state' => false, 'message' => $e->getMessage()];
         }
@@ -131,7 +133,7 @@ class Wp_Fce_Admin_Ajax_Handler
         if (empty($data['product_id']) || ! is_numeric($data['product_id'])) {
             return [
                 'state'   => false,
-                'message' => __('Ungültige Produkt-ID', 'wp-fce'),
+                'message' => __('Invalid product ID', 'wp-fce'),
             ];
         }
 
@@ -144,7 +146,7 @@ class Wp_Fce_Admin_Ajax_Handler
             // 3) Erfolgs-Antwort
             return [
                 'state'   => true,
-                'message' => __('Alle Zuweisungen gelöscht.', 'wp-fce'),
+                'message' => sprintf(__('All mappings successfully deleted for product #%d', 'wp-fce'), $product_id)
             ];
         } catch (\Exception $e) {
             // 4) Fehler-Antwort
@@ -152,7 +154,8 @@ class Wp_Fce_Admin_Ajax_Handler
                 'state'   => false,
                 'message' => sprintf(
                     /* translators: %s = Fehlermeldung */
-                    __('Fehler beim Löschen: %s', 'wp-fce'),
+                    __('Error deleting mappings for product #%d: %s', 'wp-fce'),
+                    $product_id,
                     $e->getMessage()
                 ),
             ];

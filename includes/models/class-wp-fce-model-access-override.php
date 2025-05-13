@@ -27,8 +27,7 @@ class WP_FCE_Model_Access_Override extends WP_FCE_Model_Base
     protected static array $db_fields = [
         'id'            => '%d',
         'user_id'       => '%d',
-        'entity_type'   => '%s',
-        'entity_id'     => '%d',
+        'product_id'     => '%d',
         'override_type' => '%s',
         'source'        => '%s',
         'comment'       => '%s',
@@ -57,11 +56,8 @@ class WP_FCE_Model_Access_Override extends WP_FCE_Model_Base
     /** @var int WP user ID */
     public int $user_id = 0;
 
-    /** @var string The type of entity (e.g. 'space', 'course', 'bundle') */
-    public string $entity_type = '';
-
     /** @var int The ID of the entity within its table */
-    public int $entity_id = 0;
+    public int $product_id = 0;
 
     /** @var string The type of override (e.g. 'grant', 'revoke') */
     public string $override_type = '';
@@ -86,23 +82,13 @@ class WP_FCE_Model_Access_Override extends WP_FCE_Model_Base
     }
 
     /**
-     * Get the entity type.
+     * Get the product ID.
      *
      * @return string
      */
-    public function get_entity_type(): string
+    public function get_product_id(): int
     {
-        return $this->entity_type;
-    }
-
-    /**
-     * Get the entity ID.
-     *
-     * @return int
-     */
-    public function get_entity_id(): int
-    {
-        return $this->entity_id;
+        return $this->product_id;
     }
 
     /**
