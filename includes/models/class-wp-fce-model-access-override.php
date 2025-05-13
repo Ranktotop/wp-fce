@@ -1,98 +1,159 @@
 <?php
+// File: includes/models/class-wp-fce-model-access-override.php
 
+use DateTime;
+use RuntimeException;
+
+/**
+ * Model for entries in wp_fce_product_access_overrides.
+ *
+ * Represents manual access overrides (e.g. granting/revoking access)
+ * for a user on a specific entity.
+ */
 class WP_FCE_Model_Access_Override extends WP_FCE_Model_Base
 {
-    private int $user_id;
-    private string $fce_product_id;
-    private string $mode;
-    private int $valid_until;
-
-    public function __construct(int $id, int $user_id, string $fce_product_id, string $mode, int $valid_until)
-    {
-        $this->id = $id;
-        $this->user_id = $user_id;
-        $this->fce_product_id = $fce_product_id;
-        $this->mode = $mode;
-        $this->valid_until = $valid_until;
-    }
+    /**
+     * Base table name (without WP prefix).
+     *
+     * @var string
+     */
+    protected static string $table = 'fce_product_access_overrides';
 
     /**
-     * Loads an access override by its ID.
+     * Columns and their WPDB format strings.
      *
-     * @param int $id The ID of the access override to load.
-     *
-     * @return WP_FCE_Model_Access_Override The loaded access override.
-     *
-     * @throws \Exception If the access override was not found.
+     * @var array<string,string>
      */
-    public static function load_by_id(int $id): WP_FCE_Model_Access_Override
-    {
-        global $wpdb;
-        $table = $wpdb->prefix . 'fce_product_access_overrides';
+    protected static array $db_fields = [
+        'id'            => '%d',
+        'user_id'       => '%d',
+        'entity_type'   => '%s',
+        'entity_id'     => '%d',
+        'override_type' => '%s',
+        'source'        => '%s',
+        'comment'       => '%s',
+        'created_at'    => '%s',
+    ];
 
-        $row = $wpdb->get_row(
-            $wpdb->prepare("SELECT * FROM {$table} WHERE id = %d", $id),
-            ARRAY_A
-        );
+    /**
+     * Columns that should never be mass-updated.
+     *
+     * @var string[]
+     */
+    protected static array $guarded = ['id', 'created_at'];
 
-        if (!$row) {
-            throw new \Exception(__('Override nicht gefunden.', 'wp-fce'));
-        }
+    /**
+     * Columns that should be automatically cast.
+     *
+     * @var array<string,string>
+     */
+    protected static array $casts = [
+        'created_at' => 'datetime',
+    ];
 
-        return new WP_FCE_Model_Access_Override(
-            (int) $row['id'],
-            $row['user_id'],
-            $row['fce_product_id'],
-            $row['mode'],
-            (int) strtotime($row['valid_until'])
-        );
-    }
+    /** @var int|null Primary key */
+    public ?int $id = null;
 
-    //******************************** */
-    //*********** CHECKER ************ */
-    //******************************** */
+    /** @var int WP user ID */
+    public int $user_id = 0;
 
-    public function is_active(): bool
-    {
-        return time() < $this->valid_until;
-    }
+    /** @var string The type of entity (e.g. 'space', 'course', 'bundle') */
+    public string $entity_type = '';
 
-    public function is_deny(): bool
-    {
-        return $this->get_mode() === 'deny';
-    }
+    /** @var int The ID of the entity within its table */
+    public int $entity_id = 0;
 
-    //******************************** */
-    //************ GETTER ************ */
-    //******************************** */
+    /** @var string The type of override (e.g. 'grant', 'revoke') */
+    public string $override_type = '';
 
+    /** @var string Source of the override (e.g. 'admin', 'system') */
+    public string $source = '';
+
+    /** @var string|null Optional comment or note */
+    public ?string $comment = null;
+
+    /** @var DateTime When this override was created */
+    public DateTime $created_at;
+
+    /**
+     * Get the WP user ID.
+     *
+     * @return int
+     */
     public function get_user_id(): int
     {
         return $this->user_id;
     }
 
-    public function get_product_id(): string
+    /**
+     * Get the entity type.
+     *
+     * @return string
+     */
+    public function get_entity_type(): string
     {
-        return $this->fce_product_id;
+        return $this->entity_type;
     }
 
-    public function get_valid_until(): int
+    /**
+     * Get the entity ID.
+     *
+     * @return int
+     */
+    public function get_entity_id(): int
     {
-        return $this->valid_until;
+        return $this->entity_id;
     }
 
-    public function get_mode(): string
+    /**
+     * Get the override type.
+     *
+     * @return string
+     */
+    public function get_override_type(): string
     {
-        return $this->mode;
+        return $this->override_type;
     }
 
-    public function get_user(): WP_FCE_Model_User
+    /**
+     * Get the source of the override.
+     *
+     * @return string
+     */
+    public function get_source(): string
     {
-        return $this->user_helper()->get_by_id($this->get_user_id());
+        return $this->source;
     }
 
-    public function get_product(): WP_FCE_Model_Product
+    /**
+     * Get the optional comment.
+     *
+     * @return string|null
+     */
+    public function get_comment(): ?string
     {
-        return $this->product_helper()->get_by_id($this->get_product_id());
+        return $this->comment;
+    }
+
+    /**
+     * Get the creation timestamp.
+     *
+     * @return DateTime
+     */
+    public function get_created_at(): DateTime
+    {
+        return $this->created_at;
+    }
+
+    /**
+     * Optionally set a new comment.
+     *
+     * @param  string|null $comment
+     * @return static
+     */
+    public function set_comment(?string $comment): static
+    {
+        $this->comment = $comment;
+        return $this;
     }
 }

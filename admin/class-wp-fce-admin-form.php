@@ -98,80 +98,116 @@ class Wp_Fce_Admin_Form_Handler
      * @since 1.0.0
      */
 
+    /**
+     * Handle the product→space mapping form submission.
+     *
+     * @return void
+     */
     private function handle_create_product_mapping(): void
     {
+        // 1) Nonce prüfen
         if (
             ! isset($_POST['wp_fce_nonce']) ||
-            ! wp_verify_nonce($_POST['wp_fce_nonce'], 'wp_fce_map_product')
+            ! wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['wp_fce_nonce'])), 'wp_fce_map_product')
         ) {
             return;
         }
 
-        $product_id = sanitize_text_field($_POST['fce_product_id'] ?? '');
-        $space_ids  = array_map('intval', $_POST['fce_spaces'] ?? []);
-        $course_ids = array_map('intval', $_POST['fce_courses'] ?? []);
+        // 2) Eingaben säubern
+        $product_id = isset($_POST['fce_product_id']) ? intval($_POST['fce_product_id']) : 0;
+        $space_ids  = isset($_POST['fce_spaces']) ? array_map('intval', (array) $_POST['fce_spaces']) : [];
 
-        if ($product_id === '') {
+        // 3) Pflicht prüfen
+        if ($product_id <= 0) {
             add_action('admin_notices', function () {
-                echo '<div class="notice notice-error"><p>' . esc_html__('Bitte wähle ein Produkt.', 'wp-fce') . '</p></div>';
+                echo '<div class="notice notice-error"><p>'
+                    . esc_html__('Bitte wähle ein Produkt.', 'wp-fce')
+                    . '</p></div>';
             });
             return;
         }
 
         try {
-            $product = WP_FCE_Model_Product::load_by_id($product_id);
-            $merged_ids = array_merge($space_ids, $course_ids);
-            $product->set_spaces($merged_ids);
+            // 4) Alte Mappings löschen
+            WP_FCE_Helper_Product_Space::remove_mappings_for_product($product_id);
 
-            wp_safe_redirect(add_query_arg('fce_success', urlencode(__('Produktzuweisung gespeichert.', 'wp-fce')), $_SERVER['REQUEST_URI']));
+            // 5) Neue Mappings anlegen und retroaktiv Zugänge vergeben
+            foreach ($space_ids as $space_id) {
+                WP_FCE_Helper_Product_Space::create_mapping_and_assign($product_id, $space_id);
+            }
+
+            // 6) Erfolg – Redirect mit Hinweis
+            $redirect_url = add_query_arg(
+                'fce_success',
+                urlencode(__('Produktzuweisung gespeichert.', 'wp-fce')),
+                $_SERVER['REQUEST_URI']
+            );
+            wp_safe_redirect($redirect_url);
             exit;
         } catch (\Exception $e) {
+            // 7) Fehler anzeigen
             add_action('admin_notices', function () use ($e) {
-                echo '<div class="notice notice-error"><p>' . esc_html($e->getMessage()) . '</p></div>';
+                echo '<div class="notice notice-error"><p>'
+                    . esc_html($e->getMessage())
+                    . '</p></div>';
             });
         }
     }
 
     /**
-     * Handles the update of a product mapping.
+     * Handle the product→space mapping update form submission.
      *
-     * This function is called when the form submission contains the
-     * 'wp_fce_form_action' parameter with the value 'update_product_mapping'.
-     * It verifies the nonce and checks if a product has been selected.
-     * If so, it merges space and course IDs and assigns them to the product.
-     * Successful operations redirect the user with a success message, 
-     * while errors are displayed as admin notices.
-     *
-     * @since 1.0.0
+     * @return void
      */
     private function handle_update_product_mapping(): void
     {
+        // 1) Nonce prüfen
         if (
-            !isset($_POST['wp_fce_nonce']) ||
-            !wp_verify_nonce($_POST['wp_fce_nonce'], 'wp_fce_update_product_mapping')
+            ! isset($_POST['wp_fce_nonce']) ||
+            ! wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['wp_fce_nonce'])), 'wp_fce_update_product_mapping')
         ) {
             return;
         }
 
-        $product_id = isset($_POST['product_id']) ? (int) $_POST['product_id'] : 0;
-        $new_space_ids = isset($_POST['fce_edit_entities']) ? array_map('intval', $_POST['fce_edit_entities']) : [];
+        // 2) Eingaben säubern
+        $product_id     = isset($_POST['product_id']) ? intval($_POST['product_id']) : 0;
+        $new_space_ids  = isset($_POST['fce_edit_entities'])
+            ? array_map('intval', (array) $_POST['fce_edit_entities'])
+            : [];
 
-        if (!$product_id) {
+        // 3) Pflicht prüfen
+        if ($product_id <= 0) {
             add_action('admin_notices', function () {
-                echo '<div class="notice notice-error"><p>' . esc_html__('Ungültige Produkt-ID.', 'wp-fce') . '</p></div>';
+                echo '<div class="notice notice-error"><p>'
+                    . esc_html__('Ungültige Produkt-ID.', 'wp-fce')
+                    . '</p></div>';
             });
             return;
         }
 
         try {
-            $product = WP_FCE_Model_Product::load_by_id($product_id);
-            $product->set_spaces($new_space_ids);
+            // 4) Alle alten Mappings entfernen
+            WP_FCE_Helper_Product_Space::remove_mappings_for_product($product_id);
 
-            wp_safe_redirect(add_query_arg('fce_success', urlencode(__('Zuweisung gespeichert.', 'wp-fce')), $_SERVER['REQUEST_URI']));
+            // 5) Neue Mappings anlegen und retroaktiv Zugänge vergeben
+            foreach ($new_space_ids as $space_id) {
+                WP_FCE_Helper_Product_Space::create_mapping_and_assign($product_id, $space_id);
+            }
+
+            // 6) Erfolg – Redirect mit Hinweis
+            $redirect_url = add_query_arg(
+                'fce_success',
+                urlencode(__('Zuweisung gespeichert.', 'wp-fce')),
+                $_SERVER['REQUEST_URI']
+            );
+            wp_safe_redirect($redirect_url);
             exit;
         } catch (\Exception $e) {
+            // 7) Fehler anzeigen
             add_action('admin_notices', function () use ($e) {
-                echo '<div class="notice notice-error"><p>' . esc_html($e->getMessage()) . '</p></div>';
+                echo '<div class="notice notice-error"><p>'
+                    . esc_html($e->getMessage())
+                    . '</p></div>';
             });
         }
     }

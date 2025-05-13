@@ -1,206 +1,118 @@
 <?php
+// File: includes/helpers/class-wp-fce-helper-access-override.php
 
+use RuntimeException;
+
+/**
+ * @extends WP_FCE_Helper_Base<WP_FCE_Model_Access_Override>
+ */
 class WP_FCE_Helper_Access_Override extends WP_FCE_Helper_Base
 {
-
-    //******************************** */
-    //*********** CHECKER ************ */
-    //******************************** */
-
     /**
-     * Gibt zurück, ob Zugriff für diesen User und Produkt explizit erlaubt wurde.
-     */
-    public function has_grant(int $user_id, string $product_id): bool
-    {
-        $override = $this->get_active_override($user_id, $product_id);
-        return $override !== null;
-    }
-
-    //******************************** */
-    //************ GETTER ************ */
-    //******************************** */
-
-    /**
-     * Lade einen Override anhand seiner ID.
+     * Table name without WP prefix.
      *
-     * @param int $id
-     * @return WP_FCE_Model_Access_Override
-     * @throws \Exception
+     * @var string
      */
-    public function get_by_id(int $id): WP_FCE_Model_Access_Override
-    {
-        return WP_FCE_Model_Access_Override::load_by_id($id);
-    }
+    protected static string $table       = 'fce_product_access_overrides';
 
     /**
-     * Lade mehrere Overrides anhand einer Liste von IDs.
+     * Model class this helper works with.
      *
-     * @param int[] $ids
-     * @return WP_FCE_Model_Access_Override[]
+     * @var class-string<WP_FCE_Model_Access_Override>
      */
-    public function get_by_ids(array $ids): array
-    {
-        global $wpdb;
-        $table = $wpdb->prefix . 'fce_product_access_overrides';
-
-        if (empty($ids)) {
-            return [];
-        }
-
-        $placeholders = implode(',', array_fill(0, count($ids), '%d'));
-        $query = "SELECT * FROM {$table} WHERE id IN ($placeholders)";
-        $prepared = $wpdb->prepare($query, $ids);
-        $rows = $wpdb->get_results($prepared, ARRAY_A);
-
-        if (empty($rows) || !is_array($rows)) {
-            return [];
-        }
-
-        return array_map(function ($row) {
-            return new WP_FCE_Model_Access_Override(
-                (int) $row['id'],
-                (int) $row['user_id'],
-                (string) $row['fce_product_id'],
-                (string) $row['mode'],
-                (int) strtotime($row['valid_until'])
-            );
-        }, $rows);
-    }
+    protected static string $model_class = WP_FCE_Model_Access_Override::class;
 
     /**
-     * Liefert alle Access Overrides.
+     * Fetch the most recent override_type and comment for a given user/entity.
      *
-     * @return WP_FCE_Model_Access_Override[]
+     * @param  int    $user_id
+     * @param  string $entity_type
+     * @param  int    $entity_id
+     * @return array{override_type:string,comment:string|null}|null
      */
-    public function get_all(): array
-    {
-        global $wpdb;
-        $table = $wpdb->prefix . 'fce_product_access_overrides';
-
-        $rows = $wpdb->get_results("SELECT * FROM {$table}", ARRAY_A);
-
-        return array_map(function ($row) {
-            return new WP_FCE_Model_Access_Override(
-                (int) $row['id'],
-                (int) $row['user_id'],
-                (string) $row['fce_product_id'],
-                (string) $row['mode'],
-                (int) strtotime($row['valid_until'])
-            );
-        }, $rows);
-    }
-
-    /**
-     * Liefert den aktiven Override für einen Nutzer + Produkt (falls vorhanden).
-     *
-     * @param int $user_id
-     * @param string $product_id
-     * @return WP_FCE_Model_Access_Override|null
-     */
-    public function get_active_override(int $user_id, string $product_id): ?WP_FCE_Model_Access_Override
-    {
-        global $wpdb;
-        $table = $wpdb->prefix . 'fce_product_access_overrides';
-
-        $row = $wpdb->get_row(
-            $wpdb->prepare(
-                "SELECT * FROM {$table} 
-                 WHERE user_id = %d 
-                 AND fce_product_id = %s 
-                 AND valid_until > %s
-                 LIMIT 1",
-                $user_id,
-                $product_id,
-                current_time('mysql')
-            ),
-            ARRAY_A
+    public static function get_latest_override(
+        int    $user_id,
+        string $entity_type,
+        int    $entity_id
+    ): ?array {
+        $rows = static::find(
+            [
+                'user_id'     => $user_id,
+                'entity_type' => $entity_type,
+                'entity_id'   => $entity_id,
+            ],
+            ['created_at' => 'DESC'],
+            1
         );
 
-        if (!$row) {
+        if (empty($rows)) {
             return null;
         }
 
-        return new WP_FCE_Model_Access_Override(
-            (int) $row['id'],
-            (int) $row['user_id'],
-            (string) $row['fce_product_id'],
-            (string) $row['mode'],
-            (int) strtotime($row['valid_until'])
-        );
-    }
-
-    //******************************** */
-    //************* CRUD ************* */
-    //******************************** */
-
-    /**
-     * Erstellt einen neuen Override für einen Nutzer und ein Produkt.
-     *
-     * @param int $user_id
-     * @param string $product_id
-     * @param int $valid_until Timestamp
-     * @param string $reason Optionaler Grund
-     * @return bool Erfolg
-     */
-    public function create_override(int $user_id, string $product_id, string $mode, int $valid_until): bool
-    {
-        global $wpdb;
-        $table = $wpdb->prefix . 'fce_product_access_overrides';
-
-        return false !== $wpdb->insert($table, [
-            'user_id'             => $user_id,
-            'fce_product_id' => $product_id,
-            'mode'              => $mode,
-            'valid_until'       => date('Y-m-d H:i:s', $valid_until),
-            'created_at'          => current_time('mysql'),
-        ], ['%d', '%s', '%s', '%s', '%s']);
+        /** @var WP_FCE_Model_Access_Override $ov */
+        $ov = $rows[0];
+        return [
+            'override_type' => $ov->get_override_type(),
+            'comment'       => $ov->get_comment(),
+        ];
     }
 
     /**
-     * Aktualisiert einen bestehenden Override.
+     * Add a new access override entry.
      *
-     * @param int $id
-     * @param int|null $valid_until Optional neuer Gültigkeitszeitpunkt
-     * @param string|null $reason Optional neuer Grund
-     * @return bool Erfolg
+     * @param  int         $user_id
+     * @param  string      $entity_type
+     * @param  int         $entity_id
+     * @param  string      $override_type
+     * @param  string|null $comment
+     * @return int                    The new override ID.
+     * @throws Exception              On DB error.
      */
-    public function update_override_by_id(int $id, ?string $mode = null, ?int $valid_until = null): bool
-    {
-        global $wpdb;
-        $table = $wpdb->prefix . 'fce_product_access_overrides';
+    public static function add_override(
+        int     $user_id,
+        string  $entity_type,
+        int     $entity_id,
+        string  $override_type,
+        ?string $comment = null
+    ): int {
+        /** @var WP_FCE_Model_Access_Override $ov */
+        $ov = new static::$model_class();
+        $ov->user_id       = $user_id;
+        $ov->entity_type   = $entity_type;
+        $ov->entity_id     = $entity_id;
+        $ov->override_type = $override_type;
+        $ov->source        = 'admin';
+        $ov->comment       = $comment;
+        $ov->save();
 
-        $data = ['updated_at' => current_time('mysql')];
-        $format = ['%s'];
+        return $ov->get_id();
+    }
 
-        if ($valid_until !== null) {
-            $data['valid_until'] = date('Y-m-d H:i:s', $valid_until);
-            $format[] = '%s';
+    /**
+     * Remove all overrides for a given user/entity.
+     *
+     * @param  int    $user_id
+     * @param  string $entity_type
+     * @param  int    $entity_id
+     * @return bool  True on success, false on failure.
+     */
+    public static function remove_overrides(
+        int    $user_id,
+        string $entity_type,
+        int    $entity_id
+    ): bool {
+        $overrides = static::find([
+            'user_id'     => $user_id,
+            'entity_type' => $entity_type,
+            'entity_id'   => $entity_id,
+        ]);
+
+        $success = true;
+        foreach ($overrides as $ov) {
+            if (! $ov->delete()) {
+                $success = false;
+            }
         }
-
-        if ($mode !== null) {
-            $data['mode'] = $mode;
-            $format[] = '%s';
-        }
-
-        return false !== $wpdb->update(
-            $table,
-            $data,
-            ['id' => $id],
-            $format,
-            ['%d']
-        );
-    }
-    /**
-     * Entfernt einen Override anhand seiner ID.
-     *
-     * @param int $id
-     * @return bool Erfolg
-     */
-    public function delete_override_by_id(int $id): bool
-    {
-        global $wpdb;
-        $table = $wpdb->prefix . 'fce_product_access_overrides';
-
-        return false !== $wpdb->delete($table, ['id' => $id], ['%d']);
+        return $success;
     }
 }

@@ -1,141 +1,200 @@
 <?php
+// File: includes/models/class-wp-fce-model-user.php
 
+use DateTime;
+use RuntimeException;
+
+/**
+ * Model for WP users (wp_users table).
+ *
+ * CRUD is delegated to WordPress user functions.
+ * Provides read‐only access to WP_User data plus relations
+ * to FluentCommunity spaces and product access.
+ */
 class WP_FCE_Model_User extends WP_FCE_Model_Base
 {
-    private string $login;
-    private string $email;
-    private string $display_name;
+    /**
+     * Base table name without WP prefix.
+     *
+     * @var string
+     */
+    protected static string $table = 'users';
 
     /**
-     * Constructor
+     * Columns and their WPDB format strings.
      *
-     * @param \WP_User $user The user model
+     * @var array<string,string>
      */
-    public function __construct(int $id, string $login, string $email, string $display_name)
-    {
-        $this->id = $id;
-        $this->login = $login;
-        $this->email = $email;
-        $this->display_name = $display_name;
-    }
+    protected static array $db_fields = [
+        'id'           => '%d',
+        'user_login'   => '%s',
+        'user_email'   => '%s',
+        'display_name' => '%s',
+    ];
 
     /**
-     * Loads a user by its ID.
+     * Columns that should never be mass-updated.
      *
-     * @param int $id The ID of the user to load.
-     * @return WP_FCE_Model_User
-     * @throws \Exception If the user was not found.
+     * @var string[]
      */
-    public static function load_by_id(int $id): WP_FCE_Model_User
+    protected static array $guarded = ['id'];
+
+    /** @var int|null Primary key (maps to wp_users.ID) */
+    public ?int $id = null;
+
+    /** @var string WP user_login */
+    public string $user_login = '';
+
+    /** @var string WP user_email */
+    public string $user_email = '';
+
+    /** @var string WP display_name */
+    public string $display_name = '';
+
+    /**
+     * Load a WP user by ID.
+     *
+     * @param  int           $id
+     * @return static
+     * @throws RuntimeException If not found.
+     */
+    public static function load_by_id(int $id): static
     {
         global $wpdb;
-
         $row = $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT ID, user_login, user_email, display_name FROM {$wpdb->users} WHERE ID = %d",
+                "SELECT ID, user_login, user_email, display_name
+                 FROM {$wpdb->users}
+                 WHERE ID = %d",
                 $id
             ),
             ARRAY_A
         );
-
-        if (!$row) {
-            throw new \Exception(__('Benutzer wurde nicht gefunden.', 'wp-fce'));
+        if (! $row) {
+            throw new RuntimeException("WP user {$id} not found.");
         }
 
-        return new self(
-            (int) $row['ID'],
-            $row['user_login'],
-            $row['user_email'],
-            $row['display_name']
-        );
+        // Map column names to our property keys
+        return static::load_by_row([
+            'id'           => (int)   $row['ID'],
+            'user_login'   =>         $row['user_login'],
+            'user_email'   =>         $row['user_email'],
+            'display_name' =>         $row['display_name'],
+        ]);
     }
 
-    //******************************** */
-    //************ GETTER ************ */
-    //******************************** */
-
-    public function get_id(): int
+    /**
+     * Save (insert or update) via WP functions.
+     *
+     * @throws RuntimeException On failure.
+     */
+    public function save(): void
     {
-        return (int) $this->id;
+        if ($this->id) {
+            // update existing user
+            $userdata = [
+                'ID'           => $this->id,
+                'user_email'   => $this->user_email,
+                'display_name' => $this->display_name,
+            ];
+            $result = wp_update_user($userdata);
+            if (is_wp_error($result)) {
+                throw new RuntimeException('wp_update_user error: ' . $result->get_error_message());
+            }
+        } else {
+            // create new user
+            if (empty($this->user_login) || empty($this->user_email)) {
+                throw new RuntimeException('user_login and user_email are required to create a new WP user.');
+            }
+            $userdata = [
+                'user_login'   => $this->user_login,
+                'user_email'   => $this->user_email,
+                'display_name' => $this->display_name,
+                'user_pass'    => wp_generate_password(),
+            ];
+            $new_id = wp_insert_user($userdata);
+            if (is_wp_error($new_id)) {
+                throw new RuntimeException('wp_insert_user error: ' . $new_id->get_error_message());
+            }
+            $this->id = $new_id;
+        }
     }
 
+    /**
+     * Delete this user via WP function.
+     *
+     * @throws RuntimeException On failure.
+     */
+    public function delete(): void
+    {
+        if (! $this->id) {
+            return;
+        }
+        $result = wp_delete_user($this->id);
+        if (! $result) {
+            throw new RuntimeException("Failed to delete WP user {$this->id}.");
+        }
+        $this->id = null;
+    }
+
+    /**
+     * Get the WP user_login.
+     *
+     * @return string
+     */
+    public function get_login(): string
+    {
+        return $this->user_login;
+    }
+
+    /**
+     * Get the WP user_email.
+     *
+     * @return string
+     */
     public function get_email(): string
     {
-        return $this->email;
+        return $this->user_email;
     }
 
+    /**
+     * Get the WP display_name.
+     *
+     * @return string
+     */
     public function get_name(): string
     {
         return $this->display_name;
     }
 
-    public function get_login(): string
-    {
-        return $this->login;
-    }
-
     /**
-     * Get all space entities assigned to this user via FluentCommunity.
+     * Get all FluentCommunity spaces (communities) assigned to this user.
      *
-     * @return WP_FCE_Model_Space[] Array of space models
+     * @return WP_FCE_Model_Fcom[]
      */
     public function get_spaces(): array
     {
         global $wpdb;
         $table = $wpdb->prefix . 'fcom_space_user';
+        $ids   = $wpdb->get_col(
+            $wpdb->prepare(
+                "SELECT space_id FROM {$table} WHERE user_id = %d",
+                $this->get_id()
+            )
+        );
 
-        $space_ids = $wpdb->get_col($wpdb->prepare(
-            "SELECT space_id FROM {$table} WHERE user_id = %d",
-            $this->get_id()
-        ));
-
-        return $this->space_helper()->get_by_ids($space_ids);
+        return $ids
+            ? WP_FCE_Helper_Fcom::find(['id' => $ids])
+            : [];
     }
 
     /**
-     * Get all Products this user has access to.
+     * Get all products this user has access to.
      *
-     * @return WP_FCE_Model_Product[] Array of spaces mapped to this product.
+     * @return WP_FCE_Model_Product[]
      */
     public function get_products(): array
     {
-        global $wpdb;
-
-        $table = $wpdb->prefix . 'fce_product_user';
-
-        $ids = $wpdb->get_col($wpdb->prepare(
-            "SELECT fce_product_id FROM {$table} WHERE user_id = %d",
-            $this->id
-        ));
-
-        if (empty($ids)) {
-            return [];
-        }
-
-        return $this->product_helper->get_by_ids($ids);
-    }
-
-    //******************************** */
-    //************* CRUDS ************ */
-    //******************************** */
-
-    /**
-     * Grant access to a product for this user.
-     *
-     * @param int $product_id The internal product ID (not external).
-     * @param int|null $expires_on Optional expiration timestamp.
-     * @param string $source The source of access (e.g., 'admin', 'ipn').
-     * @return bool True on success, false on failure.
-     */
-    public function add_product(int $product_id, ?int $expires_on = null, string $source = 'admin'): bool
-    {
-        $product = $this->product_helper->get_by_id($product_id);
-        return $product->add_user($this->get_id(), $expires_on, $source);
-    }
-
-    public function remove_product(int $product_id): bool
-    {
-        $product = $this->product_helper->get_by_id($product_id);
-        return $product->remove_user($this->get_id());
+        return WP_FCE_Helper_Product_User::find(['user_id' => $this->get_id()]);
     }
 }

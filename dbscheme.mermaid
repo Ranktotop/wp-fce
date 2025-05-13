@@ -1,0 +1,92 @@
+erDiagram
+    wp_users {
+        int ID PK
+        string user_login
+        string user_email
+    }
+
+    wp_fce_products {
+        int id PK
+        string sku
+        string name
+        text description
+    }
+
+    wp_fcom_spaces {
+        bigint id PK
+        bigint created_by
+        bigint parent_id
+        varchar(194) title
+        varchar(194) slug
+        text logo
+        text cover_photo
+        longtext description
+        varchar(100) type
+        varchar(100) privacy
+        varchar(100) status
+        int serial
+        longtext settings
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    wp_fce_ipn_log {
+        bigint id PK
+        varchar(255) user_email
+        varchar(100) transaction_id
+        datetime ipn_date
+        varchar(100) external_product_id
+        varchar(100) source
+        longtext ipn
+        char(32) ipn_hash
+    }
+
+    wp_fce_product_user {
+        int id PK
+        int user_id FK
+        int product_id FK
+        enum source
+        string transaction_id
+        datetime start_date
+        datetime expiry_date
+        enum status
+        text note
+    }
+
+    wp_fce_product_space {
+        int id PK
+        int product_id FK
+        bigint space_id FK
+    }
+
+    wp_fce_product_access_overrides {
+        int id PK
+        int user_id FK
+        enum entity_type
+        int entity_id FK
+        enum override_type
+        enum source
+        text comment
+        datetime created_at
+    }
+
+    wp_fce_access_log {
+        int id PK
+        int user_id FK
+        enum entity_type
+        int entity_id
+        datetime evaluated_at
+        boolean decision
+        text reason
+        int source_id
+    }
+
+    wp_users ||--o{ wp_fce_product_user      : has_access_records
+    wp_users ||--o{ wp_fce_product_access_overrides          : has_overrides
+    wp_users ||--o{ wp_fce_access_log               : has_access_logs
+
+    wp_fce_products ||--o{ wp_fce_product_user   : access_for_product
+    wp_fce_products ||--o{ wp_fce_product_space      : mappings_for_product
+
+    wp_fcom_spaces ||--o{ wp_fce_product_space     : mappings_for_space
+    wp_fcom_spaces ||--o{ wp_fce_product_access_overrides      : has_space_overrides

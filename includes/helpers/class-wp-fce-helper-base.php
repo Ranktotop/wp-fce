@@ -1,58 +1,158 @@
 <?php
 
+/**
+ * @template TModel of WP_FCE_Model_Base
+ */
 abstract class WP_FCE_Helper_Base
 {
-    protected ?WP_FCE_Helper_Product $product_helper = null;
-    protected ?WP_FCE_Helper_User $user_helper = null;
-    protected ?WP_FCE_Helper_Ipn $ipn_helper = null;
-    protected ?WP_FCE_Helper_Fluent_Community_Entity $space_helper = null;
-    protected ?WP_FCE_Helper_Access_Override $access_helper = null;
+    /**
+     * Table name **without** WP prefix.
+     *
+     * @var string
+     */
+    protected static string $table = '';
 
-    protected function product(): WP_FCE_Helper_Product
-    {
-        return $this->product_helper ??= new WP_FCE_Helper_Product();
-    }
+    /**
+     * Fully qualified model class this helper works with.
+     *
+     * @var class-string<WP_FCE_Model_Base>
+     */
+    protected static string $model_class = '';
 
-    protected function user(): WP_FCE_Helper_User
+    /**
+     * Get the WPDB-prefixed table name.
+     *
+     * @return string
+     */
+    protected static function getTableName(): string
     {
-        return $this->user_helper ??= new WP_FCE_Helper_User();
-    }
-
-    protected function ipn(): WP_FCE_Helper_Ipn
-    {
-        return $this->ipn_helper ??= new WP_FCE_Helper_Ipn();
-    }
-
-    protected function space(): WP_FCE_Helper_Fluent_Community_Entity
-    {
-        return $this->space_helper ??= new WP_FCE_Helper_Fluent_Community_Entity();
-    }
-
-    protected function access(): WP_FCE_Helper_Access_Override
-    {
-        return $this->access_helper ??= new WP_FCE_Helper_Access_Override();
+        global $wpdb;
+        return $wpdb->prefix . static::$table;
     }
 
     /**
-     * Get a single entity by ID.
+     * Find multiple models by arbitrary WHERE-criteria.
      *
-     * @param int $id
-     * @return mixed
+     * Supports:
+     * - scalar value → `col = %format`
+     * - array value  → `col IN (%format,…)`
+     * - ORDER BY, LIMIT, OFFSET
+     *
+     * @param  array<string,mixed> $criteria  column => value or array of values
+     * @param  array<string,string> $order    column => 'ASC'|'DESC'
+     * @param  int|null            $limit
+     * @param  int|null            $offset
+     * @return WP_FCE_Model_Base[]            Array of model instances
      */
-    abstract public function get_by_id(int $id);
+    public static function find(
+        array $criteria,
+        array $order = [],
+        ?int  $limit = null,
+        ?int  $offset = null
+    ): array {
+        global $wpdb;
+        $table      = static::getTableName();
+        $formatsMap = static::$model_class::getDbFields();
+
+        $where   = [];
+        $values  = [];
+
+        foreach ($criteria as $col => $val) {
+            if (! isset($formatsMap[$col])) {
+                throw new \InvalidArgumentException("Unknown column '{$col}'");
+            }
+            $fmt = $formatsMap[$col];
+
+            if (is_array($val) && count($val) > 0) {
+                // IN (...)
+                $ph = implode(',', array_fill(0, count($val), $fmt));
+                $where[]  = "`{$col}` IN ({$ph})";
+                $values   = array_merge($values, $val);
+            } elseif (!is_array($val)) {
+                // =
+                $where[] = "`{$col}` = {$fmt}";
+                $values[] = $val;
+            }
+        }
+
+        $sql = "SELECT * FROM {$table}";
+        if (!empty($where)) {
+            $sql .= ' WHERE ' . implode(' AND ', $where);
+        }
+
+        // ORDER BY
+        if (!empty($order)) {
+            $parts = [];
+            foreach ($order as $col => $dir) {
+                $dir = strtoupper($dir) === 'DESC' ? 'DESC' : 'ASC';
+                $parts[] = "`{$col}` {$dir}";
+            }
+            $sql .= ' ORDER BY ' . implode(', ', $parts);
+        }
+
+        // LIMIT & OFFSET
+        if (null !== $limit) {
+            $sql .= ' LIMIT ' . intval($limit);
+        }
+        if (null !== $offset) {
+            $sql .= ' OFFSET ' . intval($offset);
+        }
+
+        $prepared = $values ? $wpdb->prepare($sql, ...$values) : $sql;
+        $rows     = $wpdb->get_results($prepared, ARRAY_A) ?: [];
+
+        return array_map(
+            fn(array $row) => static::$model_class::load_by_row($row),
+            $rows
+        );
+    }
 
     /**
-     * Get multiple entities by their IDs.
+     * Find exactly one model matching the criteria (or null).
      *
-     * @param int[] $ids
-     * @return array
+     * @param  array<string,mixed> $criteria
+     * @return WP_FCE_Model_Base|null
      */
-    abstract public function get_by_ids(array $ids): array;
+    public static function findOneBy(array $criteria): ?WP_FCE_Model_Base
+    {
+        $results = static::find($criteria, [], 1);
+        return $results[0] ?? null;
+    }
 
     /**
-     * Get all entities.
+     * Fetch one record by primary key.
      *
-     * @return array
+     * @param  int         $id
+     * @return TModel
      */
-    abstract public function get_all();
+    public static function get_by_id(int $id): WP_FCE_Model_Base
+    {
+        /** @var TModel $instance */
+        $instance = static::$model_class::load_by_id($id);
+        return $instance;
+    }
+
+    /**
+     * Fetch multiple records by their primary keys.
+     *
+     * @param  int[] $ids
+     * @return TModel[]
+     */
+    public static function get_by_ids(array $ids): array
+    {
+        if (empty($ids)) {
+            return [];
+        }
+        return static::find(['id' => $ids]);
+    }
+
+    /**
+     * Fetch all records, ordered by ID.
+     *
+     * @return TModel[]
+     */
+    public static function get_all(): array
+    {
+        return static::find([]);
+    }
 }

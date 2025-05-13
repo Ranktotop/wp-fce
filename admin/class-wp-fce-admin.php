@@ -206,6 +206,11 @@ class Wp_Fce_Admin
 					'id'       => 'product_admin_manage_access',
 					'type'     => 'raw',
 					'content'  => '<a href="' . admin_url('admin.php?page=fce_admin_manage_access') . '" class="button button-primary">' . __('Zugänge verwalten', 'wp-fce') . '</a>',
+				],
+				[
+					'id'       => 'product_admin_simulation_access',
+					'type'     => 'raw',
+					'content'  => '<a href="' . admin_url('admin.php?page=fce_admin_simulation_access') . '" class="button button-primary">' . __('Zugangssimulation', 'wp-fce') . '</a>',
 				]
 			],
 		]);
@@ -276,6 +281,22 @@ class Wp_Fce_Admin
 			'manage_options',               // Capability
 			'fce_admin_manage_access',                 // Menu Slug
 			[$this, 'render_page_manage_access'], // Callback
+			'',                             // Icon
+			null                            // Position
+		);
+	}
+
+	public function register_page_simulation_access(): void
+	{
+		add_action('admin_head', function () {
+			echo '<style>#toplevel_page_fce_admin_simulation_access { display: none !important; }</style>';
+		});
+		add_menu_page(
+			'Zugangssimulation',           // Page Title
+			'Zugangssimulation',           // Menu Title
+			'manage_options',               // Capability
+			'fce_admin_simulation_access',                 // Menu Slug
+			[$this, 'render_page_simulation_access'], // Callback
 			'',                             // Icon
 			null                            // Position
 		);
@@ -361,6 +382,14 @@ class Wp_Fce_Admin
 	public function render_page_manage_access(): void
 	{
 		$view = plugin_dir_path(dirname(__FILE__)) . 'templates/wp-fce-admin-manage-access.php';
+		if (file_exists($view)) {
+			include $view;
+		}
+	}
+
+	public function render_page_simulation_access(): void
+	{
+		$view = plugin_dir_path(dirname(__FILE__)) . 'admin/simulation/wp-fce-admin-simulation-access.php';
 		if (file_exists($view)) {
 			include $view;
 		}

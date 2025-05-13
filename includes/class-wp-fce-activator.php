@@ -1,102 +1,85 @@
 <?php
 
 /**
- * Fired during plugin activation
- *
- * @link       http://example.com
- * @since      1.0.0
- *
- * @package    Wp_Fce
- * @subpackage Wp_Fce/includes
- */
-
-/**
  * Fired during plugin activation.
  *
- * This class defines all code necessary to run during the plugin's activation.
- *
- * @since      1.0.0
- * @package    Wp_Fce
- * @subpackage Wp_Fce/includes
- * @author     Your Name <email@example.com>
+ * @package WP_Fluent_Community_Extreme
  */
-class Wp_Fce_Activator
+
+if (! defined('ABSPATH')) {
+	exit;
+}
+
+class WP_FCE_Activator
 {
 
 	/**
-	 * Short Description. (use period)
-	 *
-	 * Long Description.
-	 *
-	 * @since    1.0.0
+	 * Plugin activation callback.
 	 */
-	public static function activate()
+	public static function activate(): void
 	{
-		// Check if FluentCommunity is active
-		include_once(ABSPATH . 'wp-admin/includes/plugin.php');
-		if (!is_plugin_active('fluent-community/fluent-community.php')) {
-			// Prevent activation
+		// Require FluentCommunity
+		include_once ABSPATH . 'wp-admin/includes/plugin.php';
+		if (! is_plugin_active('fluent-community/fluent-community.php')) {
 			deactivate_plugins(plugin_basename(__FILE__));
-
-			// Show error message
 			wp_die(
-				'Dieses Plugin erfordert das Plugin "Fluent Community". Bitte installiere und aktiviere es zuerst.',
-				'Plugin-Anforderung nicht erfüllt',
+				__('Dieses Plugin erfordert das Plugin "Fluent Community". Bitte installiere und aktiviere es zuerst.', 'wp-fce'),
+				__('Plugin-Anforderung nicht erfüllt', 'wp-fce'),
 				['back_link' => true]
 			);
 		}
 
+		// 1) Tabellen (ohne FK) anlegen
 		self::create_db_ipn_log();
 		self::create_db_products();
-		self::create_db_product_space();
 		self::create_db_product_user();
-		self::create_db_product_user_overrides();
-		flush_rewrite_rules();
+		self::create_db_product_space();
+		self::create_db_product_access_overrides();
+		self::create_db_access_log();
 
-		if (! wp_next_scheduled('wp_fce_cron_check_expirations')) {
-			wp_schedule_event(time(), 'hourly', 'wp_fce_cron_check_expirations');
-		}
+		// 2) FOREIGN KEY Constraints einmalig hinzufügen
+		self::add_foreign_keys();
+
+		// 3) Rewrite-Regeln flushen & Cron schedule
+		flush_rewrite_rules();
+		WP_FCE_Cron::register_cronjobs();
+	}
+
+	private static function create_db_ipn_log(): void
+	{
+		global $wpdb;
+		$t = $wpdb->prefix . 'fce_ipn_log';
+		$c = $wpdb->get_charset_collate();
+		$sql = "CREATE TABLE `{$t}` (
+            `id`                  BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+            `user_email`          VARCHAR(255)      NOT NULL,
+            `transaction_id`      VARCHAR(100)      NOT NULL,
+            `ipn_date`            DATETIME          NOT NULL,
+            `external_product_id` VARCHAR(100)      NOT NULL,
+            `source`              VARCHAR(100)      NOT NULL,
+            `ipn`                 LONGTEXT          NOT NULL,
+            `ipn_hash`            CHAR(32)          NOT NULL,
+            PRIMARY KEY  (`id`),
+            UNIQUE KEY  `idx_ipn_hash`        (`ipn_hash`),
+            KEY         `idx_user_email_prod` (`user_email`,`external_product_id`)
+        ) ENGINE=InnoDB {$c};";
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		dbDelta($sql);
 	}
 
 	private static function create_db_products(): void
 	{
 		global $wpdb;
-
-		$table_name = $wpdb->prefix . 'fce_products';
-		$charset_collate = $wpdb->get_charset_collate();
-
-		$sql = "CREATE TABLE {$table_name} (
-		id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-		product_id VARCHAR(100) NOT NULL,
-		title VARCHAR(255) NOT NULL,
-		description TEXT NULL,
-		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-		updated_at DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-		UNIQUE KEY idx_product_id (product_id),
-		PRIMARY KEY (id)
-	) $charset_collate;";
-
-		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-		dbDelta($sql);
-	}
-
-	private static function create_db_product_space(): void
-	{
-		global $wpdb;
-
-		$table_name = $wpdb->prefix . 'fce_product_space';
-		$charset_collate = $wpdb->get_charset_collate();
-
-		$sql = "CREATE TABLE {$table_name} (
-		id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-		fce_product_id BIGINT UNSIGNED NOT NULL,
-		space_id BIGINT UNSIGNED NOT NULL,
-		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-		UNIQUE KEY idx_product_space (fce_product_id, space_id),
-		INDEX idx_space_id (space_id),
-		PRIMARY KEY (id)
-	) $charset_collate;";
-
+		$t = $wpdb->prefix . 'fce_products';
+		$c = $wpdb->get_charset_collate();
+		$sql = "CREATE TABLE `{$t}` (
+            `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+            `sku`         VARCHAR(100)      NOT NULL,
+            `name`        VARCHAR(200)      NOT NULL,
+            `description` TEXT              NOT NULL,
+            PRIMARY KEY (`id`),
+            UNIQUE KEY `idx_sku` (`sku`)
+        ) ENGINE=InnoDB {$c};";
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta($sql);
 	}
@@ -104,73 +87,125 @@ class Wp_Fce_Activator
 	private static function create_db_product_user(): void
 	{
 		global $wpdb;
-
-		$table_name = $wpdb->prefix . 'fce_product_user';
-		$charset_collate = $wpdb->get_charset_collate();
-
-		$sql = "CREATE TABLE {$table_name} (
-		id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-		fce_product_id BIGINT UNSIGNED NOT NULL,
-		user_id BIGINT UNSIGNED NOT NULL,
-		is_active TINYINT(1) NOT NULL DEFAULT 1,
-		expires_on DATETIME DEFAULT NULL,
-		source VARCHAR(50) DEFAULT 'ipn',
-		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-		updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-		UNIQUE KEY idx_unique_assignment (fce_product_id, user_id),
-		KEY idx_user_product (user_id, fce_product_id),
-		PRIMARY KEY (id)
-	) $charset_collate;";
-
+		$t = $wpdb->prefix . 'fce_product_user';
+		$c = $wpdb->get_charset_collate();
+		$sql = "CREATE TABLE `{$t}` (
+            `id`             BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+            `user_id`        BIGINT UNSIGNED NOT NULL,
+            `product_id`     BIGINT UNSIGNED NOT NULL,
+            `source`         ENUM('ipn','admin','import','sync') NOT NULL DEFAULT 'ipn',
+            `transaction_id` VARCHAR(100)      DEFAULT NULL,
+            `start_date`     DATETIME          NOT NULL,
+            `expiry_date`    DATETIME          DEFAULT NULL,
+            `status`         ENUM('active','expired','revoked','cancelled') NOT NULL DEFAULT 'active',
+            `note`           TEXT              DEFAULT NULL,
+            PRIMARY KEY (`id`),
+            KEY `idx_user_product` (`user_id`,`product_id`)
+        ) ENGINE=InnoDB {$c};";
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta($sql);
 	}
 
-	private static function create_db_ipn_log(): void
+	private static function create_db_product_space(): void
 	{
 		global $wpdb;
-
-		$table_name = $wpdb->prefix . 'fce_ipn_log';
-		$charset_collate = $wpdb->get_charset_collate();
-
-		$sql = "CREATE TABLE {$table_name} (
-		id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-		user_email VARCHAR(255) NOT NULL,
-		transaction_id VARCHAR(100) NOT NULL,
-		ipn_date DATETIME NOT NULL,
-		external_product_id VARCHAR(100) NOT NULL,
-		source VARCHAR(100) NOT NULL,
-		ipn LONGTEXT NOT NULL,
-    	ipn_hash CHAR(32) NOT NULL,
-		UNIQUE KEY idx_ipn_hash (ipn_hash),
-		KEY idx_user_product (user_email, external_product_id),
-		PRIMARY KEY (id)
-	) $charset_collate;";
-
+		$t = $wpdb->prefix . 'fce_product_space';
+		$c = $wpdb->get_charset_collate();
+		$sql = "CREATE TABLE `{$t}` (
+            `id`         BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+            `product_id` BIGINT UNSIGNED NOT NULL,
+            `space_id`   BIGINT UNSIGNED NOT NULL,
+            PRIMARY KEY (`id`),
+            KEY `idx_product_space` (`product_id`,`space_id`)
+        ) ENGINE=InnoDB {$c};";
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta($sql);
 	}
 
-	private static function create_db_product_user_overrides(): void
+	private static function create_db_product_access_overrides(): void
 	{
 		global $wpdb;
-
-		$table = $wpdb->prefix . 'fce_product_access_overrides';
-		$charset_collate = $wpdb->get_charset_collate();
-
-		$sql = "CREATE TABLE {$table} (
-        id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-        user_id BIGINT UNSIGNED NOT NULL,
-        fce_product_id BIGINT UNSIGNED NOT NULL,
-        mode ENUM('grant', 'deny') NOT NULL,
-        valid_until DATETIME NOT NULL,
-        created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        updated_at DATETIME NULL DEFAULT NULL,
-        PRIMARY KEY (id),
-        UNIQUE KEY user_product_unique (user_id, fce_product_id)
-    ) $charset_collate;";
-
+		$t = $wpdb->prefix . 'fce_product_access_overrides';
+		$c = $wpdb->get_charset_collate();
+		$sql = "CREATE TABLE `{$t}` (
+            `id`            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+            `user_id`       BIGINT UNSIGNED NOT NULL,
+            `entity_type`   ENUM('space','course') NOT NULL,
+            `entity_id`     BIGINT UNSIGNED NOT NULL,
+            `override_type` ENUM('allow','deny') NOT NULL,
+            `source`        ENUM('admin','import') NOT NULL DEFAULT 'admin',
+            `comment`       TEXT              NULL,
+            `created_at`    DATETIME          NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`),
+            KEY `idx_user_entity` (`user_id`,`entity_type`,`entity_id`)
+        ) ENGINE=InnoDB {$c};";
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta($sql);
+	}
+
+	private static function create_db_access_log(): void
+	{
+		global $wpdb;
+		$t = $wpdb->prefix . 'fce_access_log';
+		$c = $wpdb->get_charset_collate();
+		$sql = "CREATE TABLE `{$t}` (
+            `id`           BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+            `user_id`      BIGINT UNSIGNED NOT NULL,
+            `entity_type`  ENUM('space','course') NOT NULL,
+            `entity_id`    BIGINT UNSIGNED NOT NULL,
+            `evaluated_at` DATETIME          NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            `decision`     TINYINT(1)        NOT NULL,
+            `reason`       TEXT              NULL,
+            `source_id`    BIGINT UNSIGNED   NOT NULL,
+            PRIMARY KEY (`id`),
+            KEY `idx_log_user_entity` (`user_id`,`entity_type`,`entity_id`)
+        ) ENGINE=InnoDB {$c};";
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		dbDelta($sql);
+	}
+
+	/**
+	 * Fügt alle fehlenden FOREIGN KEY-Constraints per ALTER TABLE hinzu.
+	 * Wird nur beim initialen Activate() ausgeführt.
+	 */
+	private static function add_foreign_keys(): void
+	{
+		global $wpdb;
+		$p = $wpdb->prefix;
+		$fks = [
+			// product_user → users / products
+			"ALTER TABLE `{$p}fce_product_user`
+             ADD CONSTRAINT `fk_fcup_user`
+             FOREIGN KEY (`user_id`)    REFERENCES `{$p}users`(`ID`) ON DELETE CASCADE",
+			"ALTER TABLE `{$p}fce_product_user`
+             ADD CONSTRAINT `fk_fcup_product`
+             FOREIGN KEY (`product_id`) REFERENCES `{$p}fce_products`(`id`) ON DELETE CASCADE",
+
+			// product_space → products / spaces
+			"ALTER TABLE `{$p}fce_product_space`
+             ADD CONSTRAINT `fk_fcps_product`
+             FOREIGN KEY (`product_id`) REFERENCES `{$p}fce_products`(`id`) ON DELETE CASCADE",
+			"ALTER TABLE `{$p}fce_product_space`
+             ADD CONSTRAINT `fk_fcps_space`
+             FOREIGN KEY (`space_id`)   REFERENCES `{$p}fcom_spaces`(`id`)  ON DELETE CASCADE",
+
+			// access_overrides → users / spaces
+			"ALTER TABLE `{$p}fce_product_access_overrides`
+             ADD CONSTRAINT `fk_fcao_user`
+             FOREIGN KEY (`user_id`)    REFERENCES `{$p}users`(`ID`)       ON DELETE CASCADE",
+			"ALTER TABLE `{$p}fce_product_access_overrides`
+             ADD CONSTRAINT `fk_fcao_entity`
+             FOREIGN KEY (`entity_id`)  REFERENCES `{$p}fcom_spaces`(`id`)  ON DELETE CASCADE",
+
+			// access_log → users
+			"ALTER TABLE `{$p}fce_access_log`
+             ADD CONSTRAINT `fk_fcal_user`
+             FOREIGN KEY (`user_id`)    REFERENCES `{$p}users`(`ID`)       ON DELETE CASCADE",
+		];
+
+		foreach ($fks as $sql) {
+			// Falls Constraint schon existiert, schlägt query() still fehl und wird ignoriert.
+			$wpdb->query($sql);
+		}
 	}
 }

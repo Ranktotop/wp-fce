@@ -137,16 +137,8 @@ class Wp_Fce_Public
 	 */
 	public function register_api_routes(): void
 	{
-		// REST API
-		register_rest_route(
-			'wp-fce/v1',
-			'/ipn',
-			[
-				'methods'             => \WP_REST_Server::CREATABLE,      // POST
-				'callback'            => [$this, 'handle_ipn'],
-				'permission_callback' => '__return_true',                 // öffentlich, IPN-Provider authentifizieren selbst
-			]
-		);
+		$controller = new WP_FCE_REST_Controller();
+		$controller->register_routes();
 	}
 
 	public function register_front_end_routes(): void
@@ -183,24 +175,5 @@ class Wp_Fce_Public
 	{
 		$controller = new Wp_Fce_Rest_Controller();
 		return $controller->handle_ipn($request);
-	}
-
-	//******************************** */
-	//************* CRON ************* */
-	//******************************** */
-
-	/**
-	 * Wird vom Cronjob aufgerufen: entzieht abgelaufene Produkt-Zugriffe.
-	 *
-	 * @return void
-	 */
-	public static function cron_check_expirations(): void
-	{
-		fce_log('Starte Ablaufprüfung (Cron)', 'info');
-
-		$helper_product = new WP_FCE_Helper_Product();
-		$helper_product->revoke_expired_accesses();
-
-		fce_log('Ablaufprüfung abgeschlossen', 'info');
 	}
 }

@@ -119,27 +119,44 @@ class Wp_Fce_Admin_Ajax_Handler
     }
 
     /**
-     * Deletes all assignments (spaces/courses) of a product.
+     * Deletes all space assignments of a product.
      *
      * @param array $data Must contain the key 'product_id'.
      * @param array $meta Optional, ignored here.
-     * @return array JSON response (success/fail)
+     * @return array JSON response (state => bool, message => string)
      */
     private function delete_product_mapping(array $data, array $meta): array
     {
-        if (empty($data['product_id']) || !is_numeric($data['product_id'])) {
-            return ['state' => false, 'message' => __('Ungültige Produkt-ID', 'wp-fce')];
+        // 1) Validierung
+        if (empty($data['product_id']) || ! is_numeric($data['product_id'])) {
+            return [
+                'state'   => false,
+                'message' => __('Ungültige Produkt-ID', 'wp-fce'),
+            ];
         }
 
-        global $wpdb;
-        $table = $wpdb->prefix . 'fce_product_space';
-        $deleted = $wpdb->delete($table, ['fce_product_id' => (int) $data['product_id']]);
+        $product_id = (int) $data['product_id'];
 
-        if ($deleted === false) {
-            return ['state' => false, 'message' => __('Fehler beim Löschen.', 'wp-fce')];
+        try {
+            // 2) Helper-Aufruf zum Entfernen aller Mappings
+            WP_FCE_Helper_Product_Space::remove_mappings_for_product($product_id);
+
+            // 3) Erfolgs-Antwort
+            return [
+                'state'   => true,
+                'message' => __('Alle Zuweisungen gelöscht.', 'wp-fce'),
+            ];
+        } catch (\Exception $e) {
+            // 4) Fehler-Antwort
+            return [
+                'state'   => false,
+                'message' => sprintf(
+                    /* translators: %s = Fehlermeldung */
+                    __('Fehler beim Löschen: %s', 'wp-fce'),
+                    $e->getMessage()
+                ),
+            ];
         }
-
-        return ['state' => true, 'message' => __('Alle Zuweisungen gelöscht.', 'wp-fce')];
     }
 
     private function delete_access_rule(array $data, array $meta): array

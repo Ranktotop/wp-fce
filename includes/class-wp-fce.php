@@ -150,31 +150,42 @@ class Wp_Fce
 		 * The model classes
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/models/class-wp-fce-model-base.php';
-		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/models/class-wp-fce-model-user.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/models/class-wp-fce-model-ipn-log.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/models/class-wp-fce-model-product.php';
-		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/models/class-wp-fce-model-fluent-community-entity.php';
-		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/models/class-wp-fce-model-ipn.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/models/class-wp-fce-model-product-user.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/models/class-wp-fce-model-product-space.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/models/class-wp-fce-model-access-override.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/models/class-wp-fce-model-access-log.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/models/class-wp-fce-model-user.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/models/class-wp-fce-model-fcom.php';
 
 		/**
 		 * The helper classes
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-base.php';
-		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-user.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-ipn-log.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-product.php';
-		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-fluent-community-entity.php';
-		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-ipn.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-product-user.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-product-space.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-access-override.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-access-log.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-user.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-fcom.php';
 
 		/**
 		 * Controller classes
 		 */
-		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-fce-access-manager.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-fce-access-evaluator.php';
 
 		/**
 		 * The REST API controller for handling IPN callbacks
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-fce-rest-controller.php';
+
+		/**
+		 * Cronjob classes
+		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-fce-cron.php';
 
 		$this->loader = new Wp_Fce_Loader();
 	}
@@ -246,7 +257,7 @@ class Wp_Fce
 		$this->loader->add_action('rest_api_init', $plugin_public, 'register_api_routes');
 
 		//Register cronjob
-		$this->loader->add_action('wp_fce_cron_check_expirations', $plugin_public, 'run_expiration_cron');
+		WP_FCE_Cron::register_cron_actions();
 
 		//Register Front-End Routes#
 		$this->loader->add_action('init', $plugin_public, 'register_front_end_routes');
