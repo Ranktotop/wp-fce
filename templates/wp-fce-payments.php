@@ -33,7 +33,7 @@ if (!empty($_SERVER['HTTP_REFERER'])) {
 
 <head>
     <meta charset="UTF-8">
-    <title><?php esc_html_e('Meine Bestellungen', 'wp_fce'); ?></title>
+    <title><?php esc_html_e('My Orders', 'wp_fce'); ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="<?= esc_url(plugins_url('wp-fce/public/css/fce-orders.css', dirname(__DIR__))) ?>" media="all">
 </head>
@@ -41,16 +41,16 @@ if (!empty($_SERVER['HTTP_REFERER'])) {
 <body style="background-image: url('<?= esc_url($bg_image_url); ?>'); background-size: cover;">
 
     <div class="fce-orders-wrapper">
-        <h1><?php esc_html_e('Meine Bestellungen', 'wp_fce'); ?></h1>
+        <h1><?php esc_html_e('My Orders', 'wp_fce'); ?></h1>
 
         <?php if (!empty($ipns)): ?>
             <table class="fce-orders-table">
                 <thead>
                     <tr>
-                        <th><?php esc_html_e('Bestell-Datum', 'wp_fce'); ?></th>
-                        <th><?php esc_html_e('Produkt-ID', 'wp_fce'); ?></th>
-                        <th><?php esc_html_e('Zahlungsanbieter', 'wp_fce'); ?></th>
-                        <th><?php esc_html_e('Zahlung & Rechnung', 'wp_fce'); ?></th>
+                        <th><?php esc_html_e('Order Date', 'wp_fce'); ?></th>
+                        <th><?php esc_html_e('Product ID', 'wp_fce'); ?></th>
+                        <th><?php esc_html_e('Payment Processor', 'wp_fce'); ?></th>
+                        <th><?php esc_html_e('Invoice and Details', 'wp_fce'); ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -81,12 +81,12 @@ if (!empty($_SERVER['HTTP_REFERER'])) {
                 </tbody>
             </table>
         <?php else: ?>
-            <p style="text-align: center;"><?php esc_html_e('Keine Bestellungen gefunden.', 'wp_fce'); ?></p>
+            <p style="text-align: center;"><?php esc_html_e('No orders found', 'wp_fce'); ?></p>
         <?php endif; ?>
 
         <div style="text-align: center;">
             <a href="<?= esc_url($back_url) ?>" class="fce-back-btn">
-                &larr; <?php esc_html_e('Zurück zur Community', 'wp_fce'); ?>
+                &larr; <?php esc_html_e('Back to Community', 'wp_fce'); ?>
             </a>
         </div>
     </div>

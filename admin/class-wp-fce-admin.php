@@ -123,13 +123,14 @@ class Wp_Fce_Admin
 			 * @link https://codex.wordpress.org/Function_Reference/wp_create_nonce
 			 */
 			'_nonce' => wp_create_nonce('security_wp-fce'),
-			'msg_confirm_delete_product' => __('Möchtest du das Produkt wirklich entfernen? Dieser Schritt kann nicht rückgängig gemacht werden!', 'wp-fce'),
-			'msg_confirm_delete_product_mapping' => __('Möchtest du wirklich alle Zuweisungen dieses Produkts entfernen? Dieser Schritt kann nicht rückgängig gemacht werden!', 'wp-fce'),
-			'msg_confirm_delete_access_rule' => __('Möchtest du die Regel wirklich entfernen? Dieser Schritt kann nicht rückgängig gemacht werden!', 'wp-fce'),
-			'notice_success' => __('Änderung erfolgreich!', 'wp-fce'),
-			'notice_error' => __('Änderung fehlgeschlagen!', 'wp-fce'),
-			'label_edit' => __('Bearbeiten', 'wp-fce'),
-			'label_save' => __('Speichern', 'wp-fce')
+			'msg_confirm_delete_product' => __('Do you really want to delete the product? This action cannot be undone!', 'wp-fce'),
+			'msg_confirm_delete_product_mapping' => __('Do you really want to delete all mappings of this product? This action cannot be undone!', 'wp-fce'),
+			'msg_confirm_delete_access_rule' => __('Are you sure you want to delete the rule? This action cannot be undone!', 'wp-fce'),
+			'notice_success' => __('Saved successfully!', 'wp-fce'),
+			'notice_error' => __('Error occurred!', 'wp-fce'),
+			'label_edit' => __('Edit', 'wp-fce'),
+			'label_save' => __('Save', 'wp-fce'),
+			'label_confirm' => __('Are you sure?', 'wp-fce'),
 		));
 	}
 
@@ -149,8 +150,8 @@ class Wp_Fce_Admin
 
 		Redux::set_args('wp_fce_options', [
 			'opt_name'        => 'wp_fce_options',
-			'menu_title'      => __('FluentCommunity Extreme', 'wp-fce'),
-			'page_title'      => __('FluentCommunity Extreme', 'wp-fce'),
+			'menu_title'      => 'FluentCommunity Extreme',
+			'page_title'      => 'FluentCommunity Extreme',
 			'menu_type'       => 'menu',
 			'page_priority' => 80,
 			'allow_sub_menu'  => true,
@@ -178,40 +179,40 @@ class Wp_Fce_Admin
 			],
 		]);
 		Redux::set_section('wp_fce_options', [
-			'title'  => __('Darstellung', 'wp-fce'),
+			'title'  => __('Appearance', 'wp-fce'),
 			'id'     => 'appearance_section',
-			'desc'   => __('Gestalte das Layout der Bezahlseite.', 'wp-fce'),
+			'desc'   => __('Defines the appearance of the payments-overview page', 'wp-fce'),
 			'icon'   => 'el el-picture',
 			'fields' => [
 				[
 					'id'       => 'orders_background_image',
 					'type'     => 'media',
 					'url'      => true,
-					'title'    => __('Hintergrundbild Zahlungsseite', 'wp-fce'),
-					'subtitle' => __('Wird auf der Zahlungsseite als Hintergrund angezeigt.', 'wp-fce'),
-					'desc'     => __('Optional. Unterstützt JPG, PNG', 'wp-fce'),
+					'title'    => __('Background Image', 'wp-fce'),
+					'subtitle' => __('Is shown on the payments-overview page', 'wp-fce'),
+					'desc'     => __('Optional. Supports PNG and JPEG', 'wp-fce'),
 				],
 			],
 		]);
 		Redux::set_section('wp_fce_options', [
-			'title'  => __('Produkte verwalten', 'wp-fce'),
+			'title'  => __('Manage Products', 'wp-fce'),
 			'id'     => 'product_admin_link',
-			'desc'   => __('Hier kannst du Produkte hinzufügen oder bearbeiten.', 'wp-fce'),
+			'desc'   => __('Manage products, mappings and access rules', 'wp-fce'),
 			'fields' => [
 				[
 					'id'       => 'product_admin_manage_products',
 					'type'     => 'raw',
-					'content'  => '<a href="' . admin_url('admin.php?page=fce_admin_manage_products') . '" class="button button-primary">' . __('Produkte verwalten', 'wp-fce') . '</a>',
+					'content'  => '<a href="' . admin_url('admin.php?page=fce_admin_manage_products') . '" class="button button-primary">' . __('Manage products', 'wp-fce') . '</a>',
 				],
 				[
 					'id'       => 'product_admin_map_products',
 					'type'     => 'raw',
-					'content'  => '<a href="' . admin_url('admin.php?page=fce_admin_map_products') . '" class="button button-primary">' . __('Zuweisungen verwalten', 'wp-fce') . '</a>',
+					'content'  => '<a href="' . admin_url('admin.php?page=fce_admin_map_products') . '" class="button button-primary">' . __('Manage mappings', 'wp-fce') . '</a>',
 				],
 				[
 					'id'       => 'product_admin_manage_access',
 					'type'     => 'raw',
-					'content'  => '<a href="' . admin_url('admin.php?page=fce_admin_manage_access') . '" class="button button-primary">' . __('Zugänge verwalten', 'wp-fce') . '</a>',
+					'content'  => '<a href="' . admin_url('admin.php?page=fce_admin_manage_access') . '" class="button button-primary">' . __('Manage access', 'wp-fce') . '</a>',
 				]
 			],
 		]);

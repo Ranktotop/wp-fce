@@ -10,8 +10,8 @@ if (!defined('ABSPATH')) {
         <h2><?php esc_html_e('Bist du sicher?', 'wp-fce'); ?></h2>
         <p></p>
         <div class="wpfce-modal-actions">
-            <button class="button-secondary wpfce-cancel-btn"><?php esc_html_e('Abbrechen', 'wp-fce'); ?></button>
-            <button class="button-primary wpfce-confirm-btn"><?php esc_html_e('Bestätigen', 'wp-fce'); ?></button>
+            <button class="button-secondary wpfce-cancel-btn"><?php esc_html_e('Cancel', 'wp-fce'); ?></button>
+            <button class="button-primary wpfce-confirm-btn"><?php esc_html_e('Confirm', 'wp-fce'); ?></button>
         </div>
     </div>
 </div>

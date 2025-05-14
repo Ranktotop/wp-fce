@@ -1,0 +1,505 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Project-Id-Version: FluentCommunity Extreme Add-On\n"
+"POT-Creation-Date: 2025-05-14 23:03+0200\n"
+"PO-Revision-Date: 2025-05-14 22:45+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.3.1\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: wp-fce.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+"X-Poedit-SearchPathExcluded-1: vendor\n"
+"X-Poedit-SearchPathExcluded-2: admin/redux\n"
+
+#: admin/class-wp-fce-admin-ajax.php:46 admin/class-wp-fce-admin-ajax.php:75
+#: admin/class-wp-fce-admin-ajax.php:101 admin/class-wp-fce-admin-ajax.php:140
+#: admin/class-wp-fce-admin-form.php:184
+msgid "Invalid product ID"
+msgstr ""
+
+#: admin/class-wp-fce-admin-ajax.php:57
+msgid "Product successfully deleted"
+msgstr ""
+
+#: admin/class-wp-fce-admin-ajax.php:83
+msgid "Product successfully updated"
+msgstr ""
+
+#: admin/class-wp-fce-admin-ajax.php:121
+msgid "Sucessfully retrieved product mapping"
+msgstr ""
+
+#: admin/class-wp-fce-admin-ajax.php:155
+#, php-format
+msgid "All mappings successfully deleted for product #%d"
+msgstr ""
+
+#. translators: %s = Fehlermeldung
+#: admin/class-wp-fce-admin-ajax.php:163
+#, php-format
+msgid "Error deleting mappings for product #%d: %s"
+msgstr ""
+
+#: admin/class-wp-fce-admin-ajax.php:174 admin/class-wp-fce-admin-ajax.php:196
+msgid "Invalid rule ID"
+msgstr ""
+
+#: admin/class-wp-fce-admin-ajax.php:180 admin/class-wp-fce-admin-ajax.php:210
+msgid "Rule not found"
+msgstr ""
+
+#: admin/class-wp-fce-admin-ajax.php:187
+msgid "Rule successfully deleted"
+msgstr ""
+
+#: admin/class-wp-fce-admin-ajax.php:204
+msgid "Invalid valid until date"
+msgstr ""
+
+#: admin/class-wp-fce-admin-ajax.php:219
+msgid "Rule successfully updated"
+msgstr ""
+
+#: admin/class-wp-fce-admin-form.php:70
+msgid "Product ID and title are required"
+msgstr ""
+
+#: admin/class-wp-fce-admin-form.php:78
+msgid "Product created successfully"
+msgstr ""
+
+#: admin/class-wp-fce-admin-form.php:123
+msgid "Please select a product"
+msgstr ""
+
+#: admin/class-wp-fce-admin-form.php:144
+msgid "Product mappings created successfully"
+msgstr ""
+
+#: admin/class-wp-fce-admin-form.php:205
+msgid "Successfully updated product mappings"
+msgstr ""
+
+#: admin/class-wp-fce-admin-form.php:247
+msgid "Invalid form data for access override"
+msgstr ""
+
+#: admin/class-wp-fce-admin-form.php:268
+msgid "Access override saved"
+msgstr ""
+
+#: admin/class-wp-fce-admin.php:126
+msgid "Do you really want to delete the product? This action cannot be undone!"
+msgstr ""
+
+#: admin/class-wp-fce-admin.php:127
+msgid ""
+"Do you really want to delete all mappings of this product? This action "
+"cannot be undone!"
+msgstr ""
+
+#: admin/class-wp-fce-admin.php:128
+msgid "Are you sure you want to delete the rule? This action cannot be undone!"
+msgstr ""
+
+#: admin/class-wp-fce-admin.php:129
+msgid "Saved successfully!"
+msgstr ""
+
+#: admin/class-wp-fce-admin.php:130
+msgid "Error occurred!"
+msgstr ""
+
+#: admin/class-wp-fce-admin.php:131 templates/wp-fce-admin-manage-access.php:90
+#: templates/wp-fce-admin-manage-products.php:60
+#: templates/wp-fce-admin-map-products.php:61
+msgid "Edit"
+msgstr ""
+
+#: admin/class-wp-fce-admin.php:132 templates/wp-fce-admin-map-products.php:157
+msgid "Save"
+msgstr ""
+
+#: admin/class-wp-fce-admin.php:133
+msgid "Are you sure?"
+msgstr ""
+
+#: admin/class-wp-fce-admin.php:163
+msgid "API"
+msgstr ""
+
+#: admin/class-wp-fce-admin.php:165
+msgid "API-Settings"
+msgstr ""
+
+#: admin/class-wp-fce-admin.php:170
+msgid "API Key (IPN)"
+msgstr ""
+
+#: admin/class-wp-fce-admin.php:171
+msgid "Used to validate IPN requests."
+msgstr ""
+
+#: admin/class-wp-fce-admin.php:176
+msgid "API Key (Admin)"
+msgstr ""
+
+#: admin/class-wp-fce-admin.php:177
+msgid "Used to validate Admin requests to the REST API."
+msgstr ""
+
+#: admin/class-wp-fce-admin.php:182
+msgid "Appearance"
+msgstr ""
+
+#: admin/class-wp-fce-admin.php:184
+msgid "Defines the appearance of the payments-overview page"
+msgstr ""
+
+#: admin/class-wp-fce-admin.php:191
+msgid "Background Image"
+msgstr ""
+
+#: admin/class-wp-fce-admin.php:192
+msgid "Is shown on the payments-overview page"
+msgstr ""
+
+#: admin/class-wp-fce-admin.php:193
+msgid "Optional. Supports PNG and JPEG"
+msgstr ""
+
+#: admin/class-wp-fce-admin.php:198
+msgid "Manage Products"
+msgstr ""
+
+#: admin/class-wp-fce-admin.php:200
+msgid "Manage products, mappings and access rules"
+msgstr ""
+
+#: admin/class-wp-fce-admin.php:205
+msgid "Manage products"
+msgstr ""
+
+#: admin/class-wp-fce-admin.php:210
+msgid "Manage mappings"
+msgstr ""
+
+#: admin/class-wp-fce-admin.php:215
+msgid "Manage access"
+msgstr ""
+
+#: includes/class-wp-fce-activator.php:26
+msgid ""
+"This plugin requires the \"Fluent Community\" plugin. Please install and "
+"activate it first."
+msgstr ""
+
+#: includes/class-wp-fce-activator.php:27
+msgid "Plugin requirements not fulfilled"
+msgstr ""
+
+#: includes/helpers/class-wp-fce-helper-access-override.php:146
+#, php-format
+msgid "Override not found by ID %d."
+msgstr ""
+
+#: includes/helpers/class-wp-fce-helper-base.php:63
+#, php-format
+msgid "Unknown column %s"
+msgstr ""
+
+#: includes/helpers/class-wp-fce-helper-base.php:179
+#, php-format
+msgid "Failed to normalize to Datetime. Invalid datetime value given: %s"
+msgstr ""
+
+#: includes/helpers/class-wp-fce-helper-product-user.php:152
+#, php-format
+msgid "Product %d already assigned to user %d with transaction id \"%s\""
+msgstr ""
+
+#: includes/helpers/class-wp-fce-helper-product.php:43
+#, php-format
+msgid "Product with SKU \"%s\" already exists."
+msgstr ""
+
+#: includes/models/class-wp-fce-model-base.php:62
+msgid "Child class must set protected static $table"
+msgstr ""
+
+#: includes/models/class-wp-fce-model-base.php:171
+#, php-format
+msgid "Record with ID %d not found in %s"
+msgstr ""
+
+#: includes/models/class-wp-fce-model-base.php:205
+#, php-format
+msgid "DB insert error: %s"
+msgstr ""
+
+#: includes/models/class-wp-fce-model-base.php:222
+msgid "Cannot update without an ID"
+msgstr ""
+
+#: includes/models/class-wp-fce-model-base.php:238
+#, php-format
+msgid "DB update error: %s"
+msgstr ""
+
+#: includes/models/class-wp-fce-model-base.php:314
+#, php-format
+msgid "DB delete error: %s"
+msgstr ""
+
+#: public/class-wp-fce-public.php:119
+msgid "Payments"
+msgstr ""
+
+#: templates/partials/html-modal-confirm.php:10
+msgid "Bist du sicher?"
+msgstr ""
+
+#: templates/partials/html-modal-confirm.php:13
+#: templates/wp-fce-admin-map-products.php:158
+msgid "Cancel"
+msgstr ""
+
+#: templates/partials/html-modal-confirm.php:14
+msgid "Confirm"
+msgstr ""
+
+#: templates/wp-fce-admin-manage-access.php:21
+msgid "Access Management"
+msgstr ""
+
+#: templates/wp-fce-admin-manage-access.php:26
+msgid "Existing Rules"
+msgstr ""
+
+#: templates/wp-fce-admin-manage-access.php:28
+#: templates/wp-fce-admin-manage-access.php:112
+msgid "Manage access rules for existing users and products"
+msgstr ""
+
+#: templates/wp-fce-admin-manage-access.php:33
+msgid "No rules found"
+msgstr ""
+
+#: templates/wp-fce-admin-manage-access.php:38
+#: templates/wp-fce-admin-manage-access.php:122
+msgid "User"
+msgstr ""
+
+#: templates/wp-fce-admin-manage-access.php:39
+#: templates/wp-fce-admin-manage-access.php:135
+#: templates/wp-fce-admin-map-products.php:22
+msgid "Product"
+msgstr ""
+
+#: templates/wp-fce-admin-manage-access.php:40
+msgid "Access/Type"
+msgstr ""
+
+#: templates/wp-fce-admin-manage-access.php:41
+#: templates/wp-fce-admin-manage-access.php:163
+msgid "Valid until"
+msgstr ""
+
+#: templates/wp-fce-admin-manage-access.php:42
+#: templates/wp-fce-admin-manage-access.php:157
+msgid "Comment"
+msgstr ""
+
+#: templates/wp-fce-admin-manage-access.php:43
+#: templates/wp-fce-admin-manage-products.php:34
+#: templates/wp-fce-admin-map-products.php:25
+msgid "Action"
+msgstr ""
+
+#: templates/wp-fce-admin-manage-access.php:57
+#: templates/wp-fce-admin-manage-access.php:151
+msgid "Grant Access"
+msgstr ""
+
+#: templates/wp-fce-admin-manage-access.php:60
+#: templates/wp-fce-admin-manage-access.php:152
+msgid "Revoke Access"
+msgstr ""
+
+#: templates/wp-fce-admin-manage-access.php:95
+#: templates/wp-fce-admin-manage-products.php:65
+#: templates/wp-fce-admin-map-products.php:67
+msgid "Delete"
+msgstr ""
+
+#: templates/wp-fce-admin-manage-access.php:110
+msgid "Add Rule"
+msgstr ""
+
+#: templates/wp-fce-admin-manage-access.php:125
+msgid "Choose User"
+msgstr ""
+
+#: templates/wp-fce-admin-manage-access.php:138
+msgid "Choose product"
+msgstr ""
+
+#: templates/wp-fce-admin-manage-access.php:148
+msgid "Access Mode"
+msgstr ""
+
+#: templates/wp-fce-admin-manage-access.php:171
+msgid "Save Rule"
+msgstr ""
+
+#: templates/wp-fce-admin-manage-products.php:14
+msgid "Product Management"
+msgstr ""
+
+#: templates/wp-fce-admin-manage-products.php:19
+msgid "Existing Products"
+msgstr ""
+
+#: templates/wp-fce-admin-manage-products.php:21
+msgid "Manage existing products and change their details."
+msgstr ""
+
+#: templates/wp-fce-admin-manage-products.php:26
+msgid "No products found."
+msgstr ""
+
+#: templates/wp-fce-admin-manage-products.php:31
+#: templates/wp-fce-payments.php:51
+msgid "Product ID"
+msgstr ""
+
+#: templates/wp-fce-admin-manage-products.php:32
+#: templates/wp-fce-admin-manage-products.php:97
+msgid "Name"
+msgstr ""
+
+#: templates/wp-fce-admin-manage-products.php:33
+#: templates/wp-fce-admin-manage-products.php:101
+msgid "Description"
+msgstr ""
+
+#: templates/wp-fce-admin-manage-products.php:80
+msgid "Add Products"
+msgstr ""
+
+#: templates/wp-fce-admin-manage-products.php:82
+msgid "Create a new product that can be linked with a payment provider."
+msgstr ""
+
+#: templates/wp-fce-admin-manage-products.php:89
+msgid "Add new product"
+msgstr ""
+
+#: templates/wp-fce-admin-manage-products.php:93
+msgid "External SKU"
+msgstr ""
+
+#: templates/wp-fce-admin-manage-products.php:106
+msgid "Add Product"
+msgstr ""
+
+#: templates/wp-fce-admin-map-products.php:15
+msgid "Product Mappings"
+msgstr ""
+
+#: templates/wp-fce-admin-map-products.php:17
+msgid "Existing Mappings"
+msgstr ""
+
+#: templates/wp-fce-admin-map-products.php:23
+#: templates/wp-fce-admin-map-products.php:100
+#: templates/wp-fce-admin-map-products.php:144
+msgid "Assigned Spaces"
+msgstr ""
+
+#: templates/wp-fce-admin-map-products.php:24
+#: templates/wp-fce-admin-map-products.php:110
+#: templates/wp-fce-admin-map-products.php:131
+msgid "Assigned Courses"
+msgstr ""
+
+#: templates/wp-fce-admin-map-products.php:33
+msgid "No Mappings found"
+msgstr ""
+
+#: templates/wp-fce-admin-map-products.php:78
+msgid "Add a new mapping"
+msgstr ""
+
+#: templates/wp-fce-admin-map-products.php:86
+msgid "Choose Product"
+msgstr ""
+
+#: templates/wp-fce-admin-map-products.php:89
+msgid "Please select"
+msgstr ""
+
+#: templates/wp-fce-admin-map-products.php:120
+msgid "Save Mapping"
+msgstr ""
+
+#: templates/wp-fce-payments.php:36 templates/wp-fce-payments.php:44
+msgid "My Orders"
+msgstr ""
+
+#: templates/wp-fce-payments.php:50
+msgid "Order Date"
+msgstr ""
+
+#: templates/wp-fce-payments.php:52
+msgid "Payment Processor"
+msgstr ""
+
+#: templates/wp-fce-payments.php:53
+msgid "Invoice and Details"
+msgstr ""
+
+#: templates/wp-fce-payments.php:72
+msgid "Details"
+msgstr ""
+
+#: templates/wp-fce-payments.php:84
+msgid "No orders found"
+msgstr ""
+
+#: templates/wp-fce-payments.php:89
+msgid "Back to Community"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "FluentCommunity Extreme Add-On"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://example.com/wp-fce-uri/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Adds an API to FluentCommunity for supporting external payment processors"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Marc Meese"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://marcmeese.com"
+msgstr ""

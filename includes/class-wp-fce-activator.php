@@ -23,8 +23,8 @@ class WP_FCE_Activator
 		if (! is_plugin_active('fluent-community/fluent-community.php')) {
 			deactivate_plugins(plugin_basename(__FILE__));
 			wp_die(
-				__('Dieses Plugin erfordert das Plugin "Fluent Community". Bitte installiere und aktiviere es zuerst.', 'wp-fce'),
-				__('Plugin-Anforderung nicht erfüllt', 'wp-fce'),
+				__('This plugin requires the "Fluent Community" plugin. Please install and activate it first.', 'wp-fce'),
+				__('Plugin requirements not fulfilled', 'wp-fce'),
 				['back_link' => true]
 			);
 		}

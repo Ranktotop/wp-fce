@@ -67,7 +67,7 @@ class Wp_Fce_Admin_Form_Handler
 
         if (!$sku || !$name) {
             add_action('admin_notices', function () {
-                echo '<div class="notice notice-error"><p>' . esc_html__('Product ID and title are required.', 'wp-fce') . '</p></div>';
+                echo '<div class="notice notice-error"><p>' . esc_html__('Product ID and title are required', 'wp-fce') . '</p></div>';
             });
             return;
         }
@@ -75,7 +75,7 @@ class Wp_Fce_Admin_Form_Handler
         try {
             WP_FCE_Helper_Product::create($sku, $name, $desc);
 
-            wp_safe_redirect(add_query_arg('fce_success', urlencode(__('Product created successfully.', 'wp-fce')), $_SERVER['REQUEST_URI']));
+            wp_safe_redirect(add_query_arg('fce_success', urlencode(__('Product created successfully', 'wp-fce')), $_SERVER['REQUEST_URI']));
             exit;
         } catch (\Exception $e) {
             add_action('admin_notices', function () use ($e) {
@@ -120,7 +120,7 @@ class Wp_Fce_Admin_Form_Handler
         if ($product_id <= 0) {
             add_action('admin_notices', function () {
                 echo '<div class="notice notice-error"><p>'
-                    . esc_html__('Bitte wähle ein Produkt.', 'wp-fce')
+                    . esc_html__('Please select a product', 'wp-fce')
                     . '</p></div>';
             });
             return;
@@ -141,7 +141,7 @@ class Wp_Fce_Admin_Form_Handler
             // 6) Erfolg – Redirect mit Hinweis
             $redirect_url = add_query_arg(
                 'fce_success',
-                urlencode(__('Produktzuweisung gespeichert.', 'wp-fce')),
+                urlencode(__('Product mappings created successfully', 'wp-fce')),
                 $_SERVER['REQUEST_URI']
             );
             wp_safe_redirect($redirect_url);
@@ -181,7 +181,7 @@ class Wp_Fce_Admin_Form_Handler
         if ($product_id <= 0) {
             add_action('admin_notices', function () {
                 echo '<div class="notice notice-error"><p>'
-                    . esc_html__('Invalid product ID.', 'wp-fce')
+                    . esc_html__('Invalid product ID', 'wp-fce')
                     . '</p></div>';
             });
             return;
@@ -202,7 +202,7 @@ class Wp_Fce_Admin_Form_Handler
             // 6) Erfolg – Redirect mit Hinweis
             $redirect_url = add_query_arg(
                 'fce_success',
-                urlencode(__('Successfully updated product mappings.', 'wp-fce')),
+                urlencode(__('Successfully updated product mappings', 'wp-fce')),
                 $_SERVER['REQUEST_URI']
             );
             wp_safe_redirect($redirect_url);
@@ -244,7 +244,7 @@ class Wp_Fce_Admin_Form_Handler
             empty($valid_until)
         ) {
             add_action('admin_notices', function () {
-                echo '<div class="notice notice-error"><p>' . esc_html__('Invalid form data for access override.', 'wp-fce') . '</p></div>';
+                echo '<div class="notice notice-error"><p>' . esc_html__('Invalid form data for access override', 'wp-fce') . '</p></div>';
             });
             return;
         }
@@ -265,7 +265,7 @@ class Wp_Fce_Admin_Form_Handler
             //update access
             WP_FCE_Cron::check_expirations(user_id: $user_id, product_id: $product->get_id());
 
-            wp_safe_redirect(add_query_arg('fce_success', urlencode(__('Zugriffsüberschreibung gespeichert.', 'wp-fce')), $_SERVER['REQUEST_URI']));
+            wp_safe_redirect(add_query_arg('fce_success', urlencode(__('Access override saved', 'wp-fce')), $_SERVER['REQUEST_URI']));
             exit;
         } catch (\Exception $e) {
             add_action('admin_notices', function () use ($e) {

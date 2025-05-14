@@ -1,0 +1,4297 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: FluentCommunity Extreme Add-On\n"
+"POT-Creation-Date: 2025-05-14 23:03+0200\n"
+"PO-Revision-Date: 2025-05-14 23:09+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.3.1\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: wp-fce.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+"X-Poedit-SearchPathExcluded-1: vendor\n"
+"X-Poedit-SearchPathExcluded-2: admin/redux\n"
+
+#: admin/class-wp-fce-admin-ajax.php:46 admin/class-wp-fce-admin-ajax.php:75
+#: admin/class-wp-fce-admin-ajax.php:101 admin/class-wp-fce-admin-ajax.php:140
+#: admin/class-wp-fce-admin-form.php:184
+msgid "Invalid product ID"
+msgstr "Ungültige Produkt ID"
+
+#: admin/class-wp-fce-admin-ajax.php:57
+msgid "Product successfully deleted"
+msgstr "Produkt erfolgreich gelöscht"
+
+#: admin/class-wp-fce-admin-ajax.php:83
+msgid "Product successfully updated"
+msgstr "Produkt erfolgreich aktualisiert"
+
+#: admin/class-wp-fce-admin-ajax.php:121
+msgid "Sucessfully retrieved product mapping"
+msgstr "Zuweisung erfolgreich abgerufen"
+
+#: admin/class-wp-fce-admin-ajax.php:155
+#, php-format
+msgid "All mappings successfully deleted for product #%d"
+msgstr "Alle Zuweisungen für Produkt #%d wurden erfolgreich gelöscht"
+
+#. translators: %s = Fehlermeldung
+#: admin/class-wp-fce-admin-ajax.php:163
+#, php-format
+msgid "Error deleting mappings for product #%d: %s"
+msgstr "Fehler beim Löschen von Zuweisungen für Produkt #%d: %s"
+
+#: admin/class-wp-fce-admin-ajax.php:174 admin/class-wp-fce-admin-ajax.php:196
+msgid "Invalid rule ID"
+msgstr "Ungültige Regel-ID"
+
+#: admin/class-wp-fce-admin-ajax.php:180 admin/class-wp-fce-admin-ajax.php:210
+msgid "Rule not found"
+msgstr "Regel nicht gefunden"
+
+#: admin/class-wp-fce-admin-ajax.php:187
+msgid "Rule successfully deleted"
+msgstr "Regel erfolgreich gelöscht"
+
+#: admin/class-wp-fce-admin-ajax.php:204
+msgid "Invalid valid until date"
+msgstr "Ungültiges Ablaufdatum"
+
+#: admin/class-wp-fce-admin-ajax.php:219
+msgid "Rule successfully updated"
+msgstr "Regel erfolgreich aktualisiert"
+
+#: admin/class-wp-fce-admin-form.php:70
+msgid "Product ID and title are required"
+msgstr "Produkt-ID und Titel sind erforderlich"
+
+#: admin/class-wp-fce-admin-form.php:78
+msgid "Product created successfully"
+msgstr "Produkt erfolgreich erstellt"
+
+#: admin/class-wp-fce-admin-form.php:123
+msgid "Please select a product"
+msgstr "Bitte wähle ein Produkt"
+
+#: admin/class-wp-fce-admin-form.php:144
+msgid "Product mappings created successfully"
+msgstr "Zuweisungen erfolgreich gespeichert"
+
+#: admin/class-wp-fce-admin-form.php:205
+msgid "Successfully updated product mappings"
+msgstr "Zuweisung erfolgreich aktualisiert"
+
+#: admin/class-wp-fce-admin-form.php:247
+msgid "Invalid form data for access override"
+msgstr "Ungültige Formulardaten für die Zugriffsregel"
+
+#: admin/class-wp-fce-admin-form.php:268
+msgid "Access override saved"
+msgstr "Zugriffsregel gespeichert"
+
+#: admin/class-wp-fce-admin.php:126
+msgid "Do you really want to delete the product? This action cannot be undone!"
+msgstr ""
+"Willst du das Produkt wirklich löschen? Diese Aktion kann nicht rückgängig "
+"gemacht werden!"
+
+#: admin/class-wp-fce-admin.php:127
+msgid ""
+"Do you really want to delete all mappings of this product? This action "
+"cannot be undone!"
+msgstr ""
+"Möchtest du wirklich alle Zuweisungen für dieses Produkt löschen? Diese "
+"Aktion kann nicht rückgängig gemacht werden!"
+
+#: admin/class-wp-fce-admin.php:128
+msgid "Are you sure you want to delete the rule? This action cannot be undone!"
+msgstr ""
+"Bist du sicher, dass du die Zugriffsregel löschen möchtest? Diese Aktion "
+"kann nicht rückgängig gemacht werden!"
+
+#: admin/class-wp-fce-admin.php:129
+msgid "Saved successfully!"
+msgstr "Erfolgreich gespeichert!"
+
+#: admin/class-wp-fce-admin.php:130
+msgid "Error occurred!"
+msgstr "Fehler aufgetreten!"
+
+#: admin/class-wp-fce-admin.php:131 templates/wp-fce-admin-manage-access.php:90
+#: templates/wp-fce-admin-manage-products.php:60
+#: templates/wp-fce-admin-map-products.php:61
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: admin/class-wp-fce-admin.php:132 templates/wp-fce-admin-map-products.php:157
+msgid "Save"
+msgstr "Speichern"
+
+#: admin/class-wp-fce-admin.php:133
+msgid "Are you sure?"
+msgstr "Bist du sicher?"
+
+#: admin/class-wp-fce-admin.php:163
+msgid "API"
+msgstr "API"
+
+#: admin/class-wp-fce-admin.php:165
+msgid "API-Settings"
+msgstr "API-Einstellungen"
+
+#: admin/class-wp-fce-admin.php:170
+msgid "API Key (IPN)"
+msgstr "API-Schlüssel (IPN)"
+
+#: admin/class-wp-fce-admin.php:171
+msgid "Used to validate IPN requests."
+msgstr "Wird verwendet, um IPN-Anfragen zu validieren."
+
+#: admin/class-wp-fce-admin.php:176
+msgid "API Key (Admin)"
+msgstr "API-Schlüssel (Admin)"
+
+#: admin/class-wp-fce-admin.php:177
+msgid "Used to validate Admin requests to the REST API."
+msgstr "Wird verwendet, um Anfragen an die REST-API zu validieren."
+
+#: admin/class-wp-fce-admin.php:182
+msgid "Appearance"
+msgstr "Darstellung"
+
+#: admin/class-wp-fce-admin.php:184
+msgid "Defines the appearance of the payments-overview page"
+msgstr "Definiert das Erscheinungsbild der Zahlungsübersichtsseite"
+
+#: admin/class-wp-fce-admin.php:191
+msgid "Background Image"
+msgstr "Hintergrundbild"
+
+#: admin/class-wp-fce-admin.php:192
+msgid "Is shown on the payments-overview page"
+msgstr "Wird auf der Zahlungsübersichtsseite angezeigt"
+
+#: admin/class-wp-fce-admin.php:193
+msgid "Optional. Supports PNG and JPEG"
+msgstr "Optional. Unterstützt PNG und JPEG"
+
+#: admin/class-wp-fce-admin.php:198
+msgid "Manage Products"
+msgstr "Produkte verwalten"
+
+#: admin/class-wp-fce-admin.php:200
+msgid "Manage products, mappings and access rules"
+msgstr "Verwalte Produkte, Zuweisungen und Zugriffsregeln"
+
+#: admin/class-wp-fce-admin.php:205
+msgid "Manage products"
+msgstr "Produkte verwalten"
+
+#: admin/class-wp-fce-admin.php:210
+msgid "Manage mappings"
+msgstr "Verwalten von Zuweisungen"
+
+#: admin/class-wp-fce-admin.php:215
+msgid "Manage access"
+msgstr "Verwalten des Zugriffs"
+
+#: includes/class-wp-fce-activator.php:26
+msgid ""
+"This plugin requires the \"Fluent Community\" plugin. Please install and "
+"activate it first."
+msgstr ""
+"Dieses Plugin benötigt das Plugin \"Fluent Community\". Bitte installiere "
+"und aktiviere es zuerst."
+
+#: includes/class-wp-fce-activator.php:27
+msgid "Plugin requirements not fulfilled"
+msgstr "Plugin Anforderungen nicht erfüllt"
+
+#: includes/helpers/class-wp-fce-helper-access-override.php:146
+#, php-format
+msgid "Override not found by ID %d."
+msgstr "Zugriffsregel mit ID %d nicht gefunden."
+
+#: includes/helpers/class-wp-fce-helper-base.php:63
+#, php-format
+msgid "Unknown column %s"
+msgstr "Unbekannte Spalte %s"
+
+#: includes/helpers/class-wp-fce-helper-base.php:179
+#, php-format
+msgid "Failed to normalize to Datetime. Invalid datetime value given: %s"
+msgstr ""
+"Fehler bei der Normalisierung auf Datetime. Ungültiger datetime-Wert "
+"angegeben: %s"
+
+#: includes/helpers/class-wp-fce-helper-product-user.php:152
+#, php-format
+msgid "Product %d already assigned to user %d with transaction id \"%s\""
+msgstr ""
+"Das Produkt %d ist bereits Benutzer %d mit der Transaktions-ID \"%s\" "
+"zugeordnet"
+
+#: includes/helpers/class-wp-fce-helper-product.php:43
+#, php-format
+msgid "Product with SKU \"%s\" already exists."
+msgstr "Das Produkt mit der SKU \"%s\" ist bereits vorhanden."
+
+#: includes/models/class-wp-fce-model-base.php:62
+msgid "Child class must set protected static $table"
+msgstr "Die untergeordnete Klasse muss protected static $table festlegen"
+
+#: includes/models/class-wp-fce-model-base.php:171
+#, php-format
+msgid "Record with ID %d not found in %s"
+msgstr "Datensatz mit ID %d in %s nicht gefunden"
+
+#: includes/models/class-wp-fce-model-base.php:205
+#, php-format
+msgid "DB insert error: %s"
+msgstr "Fehler beim Einfügen der Datenbank: %s"
+
+#: includes/models/class-wp-fce-model-base.php:222
+msgid "Cannot update without an ID"
+msgstr "Ohne ID kann nicht aktualisiert werden"
+
+#: includes/models/class-wp-fce-model-base.php:238
+#, php-format
+msgid "DB update error: %s"
+msgstr "Fehler bei der DB-Aktualisierung: %s"
+
+#: includes/models/class-wp-fce-model-base.php:314
+#, php-format
+msgid "DB delete error: %s"
+msgstr "Fehler beim Löschen der Datenbank: %s"
+
+#: public/class-wp-fce-public.php:119
+msgid "Payments"
+msgstr "Zahlungen"
+
+#: templates/partials/html-modal-confirm.php:10
+msgid "Bist du sicher?"
+msgstr "Bist du sicher?"
+
+#: templates/partials/html-modal-confirm.php:13
+#: templates/wp-fce-admin-map-products.php:158
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: templates/partials/html-modal-confirm.php:14
+msgid "Confirm"
+msgstr "Bestätigen"
+
+#: templates/wp-fce-admin-manage-access.php:21
+msgid "Access Management"
+msgstr "Zugangsverwaltung"
+
+#: templates/wp-fce-admin-manage-access.php:26
+msgid "Existing Rules"
+msgstr "Bestehende Regeln"
+
+#: templates/wp-fce-admin-manage-access.php:28
+#: templates/wp-fce-admin-manage-access.php:112
+msgid "Manage access rules for existing users and products"
+msgstr "Verwalten von Zugriffsregeln für vorhandene Benutzer und Produkte"
+
+#: templates/wp-fce-admin-manage-access.php:33
+msgid "No rules found"
+msgstr "Keine Regeln gefunden"
+
+#: templates/wp-fce-admin-manage-access.php:38
+#: templates/wp-fce-admin-manage-access.php:122
+msgid "User"
+msgstr "Benutzer"
+
+#: templates/wp-fce-admin-manage-access.php:39
+#: templates/wp-fce-admin-manage-access.php:135
+#: templates/wp-fce-admin-map-products.php:22
+msgid "Product"
+msgstr "Produkt"
+
+#: templates/wp-fce-admin-manage-access.php:40
+msgid "Access/Type"
+msgstr "Zugang/Art"
+
+#: templates/wp-fce-admin-manage-access.php:41
+#: templates/wp-fce-admin-manage-access.php:163
+msgid "Valid until"
+msgstr "Gültig bis"
+
+#: templates/wp-fce-admin-manage-access.php:42
+#: templates/wp-fce-admin-manage-access.php:157
+msgid "Comment"
+msgstr "Kommentar"
+
+#: templates/wp-fce-admin-manage-access.php:43
+#: templates/wp-fce-admin-manage-products.php:34
+#: templates/wp-fce-admin-map-products.php:25
+msgid "Action"
+msgstr "Aktion"
+
+#: templates/wp-fce-admin-manage-access.php:57
+#: templates/wp-fce-admin-manage-access.php:151
+msgid "Grant Access"
+msgstr "Zugriff gewähren"
+
+#: templates/wp-fce-admin-manage-access.php:60
+#: templates/wp-fce-admin-manage-access.php:152
+msgid "Revoke Access"
+msgstr "Zugang widerrufen"
+
+#: templates/wp-fce-admin-manage-access.php:95
+#: templates/wp-fce-admin-manage-products.php:65
+#: templates/wp-fce-admin-map-products.php:67
+msgid "Delete"
+msgstr "Löschen"
+
+#: templates/wp-fce-admin-manage-access.php:110
+msgid "Add Rule"
+msgstr "Regel hinzufügen"
+
+#: templates/wp-fce-admin-manage-access.php:125
+msgid "Choose User"
+msgstr "Benutzer wählen"
+
+#: templates/wp-fce-admin-manage-access.php:138
+msgid "Choose product"
+msgstr "Produkt wählen"
+
+#: templates/wp-fce-admin-manage-access.php:148
+msgid "Access Mode"
+msgstr "Zugriffsmodus"
+
+#: templates/wp-fce-admin-manage-access.php:171
+msgid "Save Rule"
+msgstr "Regel speichern"
+
+#: templates/wp-fce-admin-manage-products.php:14
+msgid "Product Management"
+msgstr "Produkt Verwaltung"
+
+#: templates/wp-fce-admin-manage-products.php:19
+msgid "Existing Products"
+msgstr "Bestehende Produkte"
+
+#: templates/wp-fce-admin-manage-products.php:21
+msgid "Manage existing products and change their details."
+msgstr "Verwalte vorhandene Produkte und ändere deren Details."
+
+#: templates/wp-fce-admin-manage-products.php:26
+msgid "No products found."
+msgstr "Keine Produkte gefunden."
+
+#: templates/wp-fce-admin-manage-products.php:31
+#: templates/wp-fce-payments.php:51
+msgid "Product ID"
+msgstr "Produkt-ID"
+
+#: templates/wp-fce-admin-manage-products.php:32
+#: templates/wp-fce-admin-manage-products.php:97
+msgid "Name"
+msgstr "Name"
+
+#: templates/wp-fce-admin-manage-products.php:33
+#: templates/wp-fce-admin-manage-products.php:101
+msgid "Description"
+msgstr "Beschreibung"
+
+#: templates/wp-fce-admin-manage-products.php:80
+msgid "Add Products"
+msgstr "Produkte hinzufügen"
+
+#: templates/wp-fce-admin-manage-products.php:82
+msgid "Create a new product that can be linked with a payment provider."
+msgstr ""
+"Erstelle ein neues Produkt, das mit einem Zahlungsanbieter verknüpft werden "
+"kann."
+
+#: templates/wp-fce-admin-manage-products.php:89
+msgid "Add new product"
+msgstr "Neues Produkt hinzufügen"
+
+#: templates/wp-fce-admin-manage-products.php:93
+msgid "External SKU"
+msgstr "Externe SKU"
+
+#: templates/wp-fce-admin-manage-products.php:106
+msgid "Add Product"
+msgstr "Produkt hinzufügen"
+
+#: templates/wp-fce-admin-map-products.php:15
+msgid "Product Mappings"
+msgstr "Produktzuweisungen"
+
+#: templates/wp-fce-admin-map-products.php:17
+msgid "Existing Mappings"
+msgstr "Bestehende Zuweisungen"
+
+#: templates/wp-fce-admin-map-products.php:23
+#: templates/wp-fce-admin-map-products.php:100
+#: templates/wp-fce-admin-map-products.php:144
+msgid "Assigned Spaces"
+msgstr "Zugewiesene Räume"
+
+#: templates/wp-fce-admin-map-products.php:24
+#: templates/wp-fce-admin-map-products.php:110
+#: templates/wp-fce-admin-map-products.php:131
+msgid "Assigned Courses"
+msgstr "Zugewiesene Kurse"
+
+#: templates/wp-fce-admin-map-products.php:33
+msgid "No Mappings found"
+msgstr "Keine Zuweisungen gefunden"
+
+#: templates/wp-fce-admin-map-products.php:78
+msgid "Add a new mapping"
+msgstr "Neue Zuweisung hinzufügen"
+
+#: templates/wp-fce-admin-map-products.php:86
+msgid "Choose Product"
+msgstr "Produkt wählen"
+
+#: templates/wp-fce-admin-map-products.php:89
+msgid "Please select"
+msgstr "Bitte wählen"
+
+#: templates/wp-fce-admin-map-products.php:120
+msgid "Save Mapping"
+msgstr "Zuweisung speichern"
+
+#: templates/wp-fce-payments.php:36 templates/wp-fce-payments.php:44
+msgid "My Orders"
+msgstr "Meine Bestellungen"
+
+#: templates/wp-fce-payments.php:50
+msgid "Order Date"
+msgstr "Bestelldatum"
+
+#: templates/wp-fce-payments.php:52
+msgid "Payment Processor"
+msgstr "Zahlungsanbieter"
+
+#: templates/wp-fce-payments.php:53
+msgid "Invoice and Details"
+msgstr "Rechnung und Details"
+
+#: templates/wp-fce-payments.php:72
+msgid "Details"
+msgstr "Details"
+
+#: templates/wp-fce-payments.php:84
+msgid "No orders found"
+msgstr "Keine Bestellungen gefunden"
+
+#: templates/wp-fce-payments.php:89
+msgid "Back to Community"
+msgstr "Zurück zur Community"
+
+#. Plugin Name of the plugin/theme
+msgid "FluentCommunity Extreme Add-On"
+msgstr "FluentCommunity Extreme Add-On"
+
+#. Plugin URI of the plugin/theme
+msgid "http://example.com/wp-fce-uri/"
+msgstr "http://example.com/wp-fce-uri/"
+
+#. Description of the plugin/theme
+msgid ""
+"Adds an API to FluentCommunity for supporting external payment processors"
+msgstr ""
+"Fügt FluentCommunity eine API zur Unterstützung externer Zahlungsanbieter "
+"hinzu"
+
+#. Author of the plugin/theme
+msgid "Marc Meese"
+msgstr "Marc Meese"
+
+#. Author URI of the plugin/theme
+msgid "https://marcmeese.com"
+msgstr "https://marcmeese.com"
+
+#~ msgid "Abbrechen"
+#~ msgstr "Abbrechen"
+
+#, fuzzy
+#~ msgid "Bestätigen"
+#~ msgstr "Bestätigen"
+
+#, fuzzy, php-format
+#~ msgid ""
+#~ "The Redux 3 file ReduxCore/core/dashboard.php is still in use by %1$s. "
+#~ "Please contact the author of this theme (NOT Redux support, we have no "
+#~ "control over this issue). They need to update their project to use Redux "
+#~ "4 and discontinue use of this file. It will soon be removed from Redux."
+#~ msgstr ""
+#~ "Die Redux 3-Datei ReduxCore/core/dashboard.php wird von %1$s weiterhin "
+#~ "verwendet. Bitte wenden Sie sich an den Autor dieses Themas (NICHT den "
+#~ "Redux-Support, wir haben keine Kontrolle über dieses Problem). Sie müssen "
+#~ "ihr Projekt aktualisieren, um Redux 4 zu verwenden, und die Verwendung "
+#~ "dieser Datei einstellen. Es wird bald aus Redux entfernt."
+
+#, fuzzy, php-format
+#~ msgid ""
+#~ "The Redux 3 file ReduxCore/core/enqueue.php is still in use by %1$s. "
+#~ "Please contact the author of this theme (NOT Redux support, we have no "
+#~ "control over this issue). They need to update their project to use Redux "
+#~ "4 and discontinue use of this file. It will soon be removed from Redux."
+#~ msgstr ""
+#~ "Die Redux 3-Datei ReduxCore/core/enqueue.php wird von %1$s weiterhin "
+#~ "verwendet. Bitte wenden Sie sich an den Autor dieses Themas (NICHT den "
+#~ "Redux-Support, wir haben keine Kontrolle über dieses Problem). Sie müssen "
+#~ "ihr Projekt aktualisieren, um Redux 4 zu verwenden, und die Verwendung "
+#~ "dieser Datei einstellen. Es wird bald aus Redux entfernt."
+
+#, fuzzy, php-format
+#~ msgid ""
+#~ "The Redux 3 file ReduxCore/core/newsflash.php is still in use by %1$s. "
+#~ "Please contact the author of this theme (NOT Redux support, we have no "
+#~ "control over this issue). They need to update their project to use Redux "
+#~ "4 and discontinue use of this file. It will soon be removed from Redux."
+#~ msgstr ""
+#~ "Die Redux 3-Datei ReduxCore/core/newsflash.php wird weiterhin von %1$s "
+#~ "verwendet. Bitte wenden Sie sich an den Autor dieses Themas (NICHT den "
+#~ "Redux-Support, wir haben keine Kontrolle über dieses Problem). Sie müssen "
+#~ "ihr Projekt aktualisieren, um Redux 4 zu verwenden, und die Verwendung "
+#~ "dieser Datei einstellen. Es wird bald aus Redux entfernt."
+
+#, fuzzy, php-format
+#~ msgid ""
+#~ "The Redux 3 file ReduxCore/core/panel.php is still in use by %1$s. Please "
+#~ "contact the author of this theme (NOT Redux support, we have no control "
+#~ "over this issue). They need to update their project to use Redux 4 and "
+#~ "discontinue use of this file. It will soon be removed from Redux."
+#~ msgstr ""
+#~ "Die Redux 3-Datei ReduxCore/core/panel.php wird von %1$s weiterhin "
+#~ "verwendet. Bitte wenden Sie sich an den Autor dieses Themas (NICHT den "
+#~ "Redux-Support, wir haben keine Kontrolle über dieses Problem). Sie müssen "
+#~ "ihr Projekt aktualisieren, um Redux 4 zu verwenden, und die Verwendung "
+#~ "dieser Datei einstellen. Es wird bald aus Redux entfernt."
+
+#, fuzzy, php-format
+#~ msgid ""
+#~ "The Redux 3 file ReduxCore/core/required.php is still in use by %1$s. "
+#~ "Please contact the author of this theme (NOT Redux support, we have no "
+#~ "control over this issue). They need to update their project to use Redux "
+#~ "4 and discontinue use of this file. It will soon be removed from Redux."
+#~ msgstr ""
+#~ "Die Redux 3-Datei ReduxCore/core/required.php wird von %1$s weiterhin "
+#~ "verwendet. Bitte wenden Sie sich an den Autor dieses Themas (NICHT den "
+#~ "Redux-Support, wir haben keine Kontrolle über dieses Problem). Sie müssen "
+#~ "ihr Projekt aktualisieren, um Redux 4 zu verwenden, und die Verwendung "
+#~ "dieser Datei einstellen. Es wird bald aus Redux entfernt."
+
+#, fuzzy, php-format
+#~ msgid ""
+#~ "The Redux 3 file ReduxCore/inc/fields/typography/typography.php is still "
+#~ "in use by %1$s. Please contact the author of this theme (NOT Redux "
+#~ "support, we have no control over this issue). They need to update their "
+#~ "project to use Redux 4 and discontinue use of this file. It will soon be "
+#~ "removed from Redux."
+#~ msgstr ""
+#~ "Die Redux 3-Datei ReduxCore/inc/fields/typography/typography.php wird von "
+#~ "%1$s weiterhin verwendet. Bitte wenden Sie sich an den Autor dieses "
+#~ "Themas (NICHT den Redux-Support, wir haben keine Kontrolle über dieses "
+#~ "Problem). Sie müssen ihr Projekt aktualisieren, um Redux 4 zu verwenden, "
+#~ "und die Verwendung dieser Datei einstellen. Es wird bald aus Redux "
+#~ "entfernt."
+
+#~ msgid ""
+#~ "Redux Framework version 4 is activated but not loaded. Redux Framework "
+#~ "version 3 is still installed and activated.  Please deactivate Redux "
+#~ "Framework version 3."
+#~ msgstr ""
+#~ "Redux Framework Version 4 ist aktiviert, aber nicht geladen. Redux "
+#~ "Framework Version 3 ist noch installiert und aktiviert.  Bitte "
+#~ "deaktivieren Sie Redux Framework Version 3."
+
+#~ msgid "Redux Framework has an embedded demo."
+#~ msgstr "Redux Framework verfügt über ein integriertes Demo."
+
+#~ msgid "Click here to activate the sample config file."
+#~ msgstr "Klicke hier, um die Beispiel-Konfiguration zu aktivieren."
+
+#~ msgid "What is this?"
+#~ msgstr "Was ist das?"
+
+#, fuzzy
+#~ msgid ""
+#~ "Redux has detected the Redux Pro plugin is enabled. All featured of Redux "
+#~ "Pro are now part of the entire Redux plugin and is no longer required. "
+#~ "Please disable the Redux Pro plugin to avoid potential conflicts."
+#~ msgstr ""
+#~ "Redux hat festgestellt, dass das Redux Pro-Plugin aktiviert ist. Alle "
+#~ "Funktionen von Redux Pro sind jetzt Teil des gesamten Redux-Plugins und "
+#~ "werden nicht mehr benötigt. Bitte deaktivieren Sie das Redux Pro-Plugin, "
+#~ "um mögliche Konflikte zu vermeiden."
+
+#~ msgid "The Redux upload directory"
+#~ msgstr "Das Redux-Upload-Verzeichnis"
+
+#~ msgid "Redux Framework"
+#~ msgstr "Redux Framework"
+
+#~ msgid "Debug information specific to Redux Framework."
+#~ msgstr "Debug-Informationen speziell für das Redux-Framework."
+
+#~ msgid "Version"
+#~ msgstr "Version"
+
+#~ msgid "Installation"
+#~ msgstr "Installation"
+
+#~ msgid "Data directory"
+#~ msgstr "Verzeichnis Data"
+
+#~ msgid "Browser"
+#~ msgstr "Browser"
+
+#, php-format
+#~ msgid "Redux Instance: %s"
+#~ msgstr "Redux-Instanz: %s"
+
+#, php-format
+#~ msgid "Debug information for the %s Redux instance."
+#~ msgstr "Debug-Informationen für die %s Redux-Instanz."
+
+#~ msgid "Cheatin&#8217; eh?"
+#~ msgstr "Betrug&#8217; eh?"
+
+#~ msgid "Dismiss"
+#~ msgstr "Verwerfen"
+
+#~ msgid "Invalid security credential.  Please reload the page and try again."
+#~ msgstr ""
+#~ "Ungültiger Sicherheitsnachweis. Bitte laden Sie die Seite neu und "
+#~ "versuchen Sie es nochmal."
+
+#~ msgid "Invalid user capability.  Please reload the page and try again."
+#~ msgstr ""
+#~ "Ungültige Benutzerberechtigung. Bitte laden Sie die Seite neu und "
+#~ "versuchen Sie es nochmal."
+
+#~ msgid "Your panel has no fields. Nothing to save."
+#~ msgstr "Ihr Panel hat keine Felder. Nichts zu speichern."
+
+#~ msgid "Warning, Premature Initialization"
+#~ msgstr "Warnung, vorzeitige Initialisierung"
+
+#, php-format
+#~ msgid "was run before the %s hook and was delayed to avoid errors."
+#~ msgstr ""
+#~ "wurde vor dem %s Hook ausgeführt und verzögert, um Fehler zu vermeiden."
+
+#~ msgid "Redux Framework is not installed. Please install it."
+#~ msgstr "Redux Framework ist nicht installiert. Bitte installieren Sie es."
+
+#~ msgid "Unable to create a section due to missing id and title."
+#~ msgstr ""
+#~ "Ein Abschnitt kann aufgrund fehlender ID und des fehlenden Titels nicht "
+#~ "erstellt werden."
+
+#~ msgid ""
+#~ "Unable to create a section due an empty section array or the section "
+#~ "variable passed was not an array."
+#~ msgstr ""
+#~ "Ein Abschnitt konnte aufgrund eines leeren Abschnittsarrays nicht "
+#~ "erstellt werden oder die übergebene Abschnittsvariable war kein Array."
+
+#~ msgid "Regular 400"
+#~ msgstr "Regular 400"
+
+#~ msgid "Regular 400 Italic"
+#~ msgstr "Regular 400 Kursiv"
+
+#~ msgid "Bold 700"
+#~ msgstr "Bold 700"
+
+#~ msgid "Bold 700 Italic"
+#~ msgstr "Fett 700 Kursiv"
+
+#, php-format
+#~ msgid ""
+#~ "Enjoyed %1$s? Please leave us a %2$s rating. We really appreciate your "
+#~ "support!"
+#~ msgstr ""
+#~ "Dir gefällt %1$s? Bitte gib uns eine %2$s Bewertung. Vielen Dank für "
+#~ "Deine Unterstützung!"
+
+#~ msgid "Redux"
+#~ msgstr "Redux"
+
+#~ msgid "Options"
+#~ msgstr "Optionen"
+
+#~ msgid "Search for field(s)"
+#~ msgstr "Suche nach Feld(ern)"
+
+#~ msgid ""
+#~ "You have changes that are not saved. Would you like to save them now?"
+#~ msgstr ""
+#~ "Sie haben Änderungen vorgenommen, die nicht gespeichert wurden. Möchten "
+#~ "Sie sie jetzt speichern?"
+
+#~ msgid "Are you sure? Resetting will lose all custom values."
+#~ msgstr ""
+#~ "Sind Sie sicher? Beim Zurücksetzen gehen alle benutzerdefinierten Werte "
+#~ "verloren."
+
+#~ msgid "Are you sure? Resetting will lose all custom values in this section."
+#~ msgstr ""
+#~ "Sind Sie sicher? Beim Zurücksetzen gehen alle benutzerdefinierten Werte "
+#~ "in diesem Bereich verloren."
+
+#~ msgid ""
+#~ "Your current options will be replaced with the values of this preset. "
+#~ "Would you like to proceed?"
+#~ msgstr ""
+#~ "Ihre aktuellen Optionen werden durch die Werte dieser Voreinstellung "
+#~ "ersetzt. Möchten Sie fortfahren?"
+
+#~ msgid ""
+#~ "Your current options will be replaced with the values of this import. "
+#~ "Would you like to proceed?"
+#~ msgstr ""
+#~ "Warnung: Alle aktuellen Optionen werden mit den Daten aus dieser "
+#~ "Sicherung ersetzt! Weiter?"
+
+#~ msgid "Please Wait"
+#~ msgstr "Bitte warten"
+
+#~ msgid "There was an error saving. Here is the result of your action:"
+#~ msgstr ""
+#~ "Beim Speichern ist ein Fehler aufgetreten. Hier ist das Resultat Ihrer "
+#~ "Handlung:"
+
+#~ msgid ""
+#~ "There was a problem with your action. Please try again or reload the page."
+#~ msgstr ""
+#~ "Es gab ein Problem mit Ihrer Aktion. Bitte versuchen Sie es noch einmal "
+#~ "oder laden Sie die Seite erneut."
+
+#, php-format
+#~ msgid "The %1$s extension requires Redux Framework version %2$s or higher."
+#~ msgstr ""
+#~ "Die Erweiterung %1$s erfordert Redux Framework-Version %2$s oder höher."
+
+#~ msgid "You are currently running Redux Framework version "
+#~ msgstr "Sie führen derzeit die Redux Framework-Version aus "
+
+#~ msgid ""
+#~ "This field will not render in your option panel, and features of this "
+#~ "extension will not be available until the latest version of Redux "
+#~ "Framework has been installed."
+#~ msgstr ""
+#~ "Dieses Feld wird in Ihrem Optionsfeld nicht gerendert, und die Funktionen "
+#~ "dieser Erweiterung sind erst verfügbar, wenn die neueste Version von "
+#~ "Redux Framework installiert wurde."
+
+#~ msgid "File Permission Issues"
+#~ msgstr "Datei Berechtigungen Fehler"
+
+#, php-format
+#~ msgid ""
+#~ "We were unable to modify required files. Please ensure that %1$s has the "
+#~ "proper read-write permissions, or modify your wp-config.php file to "
+#~ "contain your FTP login credentials as %2$s."
+#~ msgstr ""
+#~ "Erforderliche Dateien konnten nicht geändert werden. Stellen Sie sicher, "
+#~ "dass %1$s über die richtigen Lese-/Schreibberechtigungen verfügt, oder "
+#~ "ändern Sie Ihre wp-config.php-Datei so, dass Sie Ihre FTP-"
+#~ "Anmeldeinformationen als %2$s enthalten."
+
+#~ msgid "outlined here"
+#~ msgstr "hier beschrieben"
+
+#~ msgid "Enable"
+#~ msgstr "Aktivieren"
+
+#~ msgid "Disable"
+#~ msgstr "Deaktivieren"
+
+#~ msgid "moving the mouse over"
+#~ msgstr "mit der Maus drüberfahren"
+
+#~ msgid "clicking"
+#~ msgstr "klicken"
+
+#, php-format
+#~ msgid ""
+#~ "Hints are tooltips that popup when %1$s the hint icon, offering addition "
+#~ "information about the field in which they appear.  They can be %2$s by "
+#~ "using the link below."
+#~ msgstr ""
+#~ "Hinweise sind QuickInfos, die popup, wenn %1$s das Hinweissymbol ist, "
+#~ "bietet zusätzliche Informationen über das Feld, in dem sie angezeigt "
+#~ "werden.  Sie können %2$s sein, indem Sie den untenstehenden Link "
+#~ "verwenden."
+
+#~ msgid "Hints"
+#~ msgstr "Hinweise"
+
+#~ msgid "Hint Tooltip Preferences"
+#~ msgstr "Hinweis Tooltip Einstellungen"
+
+#, php-format
+#~ msgid "Field %1$s could not be displayed. Field type %2$s was not found."
+#~ msgstr ""
+#~ "Das Feld %1$s konnte nicht angezeigt werden. Der Feldtyp %2$s wurde nicht "
+#~ "gefunden."
+
+#~ msgid "Default"
+#~ msgstr "Standard"
+
+#~ msgid ""
+#~ "Warning- This options panel will not work properly without javascript!"
+#~ msgstr ""
+#~ "Warnung - Dieses Einstellungsbedienfeld wird ohne JavaScript nicht "
+#~ "korrekt funktionieren!"
+
+#~ msgid "Settings Imported!"
+#~ msgstr "Einstellungen importiert!"
+
+#~ msgid "All Defaults Restored!"
+#~ msgstr "Alle Standardwerte wiederhergestellt!"
+
+#~ msgid "Section Defaults Restored!"
+#~ msgstr "Alle Standardwerte in diesem Abschnitt wiederhergestellt!"
+
+#~ msgid "Settings Saved!"
+#~ msgstr "Einstellungen gespeichert!"
+
+#~ msgid "Settings have changed, you should save them!"
+#~ msgstr "Die Einstellungen wurden geändert. Sie sollten sie speichern!"
+
+#~ msgid "error(s) were found!"
+#~ msgstr "Fehler wurde(n) gefunden!"
+
+#~ msgid "warning(s) were found!"
+#~ msgstr "Warnung(en) wurde(n) gefunden!"
+
+#, fuzzy, php-format
+#~ msgid ""
+#~ "Redux Panel Template %1$s cannot be read. Please check the permissions "
+#~ "for this file."
+#~ msgstr ""
+#~ "Redux Panel Template %1$s kann nicht gelesen werden. Bitte überprüfen Sie "
+#~ "die Berechtigungen für diese Datei."
+
+#, fuzzy, php-format
+#~ msgid ""
+#~ "Redux Panel Template %1$s does not exist. Please reinstall Redux to "
+#~ "replace this file."
+#~ msgstr ""
+#~ "Redux Panel Template %1$s ist nicht vorhanden. Bitte installieren Sie "
+#~ "Redux neu, um diese Datei zu ersetzen."
+
+#~ msgid ""
+#~ "Your panel has bundled copies of Redux Framework template files that are "
+#~ "outdated!"
+#~ msgstr ""
+#~ "Ihr Panel enthält Kopien von Redux Framework Vorlagendateien, die "
+#~ "veraltet sind!"
+
+#, fuzzy
+#~ msgid ""
+#~ "Please ask the author of this theme to update them as functionality "
+#~ "issues could arise."
+#~ msgstr ""
+#~ "Bitte bitten Sie den Autor dieses Themes, diese zu aktualisieren, da "
+#~ "Probleme mit der Funktionalität auftreten können."
+
+#, fuzzy, php-format
+#~ msgid ""
+#~ "The %1$s plugin requires PHP version %2$s or higher. This site is running "
+#~ "PHP version %3$s. The theme/plugin that relies on Redux will not run "
+#~ "properly without a PHP update. <a href=\"%4$s\">Learn about updating PHP</"
+#~ "a>."
+#~ msgstr ""
+#~ "Das %1$s Plugin erfordert eine PHP-Version %2$s oder höher. Auf dieser "
+#~ "Seite wird die PHP-Version %3$sausgeführt. Das Theme/Plugin, das auf "
+#~ "Redux angewiesen ist, wird ohne ein PHP-Update nicht richtig laufen. <a "
+#~ "href=\"%4$s\">Erfahren Sie mehr über das Aktualisieren von PHP.</a>"
+
+#~ msgid "[unassigned]"
+#~ msgstr "[nicht zugewiesen]"
+
+#, fuzzy
+#~ msgid "Invalid Security Credentials.  Please reload the page and try again."
+#~ msgstr ""
+#~ "Ungültige Sicherheitsanmeldeinformationen.  Bitte laden Sie die Seite neu "
+#~ "und versuchen Sie es erneut."
+
+#, fuzzy
+#~ msgid "Import unsuccessful! Malformed JSON data detected."
+#~ msgstr "Import nicht erfolgreich! Fehlerhafte JSON-Daten erkannt."
+
+#, fuzzy, php-format
+#~ msgid "Import successful! Click %s to refresh."
+#~ msgstr "Import erfolgreich! Klicken Sie zum Aktualisieren auf %s."
+
+#~ msgid "OK"
+#~ msgstr "OK"
+
+#, fuzzy
+#~ msgid ""
+#~ "Import unsuccessful! File permission error: Could not write import data "
+#~ "to server."
+#~ msgstr ""
+#~ "Import nicht erfolgreich! Fehler bei der Dateiberechtigung: Importdaten "
+#~ "konnten nicht auf den Server geschrieben werden."
+
+#, fuzzy
+#~ msgid ""
+#~ "Import unsuccessful! The selected file is not a valid color scheme file."
+#~ msgstr ""
+#~ "Import nicht erfolgreich! Bei der ausgewählten Datei handelt es sich "
+#~ "nicht um eine gültige Farbschemadatei."
+
+#, fuzzy
+#~ msgid "Import unsuccessful! No data detected in the import file."
+#~ msgstr ""
+#~ "Import nicht erfolgreich! In der Importdatei wurden keine Daten erkannt."
+
+#~ msgid "Add"
+#~ msgstr "Hinzufügen"
+
+#~ msgid "Export"
+#~ msgstr "Export"
+
+#~ msgid "Import"
+#~ msgstr "Importieren"
+
+#~ msgid "Custom Fonts"
+#~ msgstr "Benutzerdefinierte Schriftart"
+
+#, fuzzy
+#~ msgid "File system failure. Could not delete temp dir."
+#~ msgstr ""
+#~ "Ausfall des Dateisystems. Das temporäre Verzeichnis konnte nicht gelöscht "
+#~ "werden."
+
+#~ msgid "Unable to delete font file(s)."
+#~ msgstr "Schriftartdatei(en) können nicht gelöscht werden."
+
+#~ msgid "Attachment does not exist."
+#~ msgstr "Anhang existiert nicht."
+
+#~ msgid "Unzipping failed."
+#~ msgstr "Das Entpacken ist fehlgeschlagen."
+
+#, fuzzy
+#~ msgid "File permission error. Local file could not be installed."
+#~ msgstr ""
+#~ "Fehler bei der Dateiberechtigung. Die lokale Datei konnte nicht "
+#~ "installiert werden."
+
+#~ msgid "File type not recognized."
+#~ msgstr "Dateityp wurde nicht erkannt."
+
+#~ msgid "Unidentified error."
+#~ msgstr "Nicht identifizierter Fehler."
+
+#~ msgid "No valid font file was found."
+#~ msgstr "Es wurde keine gültige Schriftartdatei gefunden."
+
+#~ msgid ""
+#~ "Your font could not be converted at this time. Please try again later."
+#~ msgstr ""
+#~ "Ihre Schriftart konnte zu diesem Zeitpunkt nicht konvertiert werden. "
+#~ "Bitte versuchen Sie es später noch einmal."
+
+#, fuzzy, php-format
+#~ msgid "The font converter does not support %s fonts."
+#~ msgstr "Der Schriftkonverter unterstützt keine %s Schriftarten."
+
+#~ msgid ""
+#~ "ZIP error. Your font could not be converted at this time. Please try "
+#~ "again later."
+#~ msgstr ""
+#~ "ZIP-Fehler. Ihre Schriftart konnte zu diesem Zeitpunkt nicht konvertiert "
+#~ "werden. Bitte versuchen Sie es später noch einmal."
+
+#~ msgid "Font Control"
+#~ msgstr "Steuerelement für Schriftarten"
+
+#~ msgid "Error"
+#~ msgstr "Fehler"
+
+#~ msgid "Add Font"
+#~ msgstr "Schriftart hinzufügen"
+
+#~ msgid "No Custom Fonts Found"
+#~ msgstr "Keine eigenen Schriften gefunden"
+
+#~ msgid "There was an error deleting your font:"
+#~ msgstr "Beim Löschen Ihrer Schriftart ist ein Fehler aufgetreten:"
+
+#~ msgid "Unzipping archive and generating any missing font files."
+#~ msgstr "Entpacken des Archivs und Generieren fehlender Schriftdateien."
+
+#~ msgid "Converting font file(s)..."
+#~ msgstr "Konvertieren von Schriftartdateien..."
+
+#~ msgid ""
+#~ "The only file(s) imported were those uploaded.  Please refresh the page "
+#~ "to continue (making note of any errors before doing so, please)."
+#~ msgstr ""
+#~ "Die einzige(n) Datei(en), die importiert wurden, waren die "
+#~ "hochgeladenen.  Bitte aktualisieren Sie die Seite, um fortzufahren "
+#~ "(notieren Sie sich bitte vorher eventuelle Fehler)."
+
+#~ msgid "An unknown error occurred. Please try again."
+#~ msgstr ""
+#~ "Ein unbekannter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+
+#~ msgid "Conversion complete.  Refreshing page..."
+#~ msgstr "Die Konvertierung ist abgeschlossen.  Aktualisierende Seite..."
+
+#~ msgid "Choose Font file or ZIP of font files."
+#~ msgstr "Wählen Sie Schriftartdatei oder ZIP-Datei der Schriftartdateien."
+
+#~ msgid "Update"
+#~ msgstr "Aktualisieren"
+
+#~ msgid ""
+#~ "You have changes that are not saved.  Would you like to save them now?"
+#~ msgstr ""
+#~ "Sie haben Änderungen vorgenommen, die nicht gespeichert wurden. Möchten "
+#~ "Sie sie jetzt speichern?"
+
+#~ msgid "Are you sure?  Resetting will lose all custom values."
+#~ msgstr ""
+#~ "Sind Sie sicher? Beim Zurücksetzen gehen alle benutzerdefinierten Werte "
+#~ "verloren."
+
+#~ msgid ""
+#~ "Your current options will be replaced with the values of this preset.  "
+#~ "Would you like to proceed?"
+#~ msgstr ""
+#~ "Ihre aktuellen Optionen werden durch die Werte dieser Voreinstellung "
+#~ "ersetzt. Möchten Sie fortfahren?"
+
+#~ msgid "Press return or enter to open this panel"
+#~ msgstr "Drücken Sie zum Öffnen dieses Panels die Eingabetaste"
+
+#~ msgid "You are customizing"
+#~ msgstr "Du passt gerade an"
+
+#~ msgid "Back"
+#~ msgstr "Zurück"
+
+#~ msgid "Help"
+#~ msgstr "Hilfe"
+
+#~ msgid "Press return or enter to expand"
+#~ msgstr "Drücken Sie zur Erweiterung die Eingabetaste"
+
+#, php-format
+#~ msgid "Customizing &#9656; %s"
+#~ msgstr "Anpassungen für &#9656; %s"
+
+#~ msgid "Customizing"
+#~ msgstr "Anpassen"
+
+#~ msgid "Date"
+#~ msgstr "Datum"
+
+#~ msgid "Time"
+#~ msgstr "Zeit"
+
+#~ msgid "Date / Time"
+#~ msgstr "Datum / Uhrzeit"
+
+#~ msgid "Enter your address"
+#~ msgstr "Adresse eintragen"
+
+#~ msgid "Left mouse down on top of me to move me!"
+#~ msgstr "Linke Maus runter über mir, um mich zu bewegen!"
+
+#~ msgid "The returned place contains no geometric data."
+#~ msgstr "Die zurückgegebene Stelle enthält keine geometrischen Daten."
+
+#~ msgid "Address"
+#~ msgstr "Adresse"
+
+#~ msgid "Street"
+#~ msgstr "Straße"
+
+#, fuzzy
+#~ msgid "City"
+#~ msgstr "Stadt"
+
+#~ msgid "State"
+#~ msgstr "Bundesland"
+
+#~ msgid "ZIP Code"
+#~ msgstr "PLZ"
+
+#~ msgid "Country"
+#~ msgstr "Land"
+
+#~ msgid "Latitude"
+#~ msgstr "Breitengrad"
+
+#~ msgid "Longitude"
+#~ msgstr "Längengrad"
+
+#~ msgid "Marker Info"
+#~ msgstr "Marker-Info"
+
+#~ msgid "Google Map API Key"
+#~ msgstr "Google MAP API Schlüssel"
+
+#~ msgid "Get an API Key"
+#~ msgstr "Abrufen eines API-Schlüssels"
+
+#~ msgid "Google Map Usage Limits"
+#~ msgstr "Nutzungsbeschränkungen für Google Maps"
+
+#, php-format
+#~ msgid ""
+#~ "Google Maps supports 25,000 free map loads per 24 hours for 90 "
+#~ "consecutive days.  In the events you run a high volume site, you may need "
+#~ "to obtain an API Key to continue using Google Map output beyond the free "
+#~ "quota.  To sign up for an API Key, please visit the %1$s site.  For more "
+#~ "information about Google Map usage limits, please visit the %2$s guide."
+#~ msgstr ""
+#~ "Google Maps unterstützt 25.000 kostenlose Kartenladevorgänge pro 24 "
+#~ "Stunden an 90 aufeinanderfolgenden Tagen.  In den Fällen, in denen Sie "
+#~ "eine Website mit hohem Volumen betreiben, müssen Sie möglicherweise einen "
+#~ "API-Schlüssel abrufen, um die Google Map-Ausgabe über das kostenlose "
+#~ "Kontingent hinaus weiterhin verwenden zu können.  Um sich für einen API-"
+#~ "Schlüssel anzumelden, besuchen Sie bitte die %1$s-Website.  Weitere "
+#~ "Informationen zu den Nutzungsbeschränkungen von Google Map finden Sie im "
+#~ "%2$s Leitfaden."
+
+#~ msgid ""
+#~ "Once you have obtained an API Key, please enter it in the text box below "
+#~ "and save the options panel."
+#~ msgstr ""
+#~ "Sobald Sie einen API-Schlüssel erhalten haben, geben Sie ihn bitte in das "
+#~ "Textfeld unten ein und speichern Sie das Optionsfeld."
+
+#~ msgid "API Key"
+#~ msgstr "API-Schlüssel"
+
+#~ msgid "Error: Invalid nonce verification."
+#~ msgstr "Fehler: Ungültige nonce-Überprüfung."
+
+#~ msgid "No data available."
+#~ msgstr "Keine Daten verfügbar."
+
+#~ msgid "Error retrieving stylesheet "
+#~ msgstr "Fehler beim Abrufen des Stylesheets "
+
+#~ msgid "Add Icon"
+#~ msgstr "Icon hinzufügen"
+
+#~ msgid "Remove Icon"
+#~ msgstr "Icon entfernen"
+
+#~ msgid "Search..."
+#~ msgstr "Suche..."
+
+#~ msgid "Import / Export"
+#~ msgstr "Import / Export"
+
+#~ msgid "Import Options"
+#~ msgstr "Import-Optionen"
+
+#~ msgid "Import from Clipboard"
+#~ msgstr "Importieren aus der Zwischenablage"
+
+#~ msgid "Upload file"
+#~ msgstr "Datei hochladen"
+
+#~ msgid "Paste your clipboard data here."
+#~ msgstr "Füge hier deine Zwischenablagedaten ein."
+
+#~ msgid ""
+#~ "WARNING! This will overwrite all existing option values, please proceed "
+#~ "with caution!"
+#~ msgstr ""
+#~ "WARNUNG! Dadurch werden alle bestehenden Optionen überschrieben, bitte "
+#~ "seien Sie achtsam!"
+
+#~ msgid "Export Options"
+#~ msgstr "Optionen exportieren"
+
+#~ msgid ""
+#~ "Here you can copy/download your current option settings. Keep this safe "
+#~ "as you can use it as a backup should anything go wrong, or you can use it "
+#~ "to restore your settings on this site (or any other site)."
+#~ msgstr ""
+#~ "Hier können Sie Ihre aktuellen Optionseinstellungen kopieren / "
+#~ "herunterladen. Behalten Sie diese als Backup. Sollte etwas schief gehen, "
+#~ "können Sie es verwenden, um Ihre Einstellungen auf dieser Website (oder "
+#~ "einer anderen Website) wiederherzustellen."
+
+#~ msgid "Copy to Clipboard"
+#~ msgstr "In Zwischenablage kopieren"
+
+#~ msgid "Copied!"
+#~ msgstr "Kopiert!"
+
+#~ msgid "Export File"
+#~ msgstr "Datei exportieren"
+
+#~ msgid "Your panel has unchanged values, would you like to save them now?"
+#~ msgstr ""
+#~ "Dein Panel hat unveränderte Werte. Möchtest du diese jetzt speichern?"
+
+#~ msgid "Expand"
+#~ msgstr "Erweitern"
+
+#~ msgid "warnings(s) were found!"
+#~ msgstr "Warnungen (n) wurden gefunden!"
+
+#~ msgid ""
+#~ "Unable to create a box due an empty box array or the box variable passed "
+#~ "was not an array."
+#~ msgstr ""
+#~ "Es konnte keine Box erstellt werden, da das Box-Array leer war oder die "
+#~ "übergebene Box-Variable kein Array war."
+
+#~ msgid "Add or Upload File(s)"
+#~ msgstr "Datei(en) hinzufügen oder hochladen"
+
+#~ msgid "Remove Image"
+#~ msgstr "Bild entfernen"
+
+#~ msgid "File: "
+#~ msgstr "Datei:"
+
+#~ msgid "Download"
+#~ msgstr "Download"
+
+#~ msgid "Remove"
+#~ msgstr "Entfernen"
+
+#~ msgid "Select File(s)"
+#~ msgstr "Datei(en) auswählen"
+
+#, php-format
+#~ msgid "%s already exists in your file queue."
+#~ msgstr "%s bereits in der Dateiwarteschlange vorhanden ist."
+
+#, php-format
+#~ msgid "Maximum upload limit of %s reached/exceeded."
+#~ msgstr "Maximales Upload-Limit von %s erreicht/überschritten."
+
+#~ msgid "Options Object"
+#~ msgstr "Optionen Objekt"
+
+#~ msgid "Show Object in Javascript Console Object"
+#~ msgstr "Zeige Objekt in Javascriptkonsolen-Objekt"
+
+#~ msgid "Title"
+#~ msgstr "Titel"
+
+#~ msgid "The"
+#~ msgstr "Das"
+
+#~ msgid "field is not supported within the Repeater field."
+#~ msgstr "wird im Feld Repeater nicht unterstützt."
+
+#, php-format
+#~ msgid ""
+#~ "Go to the %1$s page to add the Redux Social Widget to any active widget "
+#~ "area."
+#~ msgstr ""
+#~ "Rufen Sie die %1$s Seite auf, um das Redux Social Widget zu einem aktiven "
+#~ "Widget-Bereich hinzuzufügen."
+
+#~ msgid "Widgets"
+#~ msgstr "Widgets"
+
+#~ msgid "Link URL"
+#~ msgstr "Link URL"
+
+#~ msgid "Enabled"
+#~ msgstr "Aktiviert"
+
+#~ msgid "Reset"
+#~ msgstr "Zurücksetzen"
+
+#~ msgid "Text"
+#~ msgstr "Text"
+
+#~ msgid "Background"
+#~ msgstr "Hintergrund"
+
+#~ msgid "ADN"
+#~ msgstr "ADN"
+
+#~ msgid "Android"
+#~ msgstr "Android"
+
+#~ msgid "Apple"
+#~ msgstr "Apple"
+
+#~ msgid "behance"
+#~ msgstr "Verhalten"
+
+#~ msgid "behance square"
+#~ msgstr "Behance-Platz"
+
+#~ msgid "Bitbucket"
+#~ msgstr "Bitbucket"
+
+#~ msgid "Bitbucket square"
+#~ msgstr "Bitbucket quadratisch"
+
+#~ msgid "Bitcoin"
+#~ msgstr "Bitcoin"
+
+#~ msgid "CodePen"
+#~ msgstr "CodePen"
+
+#~ msgid "CSS3"
+#~ msgstr "CSS3"
+
+#~ msgid "Delicious"
+#~ msgstr "Delicious"
+
+#~ msgid "Deviantart"
+#~ msgstr "Deviantart"
+
+#~ msgid "Digg"
+#~ msgstr "Digg"
+
+#~ msgid "Dribbble"
+#~ msgstr "Dribbble"
+
+#~ msgid "Dropbox"
+#~ msgstr "Dropbox"
+
+#~ msgid "Drupal"
+#~ msgstr "Drupal"
+
+#~ msgid "Empire"
+#~ msgstr "Empire"
+
+#~ msgid "Facebook"
+#~ msgstr "Facebook"
+
+#~ msgid "Facebook square"
+#~ msgstr "Facebook Quadrat"
+
+#~ msgid "Flickr"
+#~ msgstr "Flickr"
+
+#~ msgid "FourSquare"
+#~ msgstr "Viereckig"
+
+#~ msgid "git"
+#~ msgstr "git"
+
+#~ msgid "git square"
+#~ msgstr "git quadratisch"
+
+#~ msgid "github"
+#~ msgstr "Github"
+
+#~ msgid "github alt"
+#~ msgstr "github alt"
+
+#~ msgid "github square"
+#~ msgstr "GitHub-Quadrat"
+
+#~ msgid "git tip"
+#~ msgstr "git-Tipp"
+
+#~ msgid "Google"
+#~ msgstr "Google"
+
+#~ msgid "Google Plus"
+#~ msgstr "Google Plus"
+
+#~ msgid "Google Plus square"
+#~ msgstr "Google Plus quadratisch"
+
+#~ msgid "Hacker News"
+#~ msgstr "Hacker News"
+
+#~ msgid "HTML5"
+#~ msgstr "HTML5"
+
+#~ msgid "Instagram"
+#~ msgstr "Instagram"
+
+#~ msgid "Joomla"
+#~ msgstr "Joomla"
+
+#~ msgid "JS Fiddle"
+#~ msgstr "JS Geige"
+
+#~ msgid "LinkedIn"
+#~ msgstr "LinkedIn"
+
+#~ msgid "LinkedIn square"
+#~ msgstr "LinkedIn-Quadrat"
+
+#~ msgid "Linux"
+#~ msgstr "Linux"
+
+#~ msgid "MaxCDN"
+#~ msgstr "MaxCDN"
+
+#~ msgid "OpenID"
+#~ msgstr "OpenID"
+
+#~ msgid "Page Lines"
+#~ msgstr "Seitenzeilen"
+
+#~ msgid "Pied Piper"
+#~ msgstr "Pied Piper"
+
+#~ msgid "Pied Piper alt"
+#~ msgstr "Rattenfänger alt"
+
+#~ msgid "Pinterest"
+#~ msgstr "Pinterest"
+
+#~ msgid "Pinterest square"
+#~ msgstr "Pinterest-Quadrat"
+
+#~ msgid "QQ"
+#~ msgstr "Qq"
+
+#~ msgid "Rebel"
+#~ msgstr "Rebell"
+
+#~ msgid "Reddit"
+#~ msgstr "Reddit"
+
+#~ msgid "Reddit square"
+#~ msgstr "Reddit-Quadrat"
+
+#~ msgid "Ren Ren"
+#~ msgstr "Ren Ren"
+
+#~ msgid "Share alt"
+#~ msgstr "Alt teilen"
+
+#~ msgid "Share square"
+#~ msgstr "Teilen-Quadrat"
+
+#~ msgid "Skype"
+#~ msgstr "Skype"
+
+#~ msgid "Slack"
+#~ msgstr "Slack"
+
+#~ msgid "Sound Cloud"
+#~ msgstr "Sound Cloud"
+
+#~ msgid "Spotify"
+#~ msgstr "Spotify"
+
+#~ msgid "Stack Exchange"
+#~ msgstr "Stack Exchange"
+
+#~ msgid "Stack Overflow"
+#~ msgstr "Stack Overflow"
+
+#~ msgid "Steam"
+#~ msgstr "Steam"
+
+#~ msgid "Steam square"
+#~ msgstr "Dampf quadratisch"
+
+#~ msgid "Stumble Upon"
+#~ msgstr "Stumble Upon"
+
+#~ msgid "Stumble Upon circle"
+#~ msgstr "Stolpern Sie über den Kreis"
+
+#~ msgid "Tencent Weibo"
+#~ msgstr "Tencent Weibo"
+
+#~ msgid "Trello"
+#~ msgstr "Trello"
+
+#~ msgid "Tumblr"
+#~ msgstr "Tumblr"
+
+#~ msgid "Tumblr square"
+#~ msgstr "Tumblr-Quadrat"
+
+#~ msgid "Twitter"
+#~ msgstr "Twitter"
+
+#~ msgid "Twitter square"
+#~ msgstr "Twitter-Quadrat"
+
+#~ msgid "Vimeo square"
+#~ msgstr "Vimeo-Quadrat"
+
+#~ msgid "Vine"
+#~ msgstr "Vine"
+
+#~ msgid "VK"
+#~ msgstr "VK"
+
+#~ msgid "Weibo"
+#~ msgstr "Weibo"
+
+#~ msgid "Weixin"
+#~ msgstr "Weixin"
+
+#~ msgid "Windows"
+#~ msgstr "Windows"
+
+#~ msgid "WordPress"
+#~ msgstr "WordPress"
+
+#~ msgid "Xing"
+#~ msgstr "Xing"
+
+#, fuzzy
+#~ msgid "Xing square"
+#~ msgstr "Xing-Quadrat"
+
+#~ msgid "Yahoo"
+#~ msgstr "Yahoo"
+
+#~ msgid "Yelp"
+#~ msgstr "Yelp"
+
+#~ msgid "YouTube"
+#~ msgstr "YouTube"
+
+#, fuzzy
+#~ msgid "YouTube play"
+#~ msgstr "YouTube-Wiedergabe"
+
+#, fuzzy
+#~ msgid "YouTube square"
+#~ msgstr "YouTube-Quadrat"
+
+#, fuzzy
+#~ msgid "Display social media links"
+#~ msgstr "Social-Media-Links anzeigen"
+
+#~ msgid "Social"
+#~ msgstr "Social"
+
+#, fuzzy, php-format
+#~ msgid ""
+#~ "Control which icons are displayed and their urls on the %1$sssettings page"
+#~ "%2$s"
+#~ msgstr ""
+#~ "Kontrollieren Sie, welche Symbole und welche URLs auf der "
+#~ "%1$sEinstellungsseite angezeigt werden%2$s"
+
+#, fuzzy
+#~ msgid "field is not supported within the Tabbed field."
+#~ msgstr "wird im Feld mit Registerkarten nicht unterstützt."
+
+#, fuzzy
+#~ msgid ""
+#~ "Unable to create a term due an empty term array or the term variable "
+#~ "passed was not an array."
+#~ msgstr ""
+#~ "Es konnte kein Begriff erstellt werden, da ein leeres Begriffsarray "
+#~ "vorhanden war oder die übergebene Begriffsvariable kein Array war."
+
+#, fuzzy
+#~ msgid ""
+#~ "Unable to create a profile due an empty profile array or the profile "
+#~ "variable passed was not an array."
+#~ msgstr ""
+#~ "Es konnte kein Profil erstellt werden, da ein leeres Profilarray "
+#~ "vorhanden war oder die übergebene Profilvariable kein Array war."
+
+#~ msgid "Create Widget Area"
+#~ msgstr "Erstelle einen Widget Bereich"
+
+#~ msgid "Transparent"
+#~ msgstr "Transparent"
+
+#~ msgid "No Repeat"
+#~ msgstr "Keine Wiederholung"
+
+#~ msgid "Repeat All"
+#~ msgstr "Alle wiederholen"
+
+#~ msgid "Repeat Horizontally"
+#~ msgstr "Horizontal wiederholen"
+
+#~ msgid "Repeat Vertically"
+#~ msgstr "Vertikal wiederholen"
+
+#~ msgid "Inherit"
+#~ msgstr "Vererbt"
+
+#~ msgid "Background Repeat"
+#~ msgstr "Hintergrund wiederholen"
+
+#~ msgid "Border Box"
+#~ msgstr "Border Box"
+
+#~ msgid "Content Box"
+#~ msgstr "Inhaltsbox"
+
+#~ msgid "Padding Box"
+#~ msgstr "Padding Box"
+
+#~ msgid "Background Clip"
+#~ msgstr "Hintergrund Clip"
+
+#~ msgid "Background Origin"
+#~ msgstr "Ursprung des Hintergrunds"
+
+#~ msgid "Cover"
+#~ msgstr "Cover"
+
+#~ msgid "Contain"
+#~ msgstr "Beinhaltet"
+
+#~ msgid "Background Size"
+#~ msgstr "Hintergrund Größe"
+
+#~ msgid "Fixed"
+#~ msgstr "Fixiert"
+
+#~ msgid "Scroll"
+#~ msgstr "Scrollen"
+
+#~ msgid "Background Attachment"
+#~ msgstr "Hintergrund Anhang"
+
+#~ msgid "Left Top"
+#~ msgstr "Links oben"
+
+#~ msgid "Left center"
+#~ msgstr "Links Mitte"
+
+#~ msgid "Left Bottom"
+#~ msgstr "Links unten"
+
+#~ msgid "Center Top"
+#~ msgstr "Mitte oben"
+
+#~ msgid "Center Center"
+#~ msgstr "Mitte zentriert"
+
+#~ msgid "Center Bottom"
+#~ msgstr "Mitte unten"
+
+#~ msgid "Right Top"
+#~ msgstr "Rechts oben"
+
+#~ msgid "Right center"
+#~ msgstr "Rechts Mitte"
+
+#~ msgid "Right Bottom"
+#~ msgstr "Rechts unten"
+
+#~ msgid "Background Position"
+#~ msgstr "Hintergrund-Position"
+
+#~ msgid "No media selected"
+#~ msgstr "Keine Medien ausgewählt"
+
+#~ msgid "Upload"
+#~ msgstr "Hochladen"
+
+#~ msgid "All"
+#~ msgstr "Alle"
+
+#~ msgid "Top"
+#~ msgstr "Oben"
+
+#~ msgid "Right"
+#~ msgstr "Rechts"
+
+#~ msgid "Bottom"
+#~ msgstr "Unten"
+
+#~ msgid "Left"
+#~ msgstr "Links"
+
+#~ msgid "Solid"
+#~ msgstr "Durchgezogen"
+
+#~ msgid "Dashed"
+#~ msgstr "Gestrichelt"
+
+#~ msgid "Dotted"
+#~ msgstr "Gepunktet"
+
+#~ msgid "Double"
+#~ msgstr "Doppelt"
+
+#~ msgid "None"
+#~ msgstr "Nichts"
+
+#~ msgid "Border style"
+#~ msgstr "Rahmenstil"
+
+#~ msgid "Shadow"
+#~ msgstr "Schatten"
+
+#~ msgid "Horizontal Length"
+#~ msgstr "Horizontale Länge"
+
+#~ msgid "Vertical Length"
+#~ msgstr "Vertikale Länge"
+
+#~ msgid "Blur Radius"
+#~ msgstr "Unschärfe Radius"
+
+#~ msgid "Spread"
+#~ msgstr "Verbreitung"
+
+#~ msgid "Choose"
+#~ msgstr "Auswählen"
+
+#~ msgid "Select Color"
+#~ msgstr "Farbe wählen"
+
+#~ msgid "Width"
+#~ msgstr "Breite"
+
+#~ msgid "Height"
+#~ msgstr "Höhe"
+
+#~ msgid "Units"
+#~ msgstr "Einheiten"
+
+#~ msgid "Add/Edit Gallery"
+#~ msgstr "Galerie hinzufügen/bearbeiten"
+
+#~ msgid "Clear Gallery"
+#~ msgstr "Galerie leeren"
+
+#~ msgid "Regular"
+#~ msgstr "Regulär"
+
+#~ msgid "Hover"
+#~ msgstr "Hover"
+
+#~ msgid "Visited"
+#~ msgstr "Besucht"
+
+#~ msgid "Active"
+#~ msgstr "Aktiv"
+
+#~ msgid "Focus"
+#~ msgstr "Fokus"
+
+#~ msgid "Add More"
+#~ msgstr "Mehr hinzufügen"
+
+#, fuzzy
+#~ msgid "Password"
+#~ msgstr "Passwort"
+
+#~ msgid "Username"
+#~ msgstr "Benutzername"
+
+#~ msgid "Select an item"
+#~ msgstr "Element auswählen"
+
+#~ msgid "No items of this type were found."
+#~ msgstr "Kein Artikel dieses Typs gefunden."
+
+#~ msgid "Slide"
+#~ msgstr "Slide"
+
+#, php-format
+#~ msgid "New %s"
+#~ msgstr "Neu %s"
+
+#~ msgid "URL"
+#~ msgstr "URL"
+
+#, php-format
+#~ msgid "Add %s"
+#~ msgstr "%s hinzufügen"
+
+#~ msgid "On"
+#~ msgstr "An"
+
+#~ msgid "Off"
+#~ msgstr "Aus"
+
+#~ msgid "Font Family"
+#~ msgstr "Schriftfamilie"
+
+#~ msgid "Font family"
+#~ msgstr "Schriftfamilie"
+
+#~ msgid "Backup Font Family"
+#~ msgstr "Schriftfamilie Sicherung"
+
+#~ msgid "Font style"
+#~ msgstr "Schriftstil"
+
+#~ msgid "Font Weight &amp; Style"
+#~ msgstr "Schriftstärke &amp; Stil"
+
+#, fuzzy
+#~ msgid "Style"
+#~ msgstr "Stil"
+
+#~ msgid "Font subsets"
+#~ msgstr "Schrift-Unterarten"
+
+#~ msgid "Font Subsets"
+#~ msgstr "Schrift-Unterarten"
+
+#~ msgid "Subsets"
+#~ msgstr "Untergruppen"
+
+#~ msgid "Font script"
+#~ msgstr "Schrift-Script"
+
+#~ msgid "Text Align"
+#~ msgstr "Textausrichtung"
+
+#~ msgid "inherit"
+#~ msgstr "vererbt"
+
+#~ msgid "left"
+#~ msgstr "links"
+
+#~ msgid "right"
+#~ msgstr "rechts"
+
+#~ msgid "center"
+#~ msgstr "zentriert"
+
+#~ msgid "justify"
+#~ msgstr "Justify"
+
+#~ msgid "initial"
+#~ msgstr "initial"
+
+#~ msgid "Text Transform"
+#~ msgstr "Text-Transformation"
+
+#~ msgid "none"
+#~ msgstr "keine"
+
+#~ msgid "capitalize"
+#~ msgstr "capitalize"
+
+#~ msgid "uppercase"
+#~ msgstr "Großbuchstaben"
+
+#~ msgid "lowercase"
+#~ msgstr "Kleinbuchstaben"
+
+#~ msgid "Font Variant"
+#~ msgstr "Schriftvariante"
+
+#~ msgid "normal"
+#~ msgstr "normal"
+
+#~ msgid "small-caps"
+#~ msgstr "Kapitälchen"
+
+#~ msgid "Text Decoration"
+#~ msgstr "Text-Dekoration"
+
+#~ msgid "underline"
+#~ msgstr "unterstreichen"
+
+#~ msgid "overline"
+#~ msgstr "Überstrich"
+
+#~ msgid "line-through"
+#~ msgstr "durchstreichen"
+
+#~ msgid "blink"
+#~ msgstr "blinzeln"
+
+#~ msgid "Font Size"
+#~ msgstr "Schriftgröße"
+
+#~ msgid "Size"
+#~ msgstr "Größe"
+
+#~ msgid "Line Height"
+#~ msgstr "Zeilenhöhe"
+
+#~ msgid "Word Spacing"
+#~ msgstr "Wortabstand"
+
+#~ msgid "Letter Spacing"
+#~ msgstr "Zeichenabstand"
+
+#~ msgid "Margin Top"
+#~ msgstr "Rand Oben"
+
+#~ msgid "Margin Bottom"
+#~ msgstr "Abstand unten"
+
+#~ msgid "Font Color"
+#~ msgstr "Schriftfarbe"
+
+#~ msgid "Font color"
+#~ msgstr "Schriftfarbe"
+
+#, fuzzy
+#~ msgid ""
+#~ "Your Google Fonts are out of date. To update them, please click one of "
+#~ "the following:"
+#~ msgstr ""
+#~ "Ihre Google Fonts sind veraltet. Um sie zu aktualisieren, klicken Sie "
+#~ "bitte auf eine der folgenden Optionen:"
+
+#~ msgid "Automated updates"
+#~ msgstr "Automatisierte Updates"
+
+#~ msgid "or"
+#~ msgstr "oder"
+
+#~ msgid "one-time update"
+#~ msgstr "einmaliges Update"
+
+#~ msgid "Shadow Color"
+#~ msgstr "Schattenfarbe"
+
+#~ msgid "Shadow color"
+#~ msgstr "Schattenfarbe"
+
+#~ msgid "Horizontal"
+#~ msgstr "Horizontal"
+
+#~ msgid "Vertical"
+#~ msgstr "Vertikal"
+
+#~ msgid "Blur"
+#~ msgstr "Unschärfe"
+
+#~ msgid "Downloading Google Fonts..."
+#~ msgstr "Google Fonts werden heruntergeladen..."
+
+#, php-format
+#~ msgid "Update Failed|msg. %1$s"
+#~ msgstr "Updatefehler|msg. %1$s"
+
+#~ msgid "Retry?"
+#~ msgstr "Wiederholen?"
+
+#, php-format
+#~ msgid "Updated! %1$s to start using your updated fonts."
+#~ msgstr "Aktualisiert! %1$s um Ihre aktualisierten Schriften zu verwenden."
+
+#~ msgid "Reload the page"
+#~ msgstr "Seite neu laden"
+
+#~ msgid "Standard Fonts"
+#~ msgstr "Standardschriften"
+
+#~ msgid "Google Webfonts"
+#~ msgstr "Google Web-Schriftarten"
+
+#~ msgid "Gradient Type "
+#~ msgstr "Farbverlauf Stil "
+
+#~ msgid "Type"
+#~ msgstr "Typ"
+
+#~ msgid "linear"
+#~ msgstr "linear"
+
+#~ msgid "radial"
+#~ msgstr "radial"
+
+#~ msgid "From Reach "
+#~ msgstr "Aus Reichweite "
+
+#~ msgid "From Reach"
+#~ msgstr "Aus Reichweite"
+
+#~ msgid "To Reach"
+#~ msgstr "Zur Reichweite"
+
+#~ msgid "Gradient Angle"
+#~ msgstr "Verlaufwinkel"
+
+#~ msgid "Filters"
+#~ msgstr "Filter"
+
+#~ msgid "RECOMMENDED"
+#~ msgstr "EMPFOHLEN"
+
+#~ msgid "If you are submitting to WordPress.org Theme Repository, it is"
+#~ msgstr ""
+#~ "Wenn Sie das WordPress.org Theme Repository einreichen, lautet dieser"
+
+#~ msgid "strongly"
+#~ msgstr "stark"
+
+#~ msgid "suggested that you read"
+#~ msgstr "schlug vor, dass Sie lesen"
+
+#~ msgid "this document"
+#~ msgstr "dieses Dokument"
+
+#~ msgid "or your theme will be rejected because of Redux."
+#~ msgstr "oder Ihr Thema wird wegen Redux abgelehnt."
+
+#~ msgid "REQUIRED"
+#~ msgstr "ERFORDERLICH"
+
+#~ msgid "You MUST delete"
+#~ msgstr "Sie MÜSSEN löschen"
+
+#~ msgid ""
+#~ "or your theme will be rejected by WP.org theme submission because of "
+#~ "Redux."
+#~ msgstr ""
+#~ "oder Ihr Thema wird von WP.org Thema Einreichung aufgrund von Redux "
+#~ "abgelehnt."
+
+#~ msgid ""
+#~ "The following arguments MUST be used for WP.org submissions, or you will "
+#~ "be rejected because of your Redux configuration."
+#~ msgstr ""
+#~ "Die folgenden Argumente MÜSSEN für WP.org Übermittlungen verwendet "
+#~ "werden, andernfalls werden Sie aufgrund Ihrer Redux Konfiguration "
+#~ "abgelehnt."
+
+#~ msgid "Redux Code Styles"
+#~ msgstr "Redux-Code-Stile"
+
+#~ msgid "Redux Plugin File"
+#~ msgstr "Redux-Plugin-Datei"
+
+#~ msgid "CI Testing File"
+#~ msgstr "CI Test-Datei"
+
+#~ msgid ""
+#~ "It appears that you have embedded the full Redux package inside your "
+#~ "theme. You need only embed the"
+#~ msgstr ""
+#~ "Es scheint, dass Sie das vollständige Redux Paket in Ihr Thema "
+#~ "eingebettet haben. Sie müssen nur die"
+
+#~ msgid ""
+#~ "folder. Embedding anything else will get your rejected from theme "
+#~ "submission. Suspected Redux package file(s):"
+#~ msgstr ""
+#~ "Ordner. Wenn Sie etwas anderes einbetten, werden Sie von der Thema "
+#~ "Einreichung abgelehnt. Vermutete Redux Paketdatei(en):"
+
+#, php-format
+#~ msgid ""
+#~ "Invalid HTML color code %1$s. Please enter a valid code. No value was "
+#~ "saved."
+#~ msgstr ""
+#~ "Ungültiger HTML-Farbcode %1$s. Geben Sie einen gültigen Code ein. Es "
+#~ "wurde kein Wert gespeichert."
+
+#, php-format
+#~ msgid "Sanitized value and saved as %1$s instead of %2$s."
+#~ msgstr "Desinfiziert Wert und speichert %1$s anstelle von %2$s."
+
+#~ msgid ""
+#~ "You must provide a comma separated list of numerical values for this "
+#~ "option."
+#~ msgstr ""
+#~ "Du musst eine durch Kommata getrennte Liste von numerischen Werten für "
+#~ "diese Option angeben."
+
+#~ msgid "Unsafe strings were found in your CSS and have been filtered out."
+#~ msgstr ""
+#~ "Unsichere Strings wurden in deiner CSS  gefunden und herausgefiltert."
+
+#~ msgid "This field must be a valid date."
+#~ msgstr "Dieses Feld muss ein gültiges Datum sein."
+
+#~ msgid "You must provide a valid email for this option."
+#~ msgstr "Sie müssen eine gültige E-Mail-Adresse angeben."
+
+#, fuzzy
+#~ msgid "Invalid HTML was found in this field and has been removed."
+#~ msgstr ""
+#~ "In diesem Feld wurde ungültiger HTML-Code gefunden, der entfernt wurde."
+
+#~ msgid "Javascript has been successfully escaped."
+#~ msgstr "Javascript wurde erfolgreich mit Escape Zeichen versehen."
+
+#~ msgid ""
+#~ "You must not enter any HTML in this field.  All HTML has been removed."
+#~ msgstr ""
+#~ "Sie dürfen in dieses Feld keinen HTML Code eingeben.  Der gesamte HTML-"
+#~ "Code wurde entfernt."
+
+#~ msgid ""
+#~ "You must not enter any special characters in this field, all special "
+#~ "characters have been removed."
+#~ msgstr ""
+#~ "Sie dürfen keine Sonderzeichen in diesem Bereich eingeben. Alle "
+#~ "Sonderzeichen werden entfernt."
+
+#~ msgid "This field cannot be empty. Please provide a value."
+#~ msgstr "Dieses Feld darf nicht leer sein. Bitte gib einen Wert ein."
+
+#~ msgid "You must provide a numerical value for this option."
+#~ msgstr "Sie müssen einen numerischen Wert angeben."
+
+#~ msgid "That URL slug is in use, please choose another."
+#~ msgstr "Dieser URL Slug wird verwendet, bitte wählen Sie einen anderen."
+
+#~ msgid "You must provide a valid URL for this option."
+#~ msgstr "Sie müssen eine gültige URL angeben."
+
+#~ msgid "If you like"
+#~ msgstr "Wenn Ihnen das"
+
+#~ msgid "please leave us a"
+#~ msgstr "Bitte hinterlasse eine"
+
+#~ msgid "rating. A huge thank you in advance!"
+#~ msgstr "Bewertung. Ein riesiges Dankeschön im Voraus!"
+
+#~ msgid "What is Redux Framework?"
+#~ msgstr "Was ist Redux Framework?"
+
+#~ msgid "What is Redux?"
+#~ msgstr "Was ist Redux?"
+
+#~ msgid "Disable Panel Demo"
+#~ msgstr "Panel Demo deaktivieren"
+
+#~ msgid "Enable Panel Demo"
+#~ msgstr "Panel Demo aktivieren"
+
+#~ msgid "Welcome to"
+#~ msgstr "Willkommen bei"
+
+#~ msgid ""
+#~ "Redux is the world's most powerful and widely used WordPress interface "
+#~ "builder. We are trusted by millions of developers and end users world-"
+#~ "wide."
+#~ msgstr ""
+#~ "Redux ist der weltweit leistungsstärkste und am weitesten verbreitete "
+#~ "WordPress Interface Builder. Millionen von Entwicklern und Endbenutzern "
+#~ "weltweit vertrauen uns."
+
+#~ msgid "Did I install this?"
+#~ msgstr "Habe ich das installiert?"
+
+#~ msgid ""
+#~ "Maybe not! These items are using Redux. If you want to keep using them, "
+#~ "Redux will need to remain installed and activated."
+#~ msgstr ""
+#~ "Vielleicht auch nicht! Diese Elemente verwenden Redux. Wenn Sie sie "
+#~ "weiterhin verwenden möchten, muss Redux installiert und aktiviert bleiben."
+
+#, php-format
+#~ msgid ""
+#~ "Maybe not! If you want to see what Redux is all about, click here to "
+#~ "%1$sActivate Demo Mode%2$s."
+#~ msgstr ""
+#~ "Vielleicht nicht! Wenn Sie sehen möchten, worum es bei Redux geht, "
+#~ "klicken Sie hier auf %1$sActivate Demo Mode%2$s."
+
+#~ msgid "Version:"
+#~ msgstr "Version:"
+
+#~ msgid "By"
+#~ msgstr "Von"
+
+#~ msgid "Theme"
+#~ msgstr "Theme"
+
+#~ msgid "Plugin"
+#~ msgstr "Plugin"
+
+#~ msgid "Save Changes"
+#~ msgstr "Änderungen speichern"
+
+#~ msgid "Reset Section"
+#~ msgstr "Abschnitt zurücksetzen"
+
+#~ msgid "Reset All"
+#~ msgstr "Alles zurücksetzen"
+
+#~ msgid "Developer Mode Enabled"
+#~ msgstr "Entwicklermodus aktiviert"
+
+#~ msgid "WP_DEBUG is enabled"
+#~ msgstr "WP_DEBUG ist aktiviert"
+
+#~ msgid "you are working in a localhost environment"
+#~ msgstr "du arbeitest in einem localhost Umfeld"
+
+#~ msgid "and"
+#~ msgstr "und"
+
+#~ msgid "This has been automatically enabled because"
+#~ msgstr "Dies wurde automatisch aktiviert, weil"
+
+#~ msgid ""
+#~ "If you are not a developer, your theme/plugin author shipped with "
+#~ "developer mode enabled. Contact them directly to fix it."
+#~ msgstr ""
+#~ "Falls Sie kein Entwickler sind, hat Ihr Theme/ Plugin-Autor den "
+#~ "Entwickler-Modus aktiviert. Kontaktieren Sie ihn direkt, um das Problem "
+#~ "zu beheben."
+
+#, fuzzy
+#~ msgid "Redux Contained"
+#~ msgstr "Redux Enthalten"
+
+#, fuzzy
+#~ msgid "Redux Full Width"
+#~ msgstr "Redux volle Breite"
+
+#, fuzzy
+#~ msgid "Redux Canvas"
+#~ msgstr "Redux Leinwand"
+
+#~ msgid "Sample Options"
+#~ msgstr "Beispieloptionen"
+
+#~ msgid "Documentation"
+#~ msgstr "Dokumentation"
+
+#~ msgid "Support"
+#~ msgstr "Support"
+
+#~ msgid "Extensions"
+#~ msgstr "Erweiterungen"
+
+#~ msgid "Like us on Facebook"
+#~ msgstr "Like uns auf Facebook"
+
+#~ msgid "Follow us on Twitter"
+#~ msgstr "Folge uns auf Twitter"
+
+#~ msgid "Find us on LinkedIn"
+#~ msgstr "Finde mich auf LinkedIn"
+
+#~ msgid ""
+#~ "Did you know that Redux sets a global variable for you? To access any of "
+#~ "your saved options from within your code you can use your global "
+#~ "variable: $s"
+#~ msgstr ""
+#~ "Wussten Sie, dass Redux eine globale Variable für Sie setzt? Um von Ihrem "
+#~ "Code aus auf eine Ihrer gespeicherten Optionen zuzugreifen, können Sie "
+#~ "Ihre globale Variable verwenden: $s"
+
+#~ msgid ""
+#~ "This text is displayed above the options panel. It isn't required, but "
+#~ "more info is always better! The intro_text field accepts all HTML."
+#~ msgstr ""
+#~ "Dieser Text wird über dem Optionsfeld angezeigt. Es ist nicht "
+#~ "erforderlich, aber mehr Infos ist immer besser! Das intro_text-Feld "
+#~ "akzeptiert alle HTML."
+
+#~ msgid ""
+#~ "This text is displayed below the options panel. It isn't required, but "
+#~ "more info is always better! The footer_text field accepts all HTML."
+#~ msgstr "Dieser Text wird unter dem Optionsfenster angezeigt."
+
+#~ msgid "Theme Information 1"
+#~ msgstr "Theme Information 1"
+
+#~ msgid "This is the tab content, HTML is allowed."
+#~ msgstr "Das ist der Inhalt des Tabs, HTML ist erlaubt."
+
+#~ msgid "Theme Information 2"
+#~ msgstr "Theme Information 2"
+
+#~ msgid "This is the sidebar content, HTML is allowed."
+#~ msgstr "Das ist der Inhalt der Seitenleiste, HTML ist erlaubt."
+
+#~ msgid "Basic Field"
+#~ msgstr "Basisfeld"
+
+#~ msgid "Basic field with no subsections."
+#~ msgstr "Basisfeld ohne Unterabschnitte."
+
+#~ msgid "Example Text"
+#~ msgstr "Beispieltext"
+
+#~ msgid "Example description."
+#~ msgstr "Beispiel Beschreibung."
+
+#~ msgid "Example subtitle."
+#~ msgstr "Beispiel Untertitel."
+
+#, fuzzy
+#~ msgid ""
+#~ "This is a <strong>hint</strong> tool-tip for the text field.<br/><br/>Add "
+#~ "any HTML-based text you like here."
+#~ msgstr ""
+#~ "Dies ist ein <strong>Hinweis-Tooltip</strong> für das Textfeld.<br/><br/"
+#~ ">Fügen Sie hier einen beliebigen HTML-basierten Text hinzu."
+
+#~ msgid "Basic Fields"
+#~ msgstr "Standardfelder"
+
+#~ msgid "Basic fields as subsections."
+#~ msgstr "Basisfelder als Unterabschnitte."
+
+#~ msgid "For full documentation on this field, visit: "
+#~ msgstr "Die vollständige Anleitung zu diesem Feld findest du unter:"
+
+#~ msgid "Text Field"
+#~ msgstr "Textfeld"
+
+#~ msgid "Subtitle"
+#~ msgstr "Untertitel"
+
+#~ msgid "Field Description"
+#~ msgstr "Feldbeschreibung"
+
+#~ msgid "Text Area"
+#~ msgstr "Textbereich"
+
+#~ msgid "Text Area Field"
+#~ msgstr "Textbereich Feld"
+
+#~ msgid "Metabox Options"
+#~ msgstr "Metabox-Optionen"
+
+#~ msgid ""
+#~ "Redux Framework was created with the developer in mind. It allows for any "
+#~ "theme developer to have an advanced theme panel with most of the features "
+#~ "a developer would need. For more information check out the Github repo at:"
+#~ msgstr ""
+#~ "Das Redux Framework wurde mit Blick auf Entwickler entwickelt. Es "
+#~ "ermöglicht jedem Theme-Entwickler ein fortschrittliches Theme-Panel mit "
+#~ "den meisten Funktionen, die ein Entwickler benötigt. Für weitere "
+#~ "Informationen besuchen Sie das Github Repo unter:"
+
+#~ msgid "Checkbox"
+#~ msgstr "Checkbox"
+
+#~ msgid "Basic Checkbox field."
+#~ msgstr "Basic Checkbox-Feld."
+
+#~ msgid "Radio Button"
+#~ msgstr "Radio Button"
+
+#~ msgid "Basic Radio Button field."
+#~ msgstr "Basis-Radio-Button-Feld."
+
+#~ msgid "Option 1"
+#~ msgstr "Option 1"
+
+#~ msgid "Option 2"
+#~ msgstr "Option 2"
+
+#~ msgid "Option 3"
+#~ msgstr "Option 3"
+
+#~ msgid "Media w/ URL"
+#~ msgstr "Medien mit URL"
+
+#~ msgid "Basic media uploader with disabled URL input field."
+#~ msgstr "Basic Media-Uploader mit reaktiviertem URL-Eingabefeld."
+
+#~ msgid "Upload any media using the WordPress native uploader"
+#~ msgstr "Laden Sie Medien ihrer Wahl mit Hilfe des WordPress-Uploaders hoch"
+
+#~ msgid ""
+#~ "Create a new Gallery by selecting existing or uploading new images using "
+#~ "the WordPress native uploader"
+#~ msgstr ""
+#~ "Erstellen Sie eine neue Galerie, indem Sie vorhandene auswählen oder neue "
+#~ "Bilder mit dem WordPress-nativen Uploader hochladen"
+
+#~ msgid "This is the description field, again good for additional info."
+#~ msgstr "Dies ist das Feld „Beschreibung“ für zusätzliche Informationen."
+
+#, fuzzy
+#~ msgid "JQuery UI Slider Example 2 w/ Steps (5)"
+#~ msgstr "JQuery UI Slider Beispiel 2 mit Schritten (5)"
+
+#, fuzzy
+#~ msgid ""
+#~ "JQuery UI slider description. Min: 0, max: 300, step: 5, default value: 75"
+#~ msgstr ""
+#~ "Beschreibung des Schiebereglers der JQuery-Benutzeroberfläche. Min: 0, "
+#~ "Max: 300, Schritt: 5, Standardwert: 75"
+
+#~ msgid "JQuery UI Spinner Example 1"
+#~ msgstr "JQuery UI Spinner Beispiel 1"
+
+#~ msgid ""
+#~ "JQuery UI spinner description. Min:20, max: 100, step:20, default value: "
+#~ "40"
+#~ msgstr ""
+#~ "JQuery UI Spinner Beschreibung. Min:20, max: 100, Schritt:20, "
+#~ "Standardwert: 40"
+
+#~ msgid "Switch On"
+#~ msgstr "Einschalten"
+
+#~ msgid "Look, it's on!"
+#~ msgstr "Schau, es ist an!"
+
+#~ msgid "Text Fields"
+#~ msgstr "Textfelder"
+
+#~ msgid "Textarea Field"
+#~ msgstr "Textbereichfeld"
+
+#, fuzzy
+#~ msgid "Color Field"
+#~ msgstr "Farbfeld"
+
+#~ msgid "Layout"
+#~ msgstr "Layout"
+
+#~ msgid "Slides Options"
+#~ msgstr "Einstellungen für Slides"
+
+#, fuzzy
+#~ msgid "Unlimited slides with drag and drop sorting."
+#~ msgstr "Unbegrenzte Anzahl von Folien mit Drag-and-Drop-Sortierung."
+
+#~ msgid ""
+#~ "This field will store all slides values into a multidimensional array to "
+#~ "use into a foreach loop."
+#~ msgstr ""
+#~ "Dieses Feld speichert alle Saide-Werte in einem multidimensionalen Array "
+#~ "für die Nutzung in einem foreach-Loop."
+
+#, fuzzy
+#~ msgid "Cross Box Required"
+#~ msgstr "Kreuzkasten erforderlich"
+
+#, fuzzy
+#~ msgid ""
+#~ "Required arguments work across metaboxes! Click on Color Field under "
+#~ "Metabox Options then adjust this field to see the fields within show or "
+#~ "hide."
+#~ msgstr ""
+#~ "Erforderliche Argumente funktionieren über Metaboxen hinweg! Klicken Sie "
+#~ "unter Metabox-Optionen auf Farbfeld und passen Sie dieses Feld an, um die "
+#~ "Felder darin anzuzeigen oder auszublenden."
+
+#~ msgid "Sidebar"
+#~ msgstr "Seitenleiste"
+
+#, fuzzy
+#~ msgid ""
+#~ "Please select the sidebar you would like to display on this page. Note: "
+#~ "You must first create the sidebar under Appearance > Widgets."
+#~ msgstr ""
+#~ "Bitte wählen Sie die Seitenleiste aus, die Sie auf dieser Seite anzeigen "
+#~ "möchten. Hinweis: Sie müssen zuerst die Seitenleiste unter Darstellung > "
+#~ "Widgets erstellen."
+
+#, fuzzy, php-format
+#~ msgid ""
+#~ "Did you know that Redux sets a global variable for you? To access any of "
+#~ "your saved options from within your code you can use your global "
+#~ "variable: $%1$s"
+#~ msgstr ""
+#~ "Wussten Sie, dass Redux eine globale Variable für Sie setzt? Um auf eine "
+#~ "Ihrer gespeicherten Optionen aus Ihrem Code zuzugreifen, können Sie Ihre "
+#~ "globale Variable verwenden: $%1$s"
+
+#~ msgid "These are really basic fields!"
+#~ msgstr "Diese sind wirklich grundlegende Felder!"
+
+#~ msgid "Editors"
+#~ msgstr "Redakteure"
+
+#~ msgid "Color Selection"
+#~ msgstr "Farbwahl"
+
+#~ msgid "Design Fields"
+#~ msgstr "Design-Felder"
+
+#~ msgid "Media Uploads"
+#~ msgstr "Medien-Uploads"
+
+#~ msgid "Presentation Fields"
+#~ msgstr "Präsentationsfelder"
+
+#~ msgid "Switch / Button Set"
+#~ msgstr "Schalter und Schaltflächen setzen"
+
+#~ msgid "Select Fields"
+#~ msgstr "Felder auswählen"
+
+#~ msgid "Slider / Spinner"
+#~ msgstr "Slider / Spinner"
+
+#~ msgid "Additional Types"
+#~ msgstr "Zusätzliche Typen"
+
+#~ msgid "Advanced Features"
+#~ msgstr "Erweiterte Funktionen"
+
+#~ msgid "Disabling"
+#~ msgstr "Wird deaktiviert"
+
+#~ msgid "Redux Extensions"
+#~ msgstr "Redux Erweiterungen"
+
+#~ msgid "Customizer Only"
+#~ msgstr "NUR Customizer"
+
+#, fuzzy
+#~ msgid "This Section should be visible only in Customizer"
+#~ msgstr "Dieser Abschnitt sollte nur im Customizer sichtbar sein"
+
+#~ msgid "Customizer Only Option"
+#~ msgstr "Nur Customizer Option"
+
+#~ msgid "The subtitle is NOT visible in customizer"
+#~ msgstr "Der Untertitel ist NICHT sichtbar im Customizer"
+
+#~ msgid "The field desc is NOT visible in customizer."
+#~ msgstr "Das Feld „desc“ ist NICHT sichtbar im Customizer."
+
+#, fuzzy
+#~ msgid "Opt 1"
+#~ msgstr "Option 1"
+
+#, fuzzy
+#~ msgid "Opt 2"
+#~ msgstr "Wahloption 2"
+
+#, fuzzy
+#~ msgid "Opt 3"
+#~ msgstr "Option 3"
+
+#~ msgid "Section via hook"
+#~ msgstr "Abschnitt via Hook"
+
+#~ msgid ""
+#~ "This is a section created by adding a filter to the sections array. Can "
+#~ "be used by child themes to add/remove sections from the options."
+#~ msgstr ""
+#~ "Dies ist ein Abschnitt, der durch Hinzufügen eines Filters zu dem "
+#~ "Abschnitts-Array erstellt wurde. Kann von Child-Themen benutzt werden, um "
+#~ "Abschnitte aus den Optionen hinzuzufügen / zu entfernen."
+
+#, fuzzy
+#~ msgid "Testing filter hook!"
+#~ msgstr "Filterhaken testen!"
+
+#, fuzzy
+#~ msgid "Date / Time Picker"
+#~ msgstr "Datums- / Zeitauswahl"
+
+#, fuzzy
+#~ msgid "Single Date / Time input"
+#~ msgstr "Einmalige Eingabe von Datum / Uhrzeit"
+
+#~ msgid "Display when the split argument is set to false"
+#~ msgstr "Display when the split argument is set to false"
+
+#, fuzzy
+#~ msgid "Split Date / Time input"
+#~ msgstr "Eingabe von Datum / Uhrzeit des Splits"
+
+#~ msgid "Display when the split argument is set to true."
+#~ msgstr "Display when the split argument is set to true."
+
+#, fuzzy
+#~ msgid "Date only input"
+#~ msgstr "Nur Datumseingabe"
+
+#, fuzzy
+#~ msgid "Popup shows only the date picker."
+#~ msgstr "Das Popup zeigt nur die Datumsauswahl an."
+
+#, fuzzy
+#~ msgid "Time only input"
+#~ msgstr "Nur Zeiteingabe"
+
+#, fuzzy
+#~ msgid "Popup shows only the time picker."
+#~ msgstr "Das Popup zeigt nur die Zeitauswahl an."
+
+#, fuzzy
+#~ msgid "Min Max demo"
+#~ msgstr "Min Max Demo"
+
+#, fuzzy
+#~ msgid "Both time and date have min and max values."
+#~ msgstr "Sowohl Uhrzeit als auch Datum haben Minimal- und Maximalwerte."
+
+#~ msgid "Date Option"
+#~ msgstr "Datumsoption"
+
+#~ msgid "No validation can be done on this field type"
+#~ msgstr "Auf diesem Feldtyp kann keine Validierung durchgeführt werden"
+
+#~ msgid "Raw"
+#~ msgstr "Raw"
+
+#~ msgid "Standard Raw Field"
+#~ msgstr "Standard Raw Feld"
+
+#, fuzzy
+#~ msgid "Raw Field <code>full_width</code> set to <code>false</code>"
+#~ msgstr "Raw-Feld <code>full_width</code> auf <code>false</code>"
+
+#~ msgid "Sorter"
+#~ msgstr "Sortieren"
+
+#~ msgid "Callback"
+#~ msgstr "Callback"
+
+#~ msgid "Custom Field Callback"
+#~ msgstr "Custom Field Rückruf"
+
+#~ msgid "This is a completely unique field type"
+#~ msgstr "Dies ist ein völlig einzigartiger Feldtyp"
+
+#~ msgid ""
+#~ "This is created with a callback function, so anything goes in this field. "
+#~ "Make sure to define the function though."
+#~ msgstr ""
+#~ "Dieses Feld wird mit einer Callback Funktion erstellt. Stellen Sie "
+#~ "sicher, dass diese Funktion vorher zu definieren."
+
+#~ msgid "Field Required / Linking"
+#~ msgstr "Pflichtfeld / Verknüpfung"
+
+#~ msgid "For full documentation on validation, visit: "
+#~ msgstr "Für eine vollständige Dokumentation zur Validierung besuche: "
+
+#~ msgid "Basic Required Example"
+#~ msgstr "Grundlegende Anforderung Beispiel"
+
+#, fuzzy
+#~ msgid "Click <code>On</code> to see the text field appear."
+#~ msgstr "Klicken Sie hier <code>On</code> , um das Textfeld anzuzeigen."
+
+#, fuzzy
+#~ msgid "Basic Text Field"
+#~ msgstr "Einfaches Textfeld"
+
+#, fuzzy
+#~ msgid ""
+#~ "This text field is only show when the above switch is set to <code>On</"
+#~ "code>, using the <code>required</code> argument."
+#~ msgstr ""
+#~ "Dieses Textfeld wird nur angezeigt, wenn der obige Schalter mit dem "
+#~ "<code>required</code> Argument auf <code>On</code>gesetzt ist."
+
+#, fuzzy
+#~ msgid "Nested Required Example"
+#~ msgstr "Beispiel für verschachtelte Anforderungen"
+
+#, fuzzy
+#~ msgid "Click <code>On</code> to see another set of options appear."
+#~ msgstr ""
+#~ "Klicken Sie hier <code>On</code> , um eine weitere Reihe von Optionen "
+#~ "anzuzeigen."
+
+#, fuzzy
+#~ msgid "Multiple Nested Required Examples"
+#~ msgstr "Mehrere verschachtelte erforderliche Beispiele"
+
+#, fuzzy
+#~ msgid ""
+#~ "Click any button to show different fields based on their <code>required</"
+#~ "code> statements."
+#~ msgstr ""
+#~ "Klicken Sie auf eine beliebige Schaltfläche, um verschiedene Felder "
+#~ "basierend auf ihren <code>required</code> Anweisungen anzuzeigen."
+
+#~ msgid "Show Text Field"
+#~ msgstr "Textfeld anzeigen"
+
+#~ msgid "Show Textarea Field"
+#~ msgstr "Textbereich-Feld anzeigen"
+
+#~ msgid "Show WP Editor"
+#~ msgstr "WP-Bearbeiter anzeigen"
+
+#~ msgid "Show ACE Editor"
+#~ msgstr "ACE-Editor anzeigen"
+
+#, fuzzy
+#~ msgid "Nested Text Field"
+#~ msgstr "Verschachteltes Textfeld"
+
+#~ msgid "Nested Textarea Field"
+#~ msgstr "Verschachteltes Textbereichs-Feld"
+
+#, fuzzy
+#~ msgid "Nested Editor Field"
+#~ msgstr "Verschachteltes Editor-Feld"
+
+#, fuzzy
+#~ msgid "Nested ACE Editor Field"
+#~ msgstr "Geschachteltes ACE-Editor-Feld"
+
+#~ msgid "Select Required Example"
+#~ msgstr "Wählen Sie das erforderliche Beispiel"
+
+#, fuzzy
+#~ msgid ""
+#~ "Select a different option to display its value.  Required may be used to "
+#~ "display multiple & reusable fields"
+#~ msgstr ""
+#~ "Wählen Sie eine andere Option aus, um den Wert anzuzeigen.  Erforderlich "
+#~ "kann verwendet werden, um mehrere und wiederverwendbare Felder anzuzeigen"
+
+#~ msgid "No Sidebars"
+#~ msgstr "Keine Seitenleisten"
+
+#~ msgid "Left Sidebar"
+#~ msgstr "Linke Seitenleiste"
+
+#~ msgid "Right Sidebar"
+#~ msgstr "Rechte Seitenleiste"
+
+#~ msgid "Both Sidebars"
+#~ msgstr "Beide Sidebars"
+
+#~ msgid "Select Left Sidebar"
+#~ msgstr "Linke Seitenleiste wählen"
+
+#~ msgid "Select Right Sidebar"
+#~ msgstr "Rechte Seitenleiste wählen"
+
+#, fuzzy
+#~ msgid "Field Sanitizing"
+#~ msgstr "Desinfektion vor Ort"
+
+#, fuzzy
+#~ msgid "Text Option - Force Uppercase"
+#~ msgstr "Textoption - Großbuchstaben erzwingen"
+
+#, fuzzy
+#~ msgid "Uses the strtoupper function to force all uppercase characters."
+#~ msgstr ""
+#~ "Verwendet die strtoupper-Funktion, um alle Großbuchstaben zu erzwingen."
+
+#, fuzzy
+#~ msgid "Text Option - Sanitize Title"
+#~ msgstr "Textoption - Titel bereinigen"
+
+#, fuzzy
+#~ msgid "Uses the WordPress sanitize_title function to format text."
+#~ msgstr ""
+#~ "Verwendet die WordPress-sanitize_title-Funktion, um Text zu formatieren."
+
+#, fuzzy
+#~ msgid "Text Option - Custom Sanitize"
+#~ msgstr "Textoption - Benutzerdefinierte Desinfektion"
+
+#, fuzzy
+#~ msgid ""
+#~ "Uses the custom function redux_custom_sanitize to capitalize every other "
+#~ "letter."
+#~ msgstr ""
+#~ "Verwendet die benutzerdefinierte Funktion redux_custom_sanitize, um jeden "
+#~ "zweiten Buchstaben groß zu schreiben."
+
+#~ msgid "Field Validation"
+#~ msgstr "Feldüberprüfung"
+
+#~ msgid "Text Option - Email Validated"
+#~ msgstr "Text Option - E-Mail geprüft"
+
+#~ msgid ""
+#~ "This is a little space under the Field Title in the Options table, "
+#~ "additional info is good in here."
+#~ msgstr ""
+#~ "Dies ist ein kleiner Abstand unter dem Feld Titel in der „Options“-"
+#~ "Tabelle, zusätzliche Informationen hier eintragen."
+
+#~ msgid "Text Option with Data Attributes"
+#~ msgstr "Textoption mit Datenattributen"
+
+#~ msgid ""
+#~ "You can also pass an options array if you want. Set the default to "
+#~ "whatever you like."
+#~ msgstr ""
+#~ "Du kannst auch ein Options Array hinterlegen, wenn du willst. Mache zum "
+#~ "„Standard“ was immer du willst."
+
+#~ msgid "Multi Text Option - Color Validated"
+#~ msgstr "Multi Text Option - Farbe validiert"
+
+#~ msgid ""
+#~ "If you enter an invalid color it will be removed. Try using the text "
+#~ "\"blue\" as a color.  ;)"
+#~ msgstr ""
+#~ "Wenn du eine ungültige Farbe eingibst, wird diese wieder entfernt. "
+#~ "Probiere Bezeichnungen wie \"blue\" als eine Farbe.  ;)"
+
+#~ msgid "Text Option - URL Validated"
+#~ msgstr "Text Option - URL geprüft"
+
+#~ msgid "This must be a URL."
+#~ msgstr "Hier muss eine URL stehen."
+
+#~ msgid "Text Option - Numeric Validated"
+#~ msgstr "Text Option - Numerisch geprüft"
+
+#~ msgid "This must be numeric."
+#~ msgstr "Die Eingabe muss numerisch sein."
+
+#~ msgid "Text Option - Comma Numeric Validated"
+#~ msgstr "Text Option - Komma numerisch geprüft"
+
+#~ msgid "This must be a comma separated string of numerical values."
+#~ msgstr ""
+#~ "Dies muss eine durch Kommata getrennte Zeichenfolge numerischer Werte "
+#~ "sein."
+
+#~ msgid "Text Option - No Special Chars Validated"
+#~ msgstr "Text Option - keine Sonderzeichen geprüft"
+
+#~ msgid "This must be a alpha numeric only."
+#~ msgstr "Die Eingabe muss alphanumerisch sein."
+
+#~ msgid "Text Option - Str Replace Validated"
+#~ msgstr "Text Option - Str Replace geprüft"
+
+#~ msgid "You decide."
+#~ msgstr "Sie entscheiden."
+
+#~ msgid "This field's default value was changed by a filter hook!"
+#~ msgstr "Standardwert dieses Feldes wurde durch einen Filter verändert!"
+
+#~ msgid "Text Option - Preg Replace Validated"
+#~ msgstr "Text Option - preg_replace geprüft"
+
+#~ msgid "Text Option - Custom Callback Validated"
+#~ msgstr "Die Textoption - benutzerdefiniertes Callback geprüft"
+
+#~ msgid ""
+#~ "Enter <code>1</code> and click <strong>Save Changes</strong> for an error "
+#~ "message, or enter <code>2</code> and click <strong>Save Changes</strong> "
+#~ "for a warning message."
+#~ msgstr ""
+#~ "Gebe <code>1</code> ein und klicke <strong>auf Änderungen speichern</"
+#~ "strong> für eine Fehlermeldung, oder gebe <code>2</code> ein und klicke "
+#~ "<strong>auf Änderungen speichern</strong> für eine Warnmeldung."
+
+#~ msgid "Textarea Option - No HTML Validated"
+#~ msgstr "Textarea-Option - kein HTML geprüft"
+
+#~ msgid "All HTML will be stripped"
+#~ msgstr "Alles HTML wird entfernt"
+
+#~ msgid "Textarea Option - HTML Validated"
+#~ msgstr "Textarea-Option - HTML geprüft"
+
+#~ msgid "HTML Allowed (wp_kses)"
+#~ msgstr "HTML erlaubt (wp_kses)"
+
+#~ msgid "Textarea Option - HTML Validated Custom"
+#~ msgstr "Textbereich-Option - HTML geprüft benutzerdefiniert"
+
+#~ msgid "Custom HTML Allowed (wp_kses)"
+#~ msgstr "Benutzerdefiniertes HTML erlaubt (wp_kses)"
+
+#~ msgid "Textarea Option - JS Validated"
+#~ msgstr "Textarea-Option - JS geprüft"
+
+#~ msgid "JS will be escaped"
+#~ msgstr "Javascript wird entfernt"
+
+#~ msgid "WPML Integration"
+#~ msgstr "WPML Integration"
+
+#~ msgid ""
+#~ "These fields can be fully translated by WPML (WordPress Multi-Language). "
+#~ "This serves as an example for you to implement. For extra details look at "
+#~ "our WPML Implementation documentation: "
+#~ msgstr ""
+#~ "Diese Felder können mit WPML (WordPress Multi-Language) vollständig "
+#~ "übersetzt werden. Dies dient als Beispiel für Ihre Implementierung. "
+#~ "Weitere Details finden Sie in unserer Dokumentation zur WPML-"
+#~ "Implementierung: "
+
+#~ msgid "WPML Text"
+#~ msgstr "WPML Text"
+
+#~ msgid "This string can be translated via WPML."
+#~ msgstr "Dieser String kann per WPML übersetzt werden."
+
+#~ msgid "WPML Multi Checkbox"
+#~ msgstr "WPML Multi Checkbox"
+
+#~ msgid "You can literally translate the values via key."
+#~ msgstr "Du kannst die Werte über Schlüssel wortwörtlich übersetzen."
+
+#~ msgid "Checkbox Option"
+#~ msgstr "Kontrollkästchen-Optionen"
+
+#~ msgid "Multi Checkbox Option"
+#~ msgstr "Multi-Checkbox-Option"
+
+#~ msgid "Multi Checkbox Option (with menu data)"
+#~ msgstr "Multi-Checkbox-Option (mit Menüdaten)"
+
+#~ msgid "Multi Checkbox Option (with sidebar data)"
+#~ msgstr "Multi-Checkbox-Option (mit Seitenleiste Daten)"
+
+#~ msgid "Multi Text"
+#~ msgstr "Multi-Text"
+
+#~ msgid "Multi Text Option"
+#~ msgstr "Multi Text Option"
+
+#~ msgid "Field subtitle"
+#~ msgstr "Felduntertitel"
+
+#~ msgid "Radio"
+#~ msgstr "Radio"
+
+#~ msgid "Radio Option"
+#~ msgstr "Radio-Option"
+
+#~ msgid "Radio Option w/ Menu Data"
+#~ msgstr "Radio-Option mit Menü Daten"
+
+#~ msgid "Sortable"
+#~ msgstr "Sortierbar"
+
+#~ msgid "Sortable Text Option"
+#~ msgstr "Sortierbare Textoption"
+
+#~ msgid "Define and reorder these however you want."
+#~ msgstr "Sie können dies frei definieren und zuordnen."
+
+#~ msgid "Sortable Toggle Option"
+#~ msgstr "Sortable Toggle Option"
+
+#~ msgid "Text Field w/ Hint"
+#~ msgstr "Textfeld mit Tipp"
+
+#, fuzzy
+#~ msgid "Text Field w/ placeholder using custom data object."
+#~ msgstr ""
+#~ "Textfeld mit Platzhalter unter Verwendung eines benutzerdefinierten "
+#~ "Datenobjekts."
+
+#~ msgid "Textarea"
+#~ msgstr "Textbereich"
+
+#~ msgid "Color Gradient"
+#~ msgstr "Farbverlauf"
+
+#~ msgid "Header Gradient Color Option"
+#~ msgstr "Header Verlaufsfarben Optionen"
+
+#~ msgid "Only color validation can be done on this field type"
+#~ msgstr "Nur Farbvalidierung kann auf diesem Feldtyp durchgeführt werden"
+
+#~ msgid "Color Palette"
+#~ msgstr "Farbpalette"
+
+#, fuzzy
+#~ msgid "Color Palette Control"
+#~ msgstr "Steuerung der Farbpalette"
+
+#, fuzzy
+#~ msgid "User defined colors with round selectors."
+#~ msgstr "Benutzerdefinierte Farben mit runden Selektoren."
+
+#, fuzzy
+#~ msgid "Set the Widget Title color here."
+#~ msgstr "Legen Sie hier die Farbe des Widget-Titels fest."
+
+#, fuzzy
+#~ msgid "All Material Design Colors."
+#~ msgstr "Alle Materialdesign-Farben."
+
+#, fuzzy
+#~ msgid "Primary Material Design Colors."
+#~ msgstr "Designfarben des Primärmaterials."
+
+#, fuzzy
+#~ msgid "Red Material Design Colors."
+#~ msgstr "Rote Materialdesignfarben."
+
+#, fuzzy
+#~ msgid "A100 Material Design Colors."
+#~ msgstr "A100 Material Design Farben."
+
+#~ msgid "Color RGBA"
+#~ msgstr "Farbe RGBA"
+
+#~ msgid "Gives you the RGBA color."
+#~ msgstr "RGBA (RGB mit Transparentkanal) Farbe."
+
+#~ msgid "Color"
+#~ msgstr "Farbe"
+
+#~ msgid "Site Title Color"
+#~ msgstr "Seitentitel-Farbe"
+
+#~ msgid "Pick a title color for the theme (default: #000)."
+#~ msgstr "Wähle eine Farbe für das Theme (Standard: #000)."
+
+#~ msgid "Footer Background Color"
+#~ msgstr "Footer Hintergrundfarbe"
+
+#~ msgid "Pick a background color for the footer (default: #dd9933)."
+#~ msgstr "Wähle eine Hintergrundfarbe für den Footer (Standard: #dd9933)."
+
+#~ msgid "Link Color"
+#~ msgstr "Linkfarbe"
+
+#~ msgid "Links Color Option"
+#~ msgstr "Link Farben Einstellungen"
+
+#~ msgid "Palette"
+#~ msgstr "Palette"
+
+#~ msgid "Palette Color Option"
+#~ msgstr "Farbpalettenoptionen"
+
+#~ msgid "Body Background"
+#~ msgstr "Body Hintergrund"
+
+#~ msgid "Body background with image, color, etc."
+#~ msgstr "Body-Hintergrund mit Bild, Farbe, etc."
+
+#~ msgid "Border"
+#~ msgstr "Rahmen"
+
+#~ msgid "Header Border Option"
+#~ msgstr "Header-Rand Optionen"
+
+#, fuzzy
+#~ msgid "Body Border Option"
+#~ msgstr "Option \"Körperrand\""
+
+#~ msgid "Box Shadow"
+#~ msgstr "Box Schatten"
+
+#~ msgid "Site Header Box Shadow with inset and drop shadows."
+#~ msgstr "Kopfzeile Box-Schatten mit Einsatz- und Schlagschatten."
+
+#~ msgid "Dimensions"
+#~ msgstr "Abmessungen"
+
+#~ msgid "Dimensions (Width/Height) Option"
+#~ msgstr "Abmessungen (Breite/Höhe) Optionen"
+
+#~ msgid "Allow your users to choose width, height, and/or unit."
+#~ msgstr ""
+#~ "Erlaube Benutzern die individuelle Auswahl von Höhe, Breite und/oder der "
+#~ "Einheit."
+
+#~ msgid ""
+#~ "You can enable or disable any piece of this field. Width, Height, or "
+#~ "Units."
+#~ msgstr ""
+#~ "Sie können jeden Teil dieses Feldes aktivieren. Breite, Höhe oder "
+#~ "Einheiten."
+
+#~ msgid "Dimensions (Width) Option"
+#~ msgstr "Abmessungen (Breite) Option"
+
+#~ msgid "Spacing"
+#~ msgstr "Abstand"
+
+#~ msgid "Padding/Margin Option"
+#~ msgstr "Innen- / Außenabstand Einstellungen"
+
+#~ msgid "Allow your users to choose the spacing or margin they want."
+#~ msgstr ""
+#~ "Erlaube Benutzern die individuelle Auswahl von Abständen und Rändern."
+
+#~ msgid ""
+#~ "You can enable or disable any piece of this field. Top, Right, Bottom, "
+#~ "Left, or Units."
+#~ msgstr ""
+#~ "Du kannst jeden Teil dieses Feldes aktivieren. Oben, Rechts, Unten, Links "
+#~ "oder Einheiten."
+
+#~ msgid "Disable Field"
+#~ msgstr "Feld deaktivieren"
+
+#~ msgid "Disable Section"
+#~ msgstr "Abschnitt deaktivieren"
+
+#~ msgid "ACE Editor"
+#~ msgstr "ACE-Editor"
+
+#~ msgid "For full documentation on the this field, visit: "
+#~ msgstr "Die vollständige Anleitung zu diesem Feld findest du unter: "
+
+#~ msgid "CSS Code"
+#~ msgstr "CSS Code"
+
+#~ msgid "Paste your CSS code here."
+#~ msgstr "CSS-Code hier einfügen."
+
+#~ msgid "JS Code"
+#~ msgstr "JS-Code"
+
+#~ msgid "Paste your JS code here."
+#~ msgstr "Hier Ihren JS-Code einfügen."
+
+#~ msgid "PHP Code"
+#~ msgstr "PHP-Code"
+
+#~ msgid "Paste your PHP code here."
+#~ msgstr "Gib hier deinen benutzerdefinierten PHP Code ein."
+
+#~ msgid "WordPress Editor"
+#~ msgstr "WordPress Editor"
+
+#~ msgid "Editor"
+#~ msgstr "Editor"
+
+#~ msgid "Use any of the features of WordPress editor inside your panel!"
+#~ msgstr "Verwende eine der Funktionen vom WordPress-Editor in deinem Panel!"
+
+#~ msgid "Editor w/o Media Button"
+#~ msgstr "Editor ohne Media-Button"
+
+#~ msgid "Editor - Full Width"
+#~ msgstr "Editor - Volle Breite"
+
+#~ msgid "Accordion"
+#~ msgstr "Akkordeon"
+
+#~ msgid "Accordion Section One"
+#~ msgstr "Accordion Section One"
+
+#, fuzzy
+#~ msgid "Section one with subtitle"
+#~ msgstr "Erster Abschnitt mit Untertiteln"
+
+#, fuzzy
+#~ msgid "Text box for some noble purpose."
+#~ msgstr "Textfeld für einen edlen Zweck."
+
+#, fuzzy
+#~ msgid "Frailty, thy name is woman!"
+#~ msgstr "Gebrechlichkeit, dein Name ist Weib!"
+
+#, fuzzy
+#~ msgid "Switch, for some other important task!"
+#~ msgstr "Switch, für eine andere wichtige Aufgabe!"
+
+#, fuzzy
+#~ msgid "Physician, heal thyself!"
+#~ msgstr "Arzt, heile dich selbst!"
+
+#~ msgid "Accordion Section Two (no subtitle)"
+#~ msgstr "Accordion Section Two (no subtitle)"
+
+#, fuzzy
+#~ msgid "Look, another sample text box."
+#~ msgstr "Schauen Sie, ein weiteres Beispieltextfeld."
+
+#, fuzzy
+#~ msgid "The tartness of his face sours ripe grapes."
+#~ msgstr "Die Säure seines Gesichts säuert reife Trauben."
+
+#, fuzzy
+#~ msgid "Yes, another switch, but you're free to use any field you like."
+#~ msgstr ""
+#~ "Ja, ein weiterer Schalter, aber Sie können jedes beliebige Feld verwenden."
+
+#, fuzzy
+#~ msgid "I scorn you, scurvy companion!"
+#~ msgstr "Ich verachte dich, Skorbutgefährte!"
+
+#~ msgid "Color Schemes"
+#~ msgstr "Farbschema"
+
+#, fuzzy
+#~ msgid "Save and load color schemes"
+#~ msgstr "Speichern und Laden von Farbschemata"
+
+#, fuzzy
+#~ msgid ""
+#~ "If you're using the theme 2023, you will be able to see many changes on "
+#~ "the current site."
+#~ msgstr ""
+#~ "Wenn Sie das Theme 2023 verwenden, können Sie viele Änderungen auf der "
+#~ "aktuellen Website sehen."
+
+#~ msgid "Header"
+#~ msgstr "Header"
+
+#, fuzzy
+#~ msgid "Set header and nav colors here. (Group open by default)"
+#~ msgstr ""
+#~ "Legen Sie hier die Farben für Kopfzeile und Navigation fest. (Gruppe "
+#~ "standardmäßig geöffnet)"
+
+#~ msgid "Body"
+#~ msgstr "Body"
+
+#, fuzzy
+#~ msgid "Set body and content colors here."
+#~ msgstr "Legen Sie hier die Text- und Inhaltsfarben fest."
+
+#~ msgid "Widget"
+#~ msgstr "Widget"
+
+#, fuzzy
+#~ msgid "These colors are not assigned to any group."
+#~ msgstr "Diese Farben sind keiner Gruppe zugeordnet."
+
+#, fuzzy
+#~ msgid "Custom Fonts Typography"
+#~ msgstr "Typografie von benutzerdefinierten Schriftarten"
+
+#~ msgid "Google Maps"
+#~ msgstr "Google Maps"
+
+#, fuzzy
+#~ msgid ""
+#~ "This map is set using only address information with a zoom factor of 3.  "
+#~ "Lat/Long is returned automatically."
+#~ msgstr ""
+#~ "Diese Karte wird nur mit Adressinformationen mit einem Zoomfaktor von 3 "
+#~ "erstellt.  Breitengrad/Längengrad wird automatisch zurückgegeben."
+
+#, fuzzy
+#~ msgid ""
+#~ "This map is set using only latitude and longitude with a zoom factor of "
+#~ "7.  When setting a Google map using lat/long, address information will "
+#~ "not be returned."
+#~ msgstr ""
+#~ "Diese Karte wird nur mit Breiten- und Längengrad mit einem Zoomfaktor von "
+#~ "7 festgelegt.  Wenn Sie eine Google-Karte mit Breitengrad/Länge "
+#~ "festlegen, werden keine Adressinformationen zurückgegeben."
+
+#~ msgid "Icon Select"
+#~ msgstr "Icon Auswahl"
+
+#, fuzzy
+#~ msgid "Legacy Icon Select"
+#~ msgstr "Legacy-Symbol auswählen"
+
+#, fuzzy
+#~ msgid ""
+#~ "Original Icon Select field that maintains backward compatibility with the "
+#~ "original extension."
+#~ msgstr ""
+#~ "Ursprüngliches Symbol Wählen Sie ein Feld aus, das die "
+#~ "Abwärtskompatibilität mit der ursprünglichen Erweiterung beibehält."
+
+#~ msgid "Select an icon."
+#~ msgstr "Wählen Sie ein Icon."
+
+#, fuzzy
+#~ msgid "JS Button"
+#~ msgstr "JS-Taste"
+
+#, fuzzy
+#~ msgid "Run javascript in the options panel from button clicks."
+#~ msgstr ""
+#~ "Führen Sie Javascript im Optionsfeld aus, wenn Sie auf die Schaltfläche "
+#~ "klicken."
+
+#, fuzzy
+#~ msgid ""
+#~ "Click the Add Date button to add the current date into the text field "
+#~ "below."
+#~ msgstr ""
+#~ "Klicken Sie auf die Schaltfläche Datum hinzufügen, um das aktuelle Datum "
+#~ "in das Textfeld darunter einzufügen."
+
+#~ msgid "Add Date"
+#~ msgstr "Datum hinzufügen"
+
+#~ msgid "Alert"
+#~ msgstr "Alarm"
+
+#, fuzzy
+#~ msgid "Click the Add Date button above to fill out this field."
+#~ msgstr ""
+#~ "Klicken Sie oben auf die Schaltfläche Datum hinzufügen, um dieses Feld "
+#~ "auszufüllen."
+
+#~ msgid "Repeater"
+#~ msgstr "Repeater"
+
+#, fuzzy
+#~ msgid "Repeater Demo"
+#~ msgstr "Repeater-Demo"
+
+#~ msgid "Select Field"
+#~ msgstr "Feld auswählen"
+
+#, fuzzy
+#~ msgid "Listing Field"
+#~ msgstr "Feld \"Auflistung\""
+
+#, fuzzy
+#~ msgid "Switch Field"
+#~ msgstr "Feld wechseln"
+
+#~ msgid "Function"
+#~ msgstr "Funktion"
+
+#~ msgid "Output:"
+#~ msgstr "Ausgang:"
+
+#~ msgid "Shortcodes"
+#~ msgstr "Shortcodes"
+
+#, fuzzy
+#~ msgid "[bloginfo data=\"name\"]"
+#~ msgstr "[bloginfo data=\"Name\"]"
+
+#, fuzzy
+#~ msgid ""
+#~ "Displays the \"Site Title\" set in Settings > General. This data is "
+#~ "retrieved from the \"blogname\" record in the wp_options table."
+#~ msgstr ""
+#~ "Zeigt den \"Website-Titel\" an, der in den Einstellungen > Allgemein "
+#~ "festgelegt wurde. Diese Daten werden aus dem Datensatz \"blogname\" in "
+#~ "der wp_options Tabelle abgerufen."
+
+#, fuzzy
+#~ msgid "[bloginfo data=\"description\"]"
+#~ msgstr "[bloginfo data=\"Beschreibung\"]"
+
+#, fuzzy
+#~ msgid ""
+#~ "Displays the \"Tagline\" set in Settings > General. This data is "
+#~ "retrieved from the \"blogdescription\" record in the wp_options table."
+#~ msgstr ""
+#~ "Zeigt den \"Slogan\" an, der in den Einstellungen > Allgemein festgelegt "
+#~ "wurde. Diese Daten werden aus dem Datensatz \"blogdescription\" in der "
+#~ "Tabelle wp_options abgerufen."
+
+#, fuzzy
+#~ msgid "[bloginfo data=\"wpurl\"]"
+#~ msgstr "[bloginfo data=\"wpurl\"]"
+
+#, fuzzy
+#~ msgid ""
+#~ "Displays the \"WordPress address (URL)\" set in Settings > General. This "
+#~ "data is retrieved from the \"siteurl\" record in the wp_options table. "
+#~ "Consider using *root_url* instead, especially for multi-site "
+#~ "configurations using paths instead of subdomains (it will return the root "
+#~ "site not the current sub-site)."
+#~ msgstr ""
+#~ "Zeigt die \"WordPress-Adresse (URL)\" an, die in den Einstellungen > "
+#~ "Allgemein festgelegt wurde. Diese Daten werden aus dem Eintrag \"siteurl"
+#~ "\" in der wp_options Tabelle abgerufen. Erwägen Sie stattdessen die "
+#~ "Verwendung von *root_url*, insbesondere für Konfigurationen mit mehreren "
+#~ "Websites, die Pfade anstelle von Subdomänen verwenden (es wird die "
+#~ "Stammwebsite und nicht die aktuelle Unterwebsite zurückgegeben)."
+
+#, fuzzy
+#~ msgid "[bloginfo data=\"root_url\"]"
+#~ msgstr "[bloginfo data=\"root_url\"]"
+
+#, fuzzy
+#~ msgid "Return the root site, not the current sub-site."
+#~ msgstr "Gibt die Stammwebsite zurück, nicht die aktuelle Unterwebsite."
+
+#, fuzzy
+#~ msgid "[bloginfo data=\"url\"]"
+#~ msgstr "[bloginfo data=\"url\"]"
+
+#, fuzzy
+#~ msgid ""
+#~ "Displays the \"Site address (URL)\" set in Settings > General. This data "
+#~ "is retrieved from the \"home\" record in the wp_options table."
+#~ msgstr ""
+#~ "Zeigt die in den Einstellungen > Allgemein festgelegte \"Site-Adresse "
+#~ "(URL)\" an. Diese Daten werden aus dem \"home\"-Datensatz in der "
+#~ "wp_options Tabelle abgerufen."
+
+#~ msgid "[bloginfo data=\"admin_email\"]"
+#~ msgstr "[bloginfo data=\"admin_email\"]"
+
+#, fuzzy
+#~ msgid ""
+#~ "Displays the \"E-mail address\" set in Settings > General. This data is "
+#~ "retrieved from the \"admin_email\" record in the wp_options table."
+#~ msgstr ""
+#~ "Zeigt die in den Einstellungen > Allgemein festgelegte \"E-Mail-Adresse\" "
+#~ "an. Diese Daten werden aus dem Datensatz \"admin_email\" in der Tabelle "
+#~ "wp_options abgerufen."
+
+#~ msgid "[bloginfo data=\"charset\"]"
+#~ msgstr "[bloginfo data=\"charset\"]"
+
+#, fuzzy
+#~ msgid ""
+#~ "Displays the \"Encoding for pages and feeds\" set in Settings > Reading. "
+#~ "This data is retrieved from the \"blog_charset\" record in the wp_options."
+#~ msgstr ""
+#~ "Zeigt die in den Einstellungen > Lesen festgelegte \"Codierung für Seiten "
+#~ "und Feeds\" an. Diese Daten werden aus dem Datensatz \"blog_charset\" im "
+#~ "wp_options abgerufen."
+
+#, fuzzy
+#~ msgid "[bloginfo data=\"version\"]"
+#~ msgstr "[bloginfo data=\"Version\"]"
+
+#, fuzzy
+#~ msgid ""
+#~ "Displays the WordPress Version you use. This data is retrieved from the "
+#~ "$wp_version variable set in wp-includes/version.php."
+#~ msgstr ""
+#~ "Zeigt die WordPress-Version an, die Sie verwenden. Diese Daten werden aus "
+#~ "der Variablen $wp_version in wp-includes/version.php abgerufen."
+
+#, fuzzy
+#~ msgid "[bloginfo data=\"html_type\"]"
+#~ msgstr "[bloginfo data=\"html_type\"]"
+
+#, fuzzy
+#~ msgid ""
+#~ "Displays the Content-Type of WordPress HTML pages (default: \"text/html"
+#~ "\"). This data is retrieved from the \"html_type\" record in the "
+#~ "wp_options table. Themes and plugins can override the default value using "
+#~ "the pre_option_html_type filter."
+#~ msgstr ""
+#~ "Zeigt den Content-Type von WordPress-HTML-Seiten an (Standard: \"text/html"
+#~ "\"). Diese Daten werden aus dem Datensatz \"html_type\" in der wp_options "
+#~ "Tabelle abgerufen. Themes und Plugins können den Standardwert mit dem "
+#~ "Filter pre_option_html_type überschreiben."
+
+#, fuzzy
+#~ msgid "[bloginfo data=\"is_multisite\"]"
+#~ msgstr "[bloginfo data=\"is_multisite\"]"
+
+#, fuzzy
+#~ msgid "Displays true/false check if WordPress is running in multisite mode."
+#~ msgstr ""
+#~ "Zeigt eine Wahr/Falsch-Prüfung an, ob WordPress im Multisite-Modus "
+#~ "ausgeführt wird."
+
+#, fuzzy
+#~ msgid "[bloginfo data=\"text_direction\"]"
+#~ msgstr "[bloginfo data=\"text_direction\"]"
+
+#, fuzzy
+#~ msgid ""
+#~ "Displays true/false check if the Text Direction of WordPress HTML pages "
+#~ "is left instead of right."
+#~ msgstr ""
+#~ "Zeigt die Richtig/Falsch-Prüfung an, ob die Textrichtung von WordPress-"
+#~ "HTML-Seiten links statt rechts ist."
+
+#, fuzzy
+#~ msgid "[bloginfo data=\"language\"]"
+#~ msgstr "[bloginfo data=\"Sprache\"]"
+
+#, fuzzy
+#~ msgid "Displays the language of WordPress."
+#~ msgstr "Zeigt die Sprache von WordPress an."
+
+#, fuzzy
+#~ msgid "[bloginfo data=\"stylesheet_url\"]"
+#~ msgstr "[bloginfo data=\"stylesheet_url\"]"
+
+#, fuzzy
+#~ msgid ""
+#~ "Displays the primary CSS (usually style.css) file URL of the active theme."
+#~ msgstr ""
+#~ "Zeigt die primäre CSS-Datei-URL (in der Regel style.css) des aktiven "
+#~ "Designs an."
+
+#, fuzzy
+#~ msgid "[bloginfo data=\"stylesheet_directory\"]"
+#~ msgstr "[bloginfo data=\"stylesheet_directory\"]"
+
+#, fuzzy
+#~ msgid "Displays the stylesheet directory of the active theme."
+#~ msgstr "Zeigt das Stylesheet-Verzeichnis des aktiven Themes an."
+
+#, fuzzy
+#~ msgid "[bloginfo data=\"template_url\"]"
+#~ msgstr "[bloginfo data=\"template_url\"]"
+
+#, fuzzy
+#~ msgid "[bloginfo data=\"child_template_url\"]"
+#~ msgstr "[bloginfo data=\"child_template_url\"]"
+
+#, fuzzy
+#~ msgid "Child template URI."
+#~ msgstr "URI der untergeordneten Vorlage."
+
+#, fuzzy
+#~ msgid "[bloginfo data=\"template_directory\"]"
+#~ msgstr "[bloginfo data=\"template_directory\"]"
+
+#, fuzzy
+#~ msgid "Template directory."
+#~ msgstr "Template-Verzeichnis."
+
+#, fuzzy
+#~ msgid "[bloginfo data=\"child_template_directory\"]"
+#~ msgstr "[bloginfo data=\"child_template_directory\"]"
+
+#, fuzzy
+#~ msgid "Child template Directory."
+#~ msgstr "Untergeordnetes Vorlagenverzeichnis."
+
+#, fuzzy
+#~ msgid "[bloginfo data=\"pingback_url\"]"
+#~ msgstr "[bloginfo data=\"pingback_url\"]"
+
+#, fuzzy
+#~ msgid "Displays the Pingback XML-RPC file URL (xmlrpc.php)."
+#~ msgstr "Zeigt die URL der Pingback-XML-RPC-Datei (xmlrpc.php) an."
+
+#~ msgid "[bloginfo data=\"atom_url\"]"
+#~ msgstr "[bloginfo data=\"atom_url\"]"
+
+#, fuzzy
+#~ msgid "Displays the Atom feed URL (/feed/atom)."
+#~ msgstr "Zeigt die Atom-Feed-URL (/feed/atom) an."
+
+#, fuzzy
+#~ msgid "[bloginfo data=\"rdf_url\"]"
+#~ msgstr "[bloginfo data=\"rdf_url\"]"
+
+#, fuzzy
+#~ msgid "Displays the RDF/RSS 1.0 feed URL (/feed/rfd)."
+#~ msgstr "Zeigt die RDF/RSS 1.0-Feed-URL (/feed/rfd) an."
+
+#, fuzzy
+#~ msgid "[bloginfo data=\"rss_url\"]"
+#~ msgstr "[bloginfo data=\"rss_url\"]"
+
+#, fuzzy
+#~ msgid "Displays the RSS 0.92 feed URL (/feed/rss)."
+#~ msgstr "Zeigt die URL des RSS 0.92-Feeds (/feed/rss) an."
+
+#, fuzzy
+#~ msgid "[bloginfo data=\"rss2_url\"]"
+#~ msgstr "[bloginfo data=\"rss2_url\"]"
+
+#, fuzzy
+#~ msgid "Displays the RSS 2.0 feed URL (/feed)."
+#~ msgstr "Zeigt die RSS 2.0-Feed-URL (/feed) an."
+
+#, fuzzy
+#~ msgid "[bloginfo data=\"comments_atom_url\"]"
+#~ msgstr "[bloginfo data=\"comments_atom_url\"]"
+
+#, fuzzy
+#~ msgid "Displays the comments Atom feed URL (/comments/feed)."
+#~ msgstr "Zeigt die Atom-Feed-URL der Kommentare (/comments/feed) an."
+
+#, fuzzy
+#~ msgid "[bloginfo data=\"comments_rss2_url\"]"
+#~ msgstr "[bloginfo data=\"comments_rss2_url\"]"
+
+#, fuzzy
+#~ msgid "Displays the comments RSS 2.0 feed URL (/comments/feed)."
+#~ msgstr "Zeigt die URL des RSS 2.0-Feeds für Kommentare (/comments/feed) an."
+
+#, fuzzy
+#~ msgid "[bloginfo data=\"login_url\"]"
+#~ msgstr "[bloginfo data=\"login_url\"]"
+
+#, fuzzy
+#~ msgid "Returns the WordPress login URL."
+#~ msgstr "Gibt die WordPress-Anmelde-URL zurück."
+
+#, fuzzy
+#~ msgid "[bloginfo data=\"logout_url\"]"
+#~ msgstr "[bloginfo data=\"logout_url\"]"
+
+#, fuzzy
+#~ msgid "Returns the WordPress logout URL."
+#~ msgstr "Gibt die WordPress-Abmelde-URL zurück."
+
+#, fuzzy
+#~ msgid "[bloginfo data=\"register_url\"]"
+#~ msgstr "[bloginfo data=\"register_url\"]"
+
+#, fuzzy
+#~ msgid "Returns the WordPress register URL."
+#~ msgstr "Gibt die WordPress-Registrierungs-URL zurück."
+
+#, fuzzy
+#~ msgid "[bloginfo data=\"lost_password_url\"]"
+#~ msgstr "[bloginfo data=\"lost_password_url\"]"
+
+#, fuzzy
+#~ msgid "Returns the WordPress lost password URL."
+#~ msgstr "Gibt die verlorene WordPress-Passwort-URL zurück."
+
+#, fuzzy
+#~ msgid "[date data=\"Y\"]"
+#~ msgstr "[date data=\"Y\"]"
+
+#, fuzzy, php-format
+#~ msgid ""
+#~ "Returns the current year.  Any date format characters as specified by the "
+#~ "%1$s may be used."
+#~ msgstr ""
+#~ "Gibt das aktuelle Jahr zurück.  Es können beliebige Datumsformatzeichen "
+#~ "verwendet werden, die in der %1$s angegeben sind."
+
+#, fuzzy
+#~ msgid "PHP Date Format Table"
+#~ msgstr "PHP-Tabelle für das Datumsformat"
+
+#, fuzzy
+#~ msgid "[themeinfo data=\"name\"]"
+#~ msgstr "[themeinfo data=\"name\"]"
+
+#, fuzzy
+#~ msgid "Theme name as given in theme's style.css."
+#~ msgstr "Theme-Name, wie er in der style.css des Themes angegeben ist."
+
+#, fuzzy
+#~ msgid "[themeinfo data=\"theme_uri\"]"
+#~ msgstr "[themeinfo data=\"theme_uri\"]"
+
+#, fuzzy
+#~ msgid "The URL to the theme's directory."
+#~ msgstr "Die URL zum Verzeichnis des Themes."
+
+#, fuzzy
+#~ msgid "[themeinfo data=\"description\"]"
+#~ msgstr "[themeinfo data=\"Beschreibung\"]"
+
+#, fuzzy
+#~ msgid "The description of the theme."
+#~ msgstr "Die Beschreibung des Themas."
+
+#, fuzzy
+#~ msgid "[themeinfo data=\"author\"]"
+#~ msgstr "[themeinfo data=\"Autor\"]"
+
+#, fuzzy
+#~ msgid "The theme's author."
+#~ msgstr "Der Autor des Themas."
+
+#, fuzzy
+#~ msgid "[themeinfo data=\"author_uri\"]"
+#~ msgstr "[themeinfo data=\"author_uri\"]"
+
+#, fuzzy
+#~ msgid "The website of the theme author."
+#~ msgstr "Die Website des Autors des Themas."
+
+#, fuzzy
+#~ msgid "[themeinfo data=\"version\"]"
+#~ msgstr "[themeinfo data=\"Version\"]"
+
+#, fuzzy
+#~ msgid "The version of the theme."
+#~ msgstr "Die Version des Designs."
+
+#, fuzzy
+#~ msgid "[themeinfo data=\"template\"]"
+#~ msgstr "[themeinfo data=\"Vorlage\"]"
+
+#, fuzzy
+#~ msgid "The folder name of the current theme."
+#~ msgstr "Der Ordnername des aktuellen Designs."
+
+#, fuzzy
+#~ msgid "[themeinfo data=\"status\"]"
+#~ msgstr "[themeinfo data=\"Status\"]"
+
+#, fuzzy
+#~ msgid "If the theme is published."
+#~ msgstr "Wenn das Theme veröffentlicht ist."
+
+#, fuzzy
+#~ msgid "[themeinfo data=\"tags\"]"
+#~ msgstr "[themeinfo data=\"Tags\"]"
+
+#, fuzzy
+#~ msgid "Tags used to describe the theme."
+#~ msgstr "Tags, die zur Beschreibung des Themas verwendet werden."
+
+#, fuzzy
+#~ msgid "[themeinfo data=\"text_domain\"]"
+#~ msgstr "[themeinfo data=\"text_domain\"]"
+
+#, fuzzy
+#~ msgid "The text domain used in the theme for translation purposes."
+#~ msgstr "Die Textdomäne, die im Theme für Übersetzungszwecke verwendet wird."
+
+#, fuzzy
+#~ msgid "[themeinfo data=\"domain_path\"]"
+#~ msgstr "[themeinfo data=\"domain_path\"]"
+
+#, fuzzy
+#~ msgid "Path to the theme translation files."
+#~ msgstr "Pfad zu den Theme-Übersetzungsdateien."
+
+#, fuzzy
+#~ msgid "[themeinfo data=\"is_child\"]"
+#~ msgstr "[themeinfo data=\"is_child\"]"
+
+#, fuzzy
+#~ msgid ""
+#~ "True/False return for child theme active check (Blank indicates False)."
+#~ msgstr ""
+#~ "True/False gibt die aktive Prüfung des untergeordneten Themes zurück "
+#~ "(Leer bedeutet False)."
+
+#~ msgid "Social Profiles"
+#~ msgstr "SocialMedia Profile"
+
+#, fuzzy
+#~ msgid ""
+#~ "Click an icon to activate it, drag and drop to change the icon order."
+#~ msgstr ""
+#~ "Klicken Sie auf ein Symbol, um es zu aktivieren, und ziehen Sie es per "
+#~ "Drag & Drop, um die Reihenfolge der Symbole zu ändern."
+
+#~ msgid "Tabbed"
+#~ msgstr "Gekennzeichnet"
+
+#, fuzzy
+#~ msgid "Color Fields"
+#~ msgstr "Farbfelder"
+
+#~ msgid "Color 1"
+#~ msgstr "Farbe 1"
+
+#~ msgid "Color 2"
+#~ msgstr "Farbe 2"
+
+#~ msgid "WP Editor"
+#~ msgstr "WP-Redakteur"
+
+#, fuzzy
+#~ msgid "Cool Options"
+#~ msgstr "Coole Optionen"
+
+#~ msgid "Home Settings"
+#~ msgstr "Home-Einstellungen"
+
+#, fuzzy
+#~ msgid "Input 1"
+#~ msgstr "Eingang 1"
+
+#~ msgid "Button Set Option"
+#~ msgstr "Button-Set Optionen"
+
+#, fuzzy
+#~ msgid "Input 2"
+#~ msgstr "Eingang 2"
+
+#~ msgid "Web Fonts"
+#~ msgstr "Web Fonts"
+
+#~ msgid "Media Options"
+#~ msgstr "Medienoptionen"
+
+#~ msgid "With the \"section\" field you can create indent option sections."
+#~ msgstr ""
+#~ "Mit dem “section” Feld können Sie den Einzug der Abschnitte angeben."
+
+#~ msgid "Media w/o URL"
+#~ msgstr "Medien ohne URL"
+
+#~ msgid ""
+#~ "This represents the minimalistic view. It does not have the preview box "
+#~ "or the display URL in an input box. "
+#~ msgstr ""
+#~ "Dies stellt die minimalistische Ansicht dar. Es verfügt nicht über das "
+#~ "Vorschaufeld oder die Anzeige-URL in einem Eingabefeld. "
+
+#~ msgid "Media No Preview"
+#~ msgstr "Medien ohne Vorschau"
+
+#, fuzzy
+#~ msgid "JQuery UI Slider Example 1"
+#~ msgstr "JQuery-UI-Schieberegler – Beispiel 1"
+
+#, fuzzy
+#~ msgid ""
+#~ "JQuery UI slider description. Min: 1, max: 500, step: 3, default value: 45"
+#~ msgstr ""
+#~ "Beschreibung des Schiebereglers der JQuery-Benutzeroberfläche. Min: 1, "
+#~ "max: 500, Schritt: 3, Standardwert: 45"
+
+#, fuzzy
+#~ msgid "Spinner Example 1"
+#~ msgstr "Spinner Beispiel 1"
+
+#, fuzzy
+#~ msgid "Spinner description. Min:20, max: 100, step:20, default value: 40"
+#~ msgstr ""
+#~ "Spinner-Beschreibung. Min:20, max: 100, Schritt:20, Standardwert: 40"
+
+#~ msgid "Switch - Nested Children, Enable to show"
+#~ msgstr "Switch - Nested Children, Anzeige aktiv"
+
+#~ msgid "Look, it's on! Also hidden child elements!"
+#~ msgstr "Schau, es ist an! Auch versteckte Child-Elemente!"
+
+#~ msgid "Switch - This and the next switch required for patterns to show"
+#~ msgstr ""
+#~ "Umschalten - dieser und der nächsten Schalter werden benötigt, um Muster "
+#~ "anzuzeigen"
+
+#~ msgid "Also called a \"fold\" parent."
+#~ msgstr "Auch “fold“ Eltern genannt."
+
+#~ msgid ""
+#~ "Items set with a fold to this ID will hide unless this is set to the "
+#~ "appropriate value."
+#~ msgstr ""
+#~ "Artikel mit einem Fold zu dieser ID werden nicht angezeigt, es sei denn, "
+#~ "sie werden auf den entsprechenden Wert gesetzt."
+
+#~ msgid "Home Layout"
+#~ msgstr "Home Layout"
+
+#, fuzzy, php-format
+#~ msgid ""
+#~ "Redux Framework was created with the developer in mind. It allows for any "
+#~ "theme developer to have an advanced theme panel with most of the features "
+#~ "a developer would need. For more information check out the GitHub repo "
+#~ "at: %s"
+#~ msgstr ""
+#~ "Redux Framework wurde mit Blick auf den Entwickler entwickelt. Es "
+#~ "ermöglicht jedem Theme-Entwickler, ein erweitertes Theme-Panel mit den "
+#~ "meisten Funktionen zu haben, die ein Entwickler benötigen würde. Weitere "
+#~ "Informationen finden Sie im GitHub-Repository unter: %s"
+
+#~ msgid "Preset"
+#~ msgstr "Voreinstellung"
+
+#~ msgid ""
+#~ "This allows you to set a json string or array to override multiple "
+#~ "preferences in your theme."
+#~ msgstr ""
+#~ "Dies ermöglicht Ihnen, einen JSON-String oder ein Array anzugeben, um "
+#~ "multiple Einstellungen in Ihrem Thema zu überschreiben."
+
+#~ msgid "User Settings"
+#~ msgstr "Benutzereinstellungen"
+
+#, fuzzy
+#~ msgid "Input 3"
+#~ msgstr "Eingang 3"
+
+#~ msgid "Widget Areas"
+#~ msgstr "Widget-Bereiche"
+
+#, fuzzy
+#~ msgid "Widget Areas is Already Running!"
+#~ msgstr "Widget Areas läuft bereits!"
+
+#, fuzzy, php-format
+#~ msgid "To see it in action, head over to your %1$s"
+#~ msgstr "Um es in Aktion zu sehen, gehen Sie zu Ihrem %1$s"
+
+#, fuzzy
+#~ msgid "Widgets page"
+#~ msgstr "Seite \"Widgets\""
+
+#~ msgid "Gallery"
+#~ msgstr "Galerie"
+
+#~ msgid "Media"
+#~ msgstr "Medien"
+
+#, fuzzy
+#~ msgid "Test Hint"
+#~ msgstr "Test-Tipp"
+
+#~ msgid "Upload Anything - Disabled Mode"
+#~ msgstr "Alles hochladen - deaktivierter Modus"
+
+#, fuzzy
+#~ msgid "Multi Media"
+#~ msgstr "Multimedia"
+
+#, fuzzy
+#~ msgid "Multi Media Selector"
+#~ msgstr "Multimedia-Selektor"
+
+#~ msgid "Alternative media field which allows for multi selections"
+#~ msgstr "Alternatives Medienfeld, das Mehrfachauswahlen ermöglicht"
+
+#, fuzzy
+#~ msgid "max_file_limit has been set to 5."
+#~ msgstr "max_file_limit wurde auf 5 gesetzt."
+
+#~ msgid "Slides"
+#~ msgstr "Slides"
+
+#~ msgid "This is a title"
+#~ msgstr "Dies ist ein Titel"
+
+#~ msgid "Description Here"
+#~ msgstr "Beschreibung hier"
+
+#~ msgid "Give us a link!"
+#~ msgstr "Geben Sie uns einen Link!"
+
+#~ msgid "Content"
+#~ msgstr "Inhalt"
+
+#~ msgid "Divide"
+#~ msgstr "Teilen"
+
+#~ msgid ""
+#~ "The spacer to the section menu as seen to the left (after this section "
+#~ "block) is the divide \"section\". Also the divider below is the divide "
+#~ "\"field\"."
+#~ msgstr ""
+#~ "Der Abstandshalter zum Sektions-Menü, wie auf der linken Seite (nach "
+#~ "diesem Abschnitt) zu sehen, ist die Teilungs-\"Sektion\". Auch der "
+#~ "folgende Teiler ist das Teilungs-\"Feld\"."
+
+#~ msgid "Info"
+#~ msgstr "Info"
+
+#~ msgid "This is the info field, if you want to break sections up."
+#~ msgstr "Dies ist das Infofeld, wenn du Abschnitte beenden möchtest."
+
+#~ msgid "This is a title."
+#~ msgstr "Das ist ein Titel."
+
+#~ msgid ""
+#~ "This is an info field with the <strong>info</strong> style applied. By "
+#~ "default the <strong>normal</strong> style is applied."
+#~ msgstr ""
+#~ "Dies ist ein Infofeld mit dem <strong>Info</strong>-Stil. Standardmäßig "
+#~ "wird der <strong>Normal</strong>-Stil angewendet."
+
+#~ msgid ""
+#~ "This is an info field with the <strong>warning</strong> style applied."
+#~ msgstr "Dies ist ein Infofeld mit dem <strong>Warnungs</strong>-Stil."
+
+#~ msgid ""
+#~ "This is an info field with the <strong>success</strong> style applied and "
+#~ "an icon."
+#~ msgstr ""
+#~ "Dies ist ein Infofeld mit dem <strong>Erfolg</strong>-Stil und einem Icon."
+
+#~ msgid ""
+#~ "This is an info field with the <strong>critical</strong> style applied "
+#~ "and an icon."
+#~ msgstr ""
+#~ "Dies ist ein Infofeld mit dem <strong>Kritisch</strong>-Stil und einem "
+#~ "Icon."
+
+#, fuzzy
+#~ msgid ""
+#~ "This is field with the <strong>custom</strong> style applied, color arg "
+#~ "passed, and an icon."
+#~ msgstr ""
+#~ "Dies ist ein Feld mit dem <strong>angewendeten benutzerdefinierten</"
+#~ "strong> Stil, dem übergebenen Farbarg und einem Symbol."
+
+#, fuzzy
+#~ msgid ""
+#~ "This is non-notice field with the <strong>normal</strong> style applied."
+#~ msgstr ""
+#~ "Dies ist ein Feld ohne Benachrichtigung, auf das der <strong>normale</"
+#~ "strong> Stil angewendet wird."
+
+#, fuzzy
+#~ msgid ""
+#~ "This is non-notice field with the <strong>info</strong> style applied."
+#~ msgstr ""
+#~ "Dies ist ein Feld ohne Benachrichtigung, auf das der <strong>Info-Stil</"
+#~ "strong> angewendet wird."
+
+#, fuzzy
+#~ msgid ""
+#~ "This is non-notice field with the <strong>warning</strong> style applied "
+#~ "and an icon."
+#~ msgstr ""
+#~ "Dies ist ein Feld ohne Benachrichtigung <strong>mit dem</strong> "
+#~ "angewendeten Warnstil und einem Symbol."
+
+#, fuzzy
+#~ msgid ""
+#~ "This is non-notice field with the <strong>success</strong> style applied "
+#~ "and an icon."
+#~ msgstr ""
+#~ "Dies ist ein Feld ohne Hinweis, auf das der <strong>Erfolgsstil</strong> "
+#~ "angewendet wird, und ein Symbol."
+
+#, fuzzy
+#~ msgid ""
+#~ "This is a non-notice field with the <strong>critical</strong> style "
+#~ "applied and an icon."
+#~ msgstr ""
+#~ "Hierbei handelt es sich um ein Feld ohne Benachrichtigung, auf das der "
+#~ "<strong>kritische</strong> Stil und ein Symbol angewendet werden."
+
+#~ msgid "Section"
+#~ msgstr "Abschnitt"
+
+#~ msgid "Section Example"
+#~ msgstr "Abschnitt Beispiel"
+
+#~ msgid "With the \"section\" field you can create indented option sections."
+#~ msgstr ""
+#~ "Mit dem Feld \"Abschnitt\" können Sie eingerückte Options-Abschnitte "
+#~ "erstellen."
+
+#~ msgid "Field Title"
+#~ msgstr "Feld Titel"
+
+#~ msgid "Field Subtitle"
+#~ msgstr "Felduntertitel"
+
+#~ msgid "And now you can add more fields below and outside of the indent."
+#~ msgstr ""
+#~ "Und jetzt kannst weitere Felder unter und außerhalb des Einzugs "
+#~ "hinzufügen."
+
+#~ msgid "Image Select"
+#~ msgstr "Bildauswahl"
+
+#~ msgid "Images Option for Layout"
+#~ msgstr "Bilder-Option für Layout"
+
+#~ msgid ""
+#~ "This uses some of the built in images, you can use them for layout "
+#~ "options."
+#~ msgstr ""
+#~ "Dies nutzt einige der eingebauten Bilder, die du für Layout Optionen "
+#~ "nutzen kannst."
+
+#~ msgid "Images Option (with tiles => true)"
+#~ msgstr "Bilder-Option (mit Kacheln => true)"
+
+#~ msgid "Select a background pattern."
+#~ msgstr "Wählen Sie einen Hintergrund."
+
+#~ msgid "Images Option"
+#~ msgstr "Bilder Optionen"
+
+#~ msgid "Select Image"
+#~ msgstr "Bild auswählen"
+
+#~ msgid ""
+#~ "A preview of the selected image will appear underneath the select box."
+#~ msgstr ""
+#~ "Eine Vorschau des ausgewählten Bildes wird unter dem Auswahlfeld "
+#~ "angezeigt."
+
+#~ msgid "Select"
+#~ msgstr "Auswählen"
+
+#~ msgid "Select Option"
+#~ msgstr "Option auswählen"
+
+#~ msgid "Theme Stylesheet"
+#~ msgstr "Theme Stylesheet"
+
+#~ msgid "Select your themes alternative color scheme."
+#~ msgstr "Wählen Sie ein alternatives Farbschema fürs Theme."
+
+#~ msgid "Select Option with optgroup"
+#~ msgstr "Option mit optgroup auswählen"
+
+#~ msgid "Multi Select Option"
+#~ msgstr "Mehrfachauswahl Optionen"
+
+#~ msgid "You can easily add a variety of data from WordPress."
+#~ msgstr ""
+#~ "Du kannst ganz einfach eine Vielzahl von Daten der Wordpress hinzufügen."
+
+#~ msgid "Categories Select Option"
+#~ msgstr "Kategorien Auswahl Optionen"
+
+#~ msgid "Categories Multi Select Option"
+#~ msgstr "Kategorien Multiauswahl Optionen"
+
+#~ msgid "Pages Select Option"
+#~ msgstr "Seiten Auswahl Optionen"
+
+#~ msgid "Pages Multi Select Option"
+#~ msgstr "Seiten Multiauswahl Optionen"
+
+#~ msgid "Tags Select Option"
+#~ msgstr "Tags Auswahl Optionen"
+
+#~ msgid "Tags Multi Select Option"
+#~ msgstr "Tags Multiauswahl Optionen"
+
+#, fuzzy
+#~ msgid "Terms Select Option"
+#~ msgstr "Begriffe Option auswählen"
+
+#, fuzzy
+#~ msgid "Terms Multi Select Option"
+#~ msgstr "Begriffe Multi-Select-Option"
+
+#~ msgid "Menus Select Option"
+#~ msgstr "Menü Auswahl Option"
+
+#~ msgid "Menus Multi Select Option"
+#~ msgstr "Menü Multiauswahl Option"
+
+#~ msgid "Post Type Select Option"
+#~ msgstr "Beitragstyp Auswahl Optionen"
+
+#~ msgid "Post Type Multi Select Option"
+#~ msgstr "Beitragstyp Multiauswahl Optionen"
+
+#~ msgid "Post Type Multi Select Option + Sortable"
+#~ msgstr "Beitragstyp Multiauswahl Optionen + sortierbar"
+
+#~ msgid "This field also has sortable enabled!"
+#~ msgstr "Dieses Feld kann sortiert werden!"
+
+#~ msgid "Posts Select Option2"
+#~ msgstr "Beiträge Auswahl Option2"
+
+#~ msgid "Posts Multi Select Option"
+#~ msgstr "Beiträge Multiauswahl Option"
+
+#~ msgid "User Role Select Option"
+#~ msgstr "Benutzerrolle Auswahl Option"
+
+#, fuzzy
+#~ msgid "Capabilities Select Option w/ AJAX Loading"
+#~ msgstr "Funktionen Wählen Sie die Option mit AJAX-Laden"
+
+#~ msgid "Elusive Icons Select Option"
+#~ msgstr "Elusive Icons Auswahl Option"
+
+#~ msgid "Here's a list of all the elusive icons by name and icon."
+#~ msgstr ""
+#~ "Hier ist eine Liste aller schwer fassbaren Icons, sortiert nach name und "
+#~ "Icon."
+
+#~ msgid "Users Select Option"
+#~ msgstr "Benutzer wählen die Option"
+
+#, fuzzy
+#~ msgid "Select Option using a Callback"
+#~ msgstr "Option mit einem Callback auswählen"
+
+#, fuzzy
+#~ msgid "The items in this select were added via a callback function."
+#~ msgstr ""
+#~ "Die Elemente in dieser Auswahl wurden über eine Callback-Funktion "
+#~ "hinzugefügt."
+
+#~ msgid "Zero"
+#~ msgstr "Null"
+
+#~ msgid "One"
+#~ msgstr "Eins"
+
+#~ msgid "Two"
+#~ msgstr "Zwei"
+
+#~ msgid "Three"
+#~ msgstr "Drei"
+
+#~ msgid "Slider"
+#~ msgstr "Slider"
+
+#~ msgid "Slider Example 1"
+#~ msgstr "Slider Beispiel 1"
+
+#~ msgid "This slider displays the value as a label."
+#~ msgstr "Dieser Slides zeigt die Werte als Label."
+
+#~ msgid "Slider description. Min: 1, max: 500, step: 1, default value: 250"
+#~ msgstr ""
+#~ "Slider-Beschreibung. Min: 1, max: 500, Schritt: 1, Standardwert: 250"
+
+#~ msgid "Slider Example 2 with Steps (5)"
+#~ msgstr "Slider Beispiel 2 mit Schritten (5)"
+
+#~ msgid "This example displays the value in a text box"
+#~ msgstr "Dieses Beispiel zeigt den Wert in einem Textfeld"
+
+#, fuzzy
+#~ msgid "Slider description. Min: 0, max: 800, step: 5, default value: 75"
+#~ msgstr ""
+#~ "Beschreibung des Schiebereglers. Min: 0, max: 800, Schritt: 5, "
+#~ "Standardwert: 75"
+
+#~ msgid "Slider Example 3 with two sliders"
+#~ msgstr "Slider Beispiel 3 mit zwei Slidern"
+
+#~ msgid "This example displays the values in select boxes"
+#~ msgstr "Dieses Beispiel zeigt die Werte in Auswahlboxen"
+
+#~ msgid ""
+#~ "Slider description. Min: 0, max: 500, step: 5, slider 1 default value: "
+#~ "100, slider 2 default value: 300"
+#~ msgstr ""
+#~ "Slider-Beschreibung. Min: 0, max: 500, Schritt: 5, Slider 1 Standardwert: "
+#~ "100, Slider 2 Standardwert: 300"
+
+#~ msgid "Slider Example 4 with float values"
+#~ msgstr "Slider Beispiel 4 mit Float-Werten"
+
+#~ msgid "This example displays float values"
+#~ msgstr "Dieses Beispiel zeigt Float-Werte"
+
+#~ msgid "Slider description. Min: 0, max: 1, step: .1, default value: .5"
+#~ msgstr "Slider-Beschreibung. Min: 0, max: 1, Schritt: .1, Standardwert: .5"
+
+#~ msgid "Spinner"
+#~ msgstr "Spinner"
+
+#, fuzzy
+#~ msgid ""
+#~ "JQuery UI spinner description. Min:20, max: 100, step:20, default value: "
+#~ "100"
+#~ msgstr ""
+#~ "Beschreibung des Spinners der JQuery-Benutzeroberfläche. Min:20, max: "
+#~ "100, Schritt:20, Standardwert: 100"
+
+#~ msgid "Button Set"
+#~ msgstr "Button-Set"
+
+#~ msgid "Button Set, Multi Select"
+#~ msgstr "Button-Set, Multi-Selektion"
+
+#~ msgid "Switch"
+#~ msgstr "Wechseln"
+
+#~ msgid "Switch Off"
+#~ msgstr "Ausschalten"
+
+#~ msgid "Switch2 - Enable the above switch and this one for patterns to show"
+#~ msgstr ""
+#~ "Switch2 - Aktivieren Sie den Schalter oben und diesen, um Muster "
+#~ "anzuzeigen"
+
+#~ msgid "Typography"
+#~ msgstr "Typografie"
+
+#~ msgid "Body Font"
+#~ msgstr "Body Schriftart"
+
+#~ msgid "Specify the body font properties."
+#~ msgstr "Body-Schrifteigenschaften festlegen."
+
+#, fuzzy
+#~ msgid "Typography Site Description"
+#~ msgstr "Typografie-Site-Beschreibung"
+
+#~ msgid "Typography option with each property can be called individually."
+#~ msgstr ""
+#~ "Typografie-Optionen können für alle Eigenschaften einzeln aufgerufen "
+#~ "werden."
+
+#~ msgid "Title Font"
+#~ msgstr "Titel Schrift"

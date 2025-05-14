@@ -116,7 +116,7 @@ class Wp_Fce_Public
 
 		$data['profile_nav_actions'][] = [
 			'css_class' => 'fce-link-orders',
-			'title'     => __('Zahlungen', 'wp_fce'),
+			'title'     => __('Payments', 'wp_fce'),
 			'svg_icon'  => '',
 			'url'       => site_url('/wp-fce/payments'),
 		];

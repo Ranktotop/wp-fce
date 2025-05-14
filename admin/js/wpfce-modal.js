@@ -16,7 +16,7 @@
             this.active = options;
 
             const $modal = $('#wpfce-confirm-modal');
-            $modal.find('.wpfce-modal-content p').text(options.message || 'Bist du sicher?');
+            $modal.find('.wpfce-modal-content p').text(options.message || wp_fce.label_confirm);
             $modal.removeClass('hidden');
         },
         close: function () {
