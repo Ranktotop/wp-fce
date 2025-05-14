@@ -159,10 +159,24 @@ class Wp_Fce_Admin
 			'display_version' => false,
 		]);
 
+		// ► Schlüssel vorab holen (gibt '' zurück, wenn noch nicht gesetzt)
+		$api_key_ipn   = Redux::get_option('wp_fce_options', 'api_key_ipn');
+		$api_key_admin = Redux::get_option('wp_fce_options', 'api_key_admin');
+
+		// Platzhalter einsetzen, falls leer
+		$ipn_param   = $api_key_ipn   ?: '{ipn_api_key}';
+		$admin_param = $api_key_admin ?: '{admin_api_key}';
+
+		// Basis-URL der REST-API
+		$base_url = untrailingslashit(rest_url('wp-fce/v1'));
 		Redux::set_section('wp_fce_options', [
 			'title'  => __('API', 'wp-fce'),
 			'id'     => 'general_section',
 			'desc'   => __('API-Settings', 'wp-fce'),
+
+			// ───────────────────────────────────────────────
+			// 1) FELDER ZUERST
+			// ───────────────────────────────────────────────
 			'fields' => [
 				[
 					'id'    => 'api_key_ipn',
@@ -175,7 +189,43 @@ class Wp_Fce_Admin
 					'type'  => 'text',
 					'title' => __('API Key (Admin)', 'wp-fce'),
 					'desc'  => __('Used to validate Admin requests to the REST API.', 'wp-fce'),
-				]
+				],
+
+				// ────────────────────────────────────────────
+				// 2) HINWEIS-BLOCK MIT URL-LISTE
+				// ────────────────────────────────────────────
+				[
+					'id'      => 'api_endpoints_info',
+					'type'    => 'raw',            // alternativ 'info'
+					'title'   => __('Endpoint-Overview', 'wp-fce'),
+					'content' => sprintf(
+						'<style>
+                    .redux-endpoint-list code{
+                        display:inline-block;
+                        padding:2px 6px;
+                        border-radius:3px;
+                        background:#f1f1f1;
+                        margin:2px 0;
+                        font-family:monospace;
+                    }
+                </style>
+                <div class="redux-endpoint-list">
+                    <p><strong>%1$s</strong></p>
+                    <ul style="margin-left:1.25rem">
+                        <li><code>%1$s/ipn?apikey=%2$s</code> <em>(POST)</em></li>
+                        <li><code>%1$s/access/status?user_id={user_id}&amp;entity_id={entity_id}&amp;apikey=%3$s</code> <em>(GET)</em></li>
+                        <li><code>%1$s/access/sources?user_id={user_id}&amp;entity_id={entity_id}&amp;apikey=%3$s</code> <em>(GET)</em></li>
+                        <li><code>%1$s/mapping?apikey=%3$s</code> <em>(POST)</em></li>
+                        <li><code>%1$s/mapping/{product_id}?apikey=%3$s</code> <em>(DELETE)</em></li>
+                        <li><code>%1$s/override?apikey=%3$s</code> <em>(POST)</em></li>
+                        <li><code>%1$s/override?user_id={user_id}&amp;product_id={product_id}&amp;apikey=%3$s</code> <em>(DELETE)</em></li>
+                    </ul>
+                </div>',
+						esc_url($base_url),
+						esc_html($ipn_param),
+						esc_html($admin_param)
+					),
+				],
 			],
 		]);
 		Redux::set_section('wp_fce_options', [
