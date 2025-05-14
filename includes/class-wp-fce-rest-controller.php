@@ -42,8 +42,7 @@ class WP_FCE_REST_Controller
             'permission_callback' => [$this, 'permission_check_admin'],
             'args'                => [
                 'user_id'     => ['required' => true,  'validate_callback' => 'is_numeric'],
-                'entity_id'   => ['required' => true,  'validate_callback' => 'is_numeric'],
-                'entity_type' => ['required' => true,  'validate_callback' => [$this, 'validate_entity_type']],
+                'entity_id'   => ['required' => true,  'validate_callback' => 'is_numeric']
             ],
         ]);
 
@@ -54,8 +53,7 @@ class WP_FCE_REST_Controller
             'permission_callback' => [$this, 'permission_check_admin'],
             'args'                => [
                 'user_id'     => ['required' => true,  'validate_callback' => 'is_numeric'],
-                'entity_id'   => ['required' => true,  'validate_callback' => 'is_numeric'],
-                'entity_type' => ['required' => true,  'validate_callback' => [$this, 'validate_entity_type']],
+                'entity_id'   => ['required' => true,  'validate_callback' => 'is_numeric']
             ],
         ]);
 
@@ -190,11 +188,10 @@ class WP_FCE_REST_Controller
     public function get_access_status(WP_REST_Request $request)
     {
         $user_id     = (int) $request->get_param('user_id');
-        $entity_type = $request->get_param('entity_type');
         $entity_id   = (int) $request->get_param('entity_id');
 
         try {
-            $has = WP_FCE_Access_Evaluator::user_has_access($user_id, $entity_type, $entity_id);
+            $has = WP_FCE_Access_Evaluator::user_has_access($user_id, $entity_id);
             return rest_ensure_response(['has_access' => $has]);
         } catch (\Exception $e) {
             return new WP_REST_Response(
@@ -212,11 +209,10 @@ class WP_FCE_REST_Controller
     public function get_access_sources_endpoint(WP_REST_Request $request)
     {
         $user_id     = (int) $request->get_param('user_id');
-        $entity_type = $request->get_param('entity_type');
         $entity_id   = (int) $request->get_param('entity_id');
 
         try {
-            $sources = WP_FCE_Access_Evaluator::get_access_sources($user_id, $entity_type, $entity_id);
+            $sources = WP_FCE_Access_Evaluator::get_access_sources($user_id, $entity_id);
             return rest_ensure_response($sources);
         } catch (\Exception $e) {
             return new WP_REST_Response(

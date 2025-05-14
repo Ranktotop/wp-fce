@@ -122,6 +122,9 @@ class WP_FCE_Helper_Ipn_Log extends WP_FCE_Helper_Base
                 'Processed by IPN'
             );
         }
+
+        // update access
+        WP_FCE_Cron::check_expirations(user_id: $user_id, product_id: $product_id);
     }
 
     /**

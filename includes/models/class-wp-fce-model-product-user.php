@@ -217,9 +217,8 @@ class WP_FCE_Model_Product_User extends WP_FCE_Model_Base
     }
 
     /**
-     * Renew this entry by setting a new expiry date.
-     * - If the given date is in the future, status becomes 'active'.
-     * - Otherwise, status becomes 'expired'.
+     * Updates the expiry date to given date.
+     * Sets state to "active" if expiry date is in the future or not set AND start date is before now. Otherwise, state is set to "expired".
      *
      * @param  DateTime $expiry_date The new expiry date.
      * @return void
@@ -235,8 +234,10 @@ class WP_FCE_Model_Product_User extends WP_FCE_Model_Base
         }
 
         $now = new DateTime(current_time('mysql'));
-        //If expiry date is in the future or not set, set status to active
-        if ($expiry_date === null || $expiry_date > $now) {
+
+        //If expiry date is set and is in the future AND start date is before now, its active
+        $is_active = $this->get_start_date() <= $now && ($expiry_date === null || $expiry_date > $now);
+        if ($is_active) {
             $this->set_status('active');
         } else {
             $this->set_status('expired');

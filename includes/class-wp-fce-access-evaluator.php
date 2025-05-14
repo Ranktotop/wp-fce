@@ -22,57 +22,77 @@ class WP_FCE_Access_Evaluator
      */
     private static array $cache = [];
 
-    /**
-     * Prüft, ob ein User Zugriff auf ein Entity (Space oder Course) hat.
-     *
-     * @param int    $user_id     WP-User-ID.
-     * @param string $entity_type 'space' oder 'course'.
-     * @param int    $entity_id   ID des Spaces oder Kurses.
-     * @return bool               true, wenn Zugriff gewährt, sonst false.
-     */
-    public static function user_has_access(int $user_id, string $entity_type, int $entity_id): bool
-    {
-        $key = "{$user_id}:{$entity_type}:{$entity_id}";
 
+    /**
+     * Check if a user has access to a given Space/Course.
+     *
+     * Evaluates the following access rules in order:
+     *
+     * 1. Check for active product-user entries with a mapped product to the given space.
+     * 2. Check for admin overrides for the given product-user combination.
+     *
+     * @param int $user_id The ID of the user to check.
+     * @param int $space_id The ID of the Space/Course to check access for.
+     * @param array<WP_FCE_Model_Product_User>|null $product_user_entries Optional array of product-user entries to consider.
+     * @return bool True if the user has access, false otherwise.
+     */
+    public static function user_has_access(
+        int $user_id,
+        int $space_id,
+        ?array $product_user_entries = null
+    ): bool {
+        $key = "{$user_id}:{$space_id}";
         if (isset(self::$cache[$key])) {
             return self::$cache[$key];
         }
 
-        // 1) Hole alle Produkt-IDs, die dieser User jemals hatte (egal ob aktiv/abgelaufen)
-        $all_product_entries = WP_FCE_Helper_Product_User::get_for_user($user_id);
+        // If no product_user_entries are provided, get all for the user
+        if ($product_user_entries === null) {
+            $product_user_entries = WP_FCE_Helper_Product_User::get_for_user($user_id);
+        }
 
-        foreach ($all_product_entries as $entry) {
-            // 1a) Override prüfen (hat Vorrang vor Aktivitätsprüfung)
-            $override = WP_FCE_Helper_Access_Override::get_latest_override_by_product_user($user_id, $entry->get_product_id(), true);
+        //Save the denied products for later
+        $deny_products = [];
+
+        // Iterate all product-user entries
+        foreach ($product_user_entries as $entry) {
+            $product_id = $entry->get_product_id();
+
+            // Check if the product has an admin override
+            $override = WP_FCE_Helper_Access_Override::get_latest_override_by_product_user($user_id, $product_id, true);
             if ($override) {
                 if ($override->is_deny()) {
-                    continue; // explizit verweigert → ignorieren
+                    $deny_products[] = $product_id;
+                    continue;
                 }
                 if ($override->is_allow()) {
-                    return self::$cache[$key] = true; // Zugriff sofort erlauben
+                    return self::$cache[$key] = true;
                 }
             }
         }
 
-        // 2) Jetzt nur aktive Produkte ohne Override prüfen
-        $active_product_entries = WP_FCE_Helper_Product_User::get_active_for_user($user_id);
+        // Iterate all active product-user entries and check if they are mapped to the given space. Also check for detected denied products
+        $active_entries = array_filter(
+            $product_user_entries,
+            fn($e) =>
+            $e->is_active() && !in_array($e->get_product_id(), $deny_products, true)
+        );
 
-        foreach ($active_product_entries as $entry) {
-            if (WP_FCE_Helper_Product_Space::has_mapping($entry->get_product_id(), $entity_id)) {
+        foreach ($active_entries as $entry) {
+            if (WP_FCE_Helper_Product_Space::has_mapping($entry->get_product_id(), $space_id)) {
                 return self::$cache[$key] = true;
             }
         }
 
-        // 3) Standard: kein Zugriff
         return self::$cache[$key] = false;
     }
+
 
     /**
      * Determine which products or overrides grant or deny access,
      * and return a breakdown of sources.
      *
      * @param  int    $user_id
-     * @param  string $entity_type
      * @param  int    $entity_id
      * @return array{
      *   override: array{product_id:int,override_type:string}|null,
@@ -80,7 +100,7 @@ class WP_FCE_Access_Evaluator
      *   final: bool
      * }
      */
-    public static function get_access_sources(int $user_id, string $entity_type, int $entity_id): array
+    public static function get_access_sources(int $user_id, int $entity_id): array
     {
         $result = [
             'override' => null,
@@ -89,7 +109,7 @@ class WP_FCE_Access_Evaluator
         ];
 
         // 1) Alle aktiven product_user-Einträge für den User holen
-        $entries = WP_FCE_Helper_Product_User::get_active_for_user($user_id);
+        $entries = WP_FCE_Helper_Product_User::get_for_user($user_id, 'active');
 
         foreach ($entries as $entry) {
             $prod_id  = $entry->get_product_id();

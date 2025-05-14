@@ -63,122 +63,30 @@ class WP_FCE_Helper_Product_User extends WP_FCE_Helper_Base
     }
 
     /**
-     * Find all product‐user entries for given user
+     * Find all product‐user entries for given user.
      *
-     * @param  int  $user_id
+     * @param  int    $user_id
+     * @param  string $status If set, only return entries with this status
      * @return WP_FCE_Model_Product_User[]
      */
-    public static function get_for_user(int $user_id): array
+    public static function get_for_user(int $user_id, ?string $status = null): array
     {
-        return static::find(['user_id' => $user_id]);
+        $criteria = ['user_id' => $user_id];
+        if ($status !== null) {
+            $criteria['status'] = $status;
+        }
+        return static::find($criteria);
     }
 
+    /**
+     * Find all product‐user entries for given product
+     *
+     * @param  int  $product_id
+     * @return WP_FCE_Model_Product_User[]
+     */
     public static function get_for_product(int $product_id): array
     {
         return static::find(['product_id' => $product_id]);
-    }
-
-    /**
-     * Retrieve all active product‐user entries for a given user.
-     * Active means: start_date <= now AND (expiry_date IS NULL OR expiry_date > now)
-     *
-     * @param  int   $user_id
-     * @return WP_FCE_Model_Product_User[]
-     */
-    public static function get_active_for_user(int $user_id): array
-    {
-        global $wpdb;
-        $now   = current_time('mysql');
-        $table = static::getTableName();
-
-        $rows = $wpdb->get_results(
-            $wpdb->prepare(
-                "
-                SELECT product_id, start_date, expiry_date
-                FROM {$table}
-                WHERE user_id    = %d
-                  AND status     = %s
-                  AND start_date <= %s
-                  AND (expiry_date IS NULL OR expiry_date > %s)
-                ",
-                $user_id,
-                'active',
-                $now,
-                $now
-            ),
-            ARRAY_A
-        ) ?: [];
-
-        return array_map(
-            fn(array $row) => static::$model_class::load_by_row($row),
-            $rows
-        );
-    }
-
-    /**
-     * Retrieve all product‐user entries which has passed the expiry date.
-     *
-     * @return WP_FCE_Model_Product_User[]
-     */
-    public static function get_expired(): array
-    {
-        global $wpdb;
-        $now   = current_time('mysql');
-        $table = static::getTableName();
-
-        // Select all rows where expiry_date is set and is before "now"
-        $rows = $wpdb->get_results(
-            $wpdb->prepare(
-                "
-            SELECT *
-            FROM {$table}
-            WHERE expiry_date IS NOT NULL
-              AND expiry_date < %s
-            ",
-                $now
-            ),
-            ARRAY_A
-        ) ?: [];
-
-        // Map each raw row to a hydrated model instance
-        return array_map(
-            fn(array $row) => static::$model_class::load_by_row($row),
-            $rows
-        );
-    }
-
-    /**
-     * Retrieve all product‐user entries which has passed the expiry date but are on state "active".
-     *
-     * @return WP_FCE_Model_Product_User[]
-     */
-    public static function get_active_expired(): array
-    {
-        global $wpdb;
-        $now   = current_time('mysql');
-        $table = static::getTableName();
-
-        // Select all rows where expiry_date is set and is before "now" and status is "active"
-        $rows = $wpdb->get_results(
-            $wpdb->prepare(
-                "
-            SELECT *
-            FROM {$table}
-            WHERE status = %s
-              AND expiry_date IS NOT NULL
-              AND expiry_date < %s
-            ",
-                'active',
-                $now
-            ),
-            ARRAY_A
-        ) ?: [];
-
-        // Map each raw row to a hydrated model instance
-        return array_map(
-            fn(array $row) => static::$model_class::load_by_row($row),
-            $rows
-        );
     }
 
     /**

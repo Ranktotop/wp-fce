@@ -53,6 +53,7 @@ class WP_FCE_Cron
 
     /**
      * The callback fired by WP-Cron to expire product_user entries.
+     * Updates the state of all entries to expired/active based on expiry dates and start dates.
      *
      * @param int|null $user_id If set, only check expirations for this user
      * @param int|null $product_id If set, only check expirations for this product
@@ -60,16 +61,25 @@ class WP_FCE_Cron
      */
     public static function check_expirations(?int $user_id = null, ?int $product_id = null): void
     {
-        // Get all product-user entries with valid expiry dates
-        $entries = WP_FCE_Helper_Product_User::get_with_expiry_date($user_id, $product_id);
+        // Get all product-user entries
+        if ($user_id !== null && $product_id !== null) {
+            $pu = WP_FCE_Helper_Product_User::get_by_user_product($user_id, $product_id);
+            $all = $pu ? [$pu] : [];
+        } elseif ($user_id !== null) {
+            $all = WP_FCE_Helper_Product_User::get_for_user($user_id);
+        } elseif ($product_id !== null) {
+            $all = WP_FCE_Helper_Product_User::get_for_product($product_id);
+        } else {
+            $all = WP_FCE_Helper_Product_User::get_all();
+        }
 
-        //Set state to expired/active based on expiry dates
-        foreach ($entries as $entry) {
+        //Update state to expired/active based on expiry and start date
+        foreach ($all as $entry) {
             $entry->renew();
         }
 
         //sync access
-        self::sync_space_accesses($user_id, $product_id);
+        self::sync_space_accesses($all);
     }
 
     /**
@@ -80,26 +90,21 @@ class WP_FCE_Cron
      * If the entry is inactive, the user is only revoked from the space if there is no other active
      * product-user entry for the same space.
      *
-     * @param int|null $user_id If set, only sync for this user
+     * @param WP_FCE_Model_Product_User[] $user_products The product-user entries to update
      * @return void
      */
-    public static function sync_space_accesses(?int $user_id = null, ?int $product_id = null): void
+    public static function sync_space_accesses(array $user_products): void
     {
-        if ($user_id !== null && $product_id !== null) {
-            $all = WP_FCE_Helper_Product_User::get_by_user_product($user_id, $product_id);
-        } elseif ($user_id !== null) {
-            $all = WP_FCE_Helper_Product_User::get_for_user($user_id);
-        } elseif ($product_id !== null) {
-            $all = WP_FCE_Helper_Product_User::get_for_product($product_id);
-        } else {
-            $all = WP_FCE_Helper_Product_User::get_all();
-        }
-        foreach ($all as $entry) {
-            $is_active = $entry->is_active();
-
+        foreach ($user_products as $entry) {
             foreach ($entry->get_mapped_spaces() as $mapping) {
                 $space = $mapping->get_space();
-                if ($is_active) {
+                $has_access = WP_FCE_Access_Evaluator::user_has_access(
+                    $entry->get_user_id(),
+                    $space->get_id(),
+                    $user_products
+                );
+
+                if ($has_access) {
                     // Zugriff sicherstellen
                     $space->grant_user_access($entry->get_user_id());
                 } else {
