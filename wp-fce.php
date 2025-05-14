@@ -35,7 +35,7 @@ if (! defined('WPINC')) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('WP_FCE_VERSION', '1.0.0');
+define('WP_FCE_VERSION', '1.0.1');
 
 //  Composer‑Autoloader laden (für Carbon Fields)
 if (file_exists(__DIR__ . '/vendor/autoload.php')) {
@@ -73,7 +73,7 @@ if (! function_exists('fce_log')) {
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
 $updateChecker = PucFactory::buildUpdateChecker(
-	'https://github.com/Ranktotop/wp-fce/', // <-- HIER ANPASSEN
+	'https://github.com/Ranktotop/wp-fce/',
 	__FILE__,
 	'wp-fce'
 );

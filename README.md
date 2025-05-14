@@ -64,14 +64,3 @@ GPL-2.0-or-later
 
 **Marc Meese**  
 [https://marcmeese.com](https://marcmeese.com)
-
-
-## TODOs
-- Make custom Post Type "Products" not available for direct access to it
-- Hook bei update custom post type product. (Wenn ein mapping geändert wird, muss jeder member aktualisiert werden)
-- add flush permalinks on plugin activation
-
-## Scenarios
-- CHECK - Rest-API is called
-- CHECK - Product has been changed
-- 

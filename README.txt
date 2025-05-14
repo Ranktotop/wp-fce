@@ -4,7 +4,7 @@ Donate link: https://marcmeese.com
 Tags: fluentcommunity, api, payments, digistore24, copecart, membership
 Requires at least: 6.0
 Tested up to: 6.5
-Stable tag: 0.0.1
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,34 +14,53 @@ Add API and automation features to FluentCommunity for managing members via exte
 
 This add-on extends the FluentCommunity plugin by providing an integration layer for external payment providers such as CopeCart and Digistore24.
 
-Features include:
-* Product-to-course/space mapping
-* Automatic user registration
-* Access management based on payment status
-* REST API for IPN handling
-* Membership expiration check via cronjob
+It enables full automation of user access management, including:
+
+* Mapping digital products to courses and spaces
+* Handling Instant Payment Notifications (IPNs)
+* Auto-creating user accounts and granting access
+* Managing expirations and cancellations via cronjob
+* REST API endpoints for external integration
+* Admin override functionality for manual control
+
+Use this plugin to connect your external shop system with your FluentCommunity-powered WordPress site.
 
 == Installation ==
 
 1. Upload the plugin ZIP via **Plugins > Installieren > Plugin hochladen** in your WordPress admin
 2. Activate the plugin
 3. Make sure **FluentCommunity** is installed and active
-4. Configure under **Einstellungen > FluentCommunity Extreme**
+4. Go to **Einstellungen > FluentCommunity Extreme** to configure the plugin
+5. Map products to courses or spaces under the Product Mapping section
 
 == Frequently Asked Questions ==
 
 = Does this work without FluentCommunity? =
-No, this plugin is an add-on and requires FluentCommunity to be active.
+No. This plugin is an add-on and requires FluentCommunity to be installed and active.
 
 = Which payment providers are supported? =
-Currently CopeCart and Digistore24, via their IPN systems.
+Currently CopeCart and Digistore24, via their IPN (Instant Payment Notification) systems.
+
+= Can I manually override access? =
+Yes. Admins can override access to spaces and courses independent of payment status.
+
+= What happens when a product expires or is cancelled? =
+Access is automatically revoked unless another active product grants access to the same space or course.
 
 == Screenshots ==
 
 1. API & Darstellung settings page
 2. Product mapping interface
+3. Simulated IPN testing tool (for admin use)
 
 == Changelog ==
+
+= 1.0.1 =
+* Product-space mapping system fully integrated
+* Fluent access sync via cronjob and real-time events
+* Evaluator-based permission logic with admin overrides
+* Access logging and REST interface improvements
+* Performance optimization and redundancy cleanup
 
 = 0.0.1 =
 * Initial release with IPN support for Digistore24 and CopeCart
@@ -49,6 +68,9 @@ Currently CopeCart and Digistore24, via their IPN systems.
 * Cronjob for expiration check
 
 == Upgrade Notice ==
+
+= 1.0.1 =
+Major access system overhaul. Adds override support, Fluent sync, and evaluator logic.
 
 = 0.0.1 =
 Initial release of FluentCommunity Extreme Add-On. Requires FluentCommunity to function.
