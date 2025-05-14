@@ -137,4 +137,37 @@ class WP_FCE_Helper_Ipn_Log extends WP_FCE_Helper_Base
     {
         return static::find(['external_product_id' => $sku]);
     }
+
+    /**
+     * Retrieve the latest IPN logs for a given user's email address.
+     * 
+     * @param  string  $user_email
+     * @return WP_FCE_Model_Ipn_Log[]
+     */
+    public static function get_latest_ipns_for_user(string $user_email): array
+    {
+        global $wpdb;
+        $table = static::getTableName();
+
+        $sql = "
+        SELECT ipn.*
+        FROM {$table} ipn
+        INNER JOIN (
+            SELECT MAX(id) as max_id
+            FROM {$table}
+            WHERE user_email = %s
+            GROUP BY external_product_id
+        ) latest ON ipn.id = latest.max_id
+    ";
+
+        $rows = $wpdb->get_results(
+            $wpdb->prepare($sql, $user_email),
+            ARRAY_A
+        ) ?: [];
+
+        return array_map(
+            fn(array $row) => static::$model_class::load_by_row($row),
+            $rows
+        );
+    }
 }

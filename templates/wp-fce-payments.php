@@ -6,12 +6,11 @@ if (!is_user_logged_in()) {
 
 global $wpdb;
 $user_id = get_current_user_id();
-$user        = (new WP_FCE_Helper_User())->get_by_id($user_id);
+$user        = WP_FCE_Helper_User::get_by_id($user_id);
 $user_email  = $user->get_email();
-$ipn_helper  = new WP_FCE_Helper_Ipn();
 
 // Neuste IPNs des Users laden
-$ipns = $ipn_helper->get_latest_ipns_for_user($user_email);
+$ipns = WP_FCE_Helper_Ipn_Log::get_latest_ipns_for_user($user_email);
 
 // Hintergrundbild holen
 $bg_image     = get_option('wp_fce_options')['orders_background_image'] ?? null;

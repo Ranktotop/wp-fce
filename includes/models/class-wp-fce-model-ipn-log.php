@@ -180,6 +180,11 @@ class WP_FCE_Model_Ipn_Log extends WP_FCE_Model_Base
         return $this->get_paid_until() < new DateTime();
     }
 
+    public function get_management_link(): ?string
+    {
+        return $this->ipn['transaction']['management_url'] ?? null;
+    }
+
     /**********************************/
     /* SETTER                         */
     /**********************************/
