@@ -54,12 +54,14 @@ class WP_FCE_Cron
     /**
      * The callback fired by WP-Cron to expire product_user entries.
      *
+     * @param int|null $user_id If set, only check expirations for this user
+     * @param int|null $product_id If set, only check expirations for this product
      * @return void
      */
-    public static function check_expirations(): void
+    public static function check_expirations(?int $user_id = null, ?int $product_id = null): void
     {
         // Get all product-user entries with valid expiry dates
-        $entries  = WP_FCE_Helper_Product_User::get_with_expiry_date();
+        $entries = WP_FCE_Helper_Product_User::get_with_expiry_date($user_id, $product_id);
 
         //Set state to expired/active based on expiry dates
         foreach ($entries as $entry) {
@@ -67,7 +69,7 @@ class WP_FCE_Cron
         }
 
         //sync access
-        self::sync_space_accesses();
+        self::sync_space_accesses($user_id, $product_id);
     }
 
     /**
@@ -78,11 +80,20 @@ class WP_FCE_Cron
      * If the entry is inactive, the user is only revoked from the space if there is no other active
      * product-user entry for the same space.
      *
+     * @param int|null $user_id If set, only sync for this user
      * @return void
      */
-    public static function sync_space_accesses(): void
+    public static function sync_space_accesses(?int $user_id = null, ?int $product_id = null): void
     {
-        $all = WP_FCE_Helper_Product_User::get_all();
+        if ($user_id !== null && $product_id !== null) {
+            $all = WP_FCE_Helper_Product_User::get_by_user_product($user_id, $product_id);
+        } elseif ($user_id !== null) {
+            $all = WP_FCE_Helper_Product_User::get_for_user($user_id);
+        } elseif ($product_id !== null) {
+            $all = WP_FCE_Helper_Product_User::get_for_product($product_id);
+        } else {
+            $all = WP_FCE_Helper_Product_User::get_all();
+        }
         foreach ($all as $entry) {
             $is_active = $entry->is_active();
 

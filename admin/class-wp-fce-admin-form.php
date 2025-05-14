@@ -136,7 +136,7 @@ class Wp_Fce_Admin_Form_Handler
             }
 
             //update access
-            WP_FCE_Cron::check_expirations();
+            WP_FCE_Cron::check_expirations(product_id: $product_id);
 
             // 6) Erfolg – Redirect mit Hinweis
             $redirect_url = add_query_arg(
@@ -197,7 +197,7 @@ class Wp_Fce_Admin_Form_Handler
             }
 
             //update access
-            WP_FCE_Cron::check_expirations();
+            WP_FCE_Cron::check_expirations(product_id: $product_id);
 
             // 6) Erfolg – Redirect mit Hinweis
             $redirect_url = add_query_arg(
@@ -263,7 +263,7 @@ class Wp_Fce_Admin_Form_Handler
             }
 
             //update access
-            WP_FCE_Cron::check_expirations();
+            WP_FCE_Cron::check_expirations(user_id: $user_id, product_id: $product->get_id());
 
             wp_safe_redirect(add_query_arg('fce_success', urlencode(__('Zugriffsüberschreibung gespeichert.', 'wp-fce')), $_SERVER['REQUEST_URI']));
             exit;

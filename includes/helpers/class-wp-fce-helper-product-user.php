@@ -73,6 +73,11 @@ class WP_FCE_Helper_Product_User extends WP_FCE_Helper_Base
         return static::find(['user_id' => $user_id]);
     }
 
+    public static function get_for_product(int $product_id): array
+    {
+        return static::find(['product_id' => $product_id]);
+    }
+
     /**
      * Retrieve all active product‐user entries for a given user.
      * Active means: start_date <= now AND (expiry_date IS NULL OR expiry_date > now)
@@ -179,16 +184,31 @@ class WP_FCE_Helper_Product_User extends WP_FCE_Helper_Base
     /**
      * Retrieve all product‐user entries which have an expiry date set.
      *
+     * @param int|null $user_id If set, only entries for this user are returned
+     * @param int|null $product_id If set, only entries for this product are returned
      * @return WP_FCE_Model_Product_User[]
      */
-    public static function get_with_expiry_date(): array
+    public static function get_with_expiry_date(?int $user_id = null, ?int $product_id = null): array
     {
         global $wpdb;
 
-        $table = $wpdb->prefix . 'fce_product_user';
-        $sql   = "SELECT * FROM {$table} WHERE expiry_date IS NOT NULL";
+        $table = static::getTableName();
 
-        $rows = $wpdb->get_results($sql, ARRAY_A) ?: [];
+        $sql = "SELECT * FROM {$table} WHERE expiry_date IS NOT NULL";
+        $params = [];
+
+        if ($user_id !== null) {
+            $sql .= " AND user_id = %d";
+            $params[] = $user_id;
+        }
+
+        if ($product_id !== null) {
+            $sql .= " AND product_id = %d";
+            $params[] = $product_id;
+        }
+
+        $query = $params ? $wpdb->prepare($sql, ...$params) : $sql;
+        $rows  = $wpdb->get_results($query, ARRAY_A) ?: [];
 
         return array_map(
             fn(array $row) => WP_FCE_Model_Product_User::load_by_row($row),

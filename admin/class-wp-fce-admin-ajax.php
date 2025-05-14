@@ -148,7 +148,7 @@ class Wp_Fce_Admin_Ajax_Handler
             WP_FCE_Helper_Product_Space::remove_mappings_for_product($product_id);
 
             //update access
-            WP_FCE_Cron::check_expirations();
+            WP_FCE_Cron::check_expirations(product_id: $product_id);
 
             return [
                 'state'   => true,
@@ -182,7 +182,7 @@ class Wp_Fce_Admin_Ajax_Handler
             WP_FCE_Helper_Access_Override::remove_overrides($rule->get_user_id(), $rule->get_product_id());
 
             //update access
-            WP_FCE_Cron::check_expirations();
+            WP_FCE_Cron::check_expirations(user_id: $rule->get_user_id(), product_id: $rule->get_product_id());
 
             return ['state' => true, 'message' => __('Rule successfully deleted', 'wp-fce')];
         } catch (\Exception $e) {
@@ -214,7 +214,7 @@ class Wp_Fce_Admin_Ajax_Handler
             WP_FCE_Helper_Access_Override::patch_override($rule->get_id(), $valid_until, $mode, $comment);
 
             //update access
-            WP_FCE_Cron::check_expirations();
+            WP_FCE_Cron::check_expirations(user_id: $rule->get_user_id(), product_id: $rule->get_product_id());
 
             return ['state' => true, 'message' => __('Rule successfully updated', 'wp-fce')];
         } catch (\Exception $e) {

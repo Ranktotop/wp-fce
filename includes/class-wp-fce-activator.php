@@ -93,7 +93,7 @@ class WP_FCE_Activator
             `id`             BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
             `user_id`        BIGINT UNSIGNED NOT NULL,
             `product_id`     BIGINT UNSIGNED NOT NULL,
-            `source`         ENUM('ipn','admin','import','sync') NOT NULL DEFAULT 'ipn',
+            `source`         TEXT              NOT NULL,
             `transaction_id` VARCHAR(100)      DEFAULT NULL,
             `start_date`     DATETIME          NOT NULL,
             `expiry_date`    DATETIME          DEFAULT NULL,

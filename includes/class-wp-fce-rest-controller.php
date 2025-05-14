@@ -341,7 +341,7 @@ class WP_FCE_REST_Controller
      */
     public function permission_check_ipn(WP_REST_Request $request): bool
     {
-        $sent_key = sanitize_text_field($request->get_param('api_key_ipn'));
+        $sent_key = sanitize_text_field($request->get_param('apikey'));
         // check if param exists
         if (empty($sent_key)) {
             return false;
@@ -367,7 +367,7 @@ class WP_FCE_REST_Controller
      */
     public function permission_check_admin(WP_REST_Request $request): bool
     {
-        $sent_key = sanitize_text_field($request->get_param('api_key_admin'));
+        $sent_key = sanitize_text_field($request->get_param('apikey'));
         // check if param exists
         if (empty($sent_key)) {
             return false;
