@@ -1,9 +1,6 @@
 <?php
 // File: includes/models/class-wp-fce-model-ipn-log.php
 
-use DateTime;
-use RuntimeException;
-
 /**
  * Model for entries in wp_fce_ipn_log.
  *
@@ -151,6 +148,36 @@ class WP_FCE_Model_Ipn_Log extends WP_FCE_Model_Base
     public function get_ipn_hash(): string
     {
         return $this->ipn_hash;
+    }
+
+    public function get_paid_until(): ?DateTime
+    {
+        $paidUntil = $this->ipn["transaction"]["paid_until"] ?? null;
+
+        if ($paidUntil === null) {
+            return null;
+        }
+
+        try {
+            return new DateTime($paidUntil);
+        } catch (Exception $e) {
+            // Optional: Log oder Fehlerbehandlung
+            return null;
+        }
+    }
+
+    /**
+     * Check if the IPN's paid_until date is in the past.
+     *
+     * @return bool True if the paid_until date is set and in the past, false otherwise.
+     */
+    public function is_expired(): bool
+    {
+        $dt = $this->get_paid_until();
+        if ($dt === null) {
+            return false;
+        }
+        return $this->get_paid_until() < new DateTime();
     }
 
     /**********************************/

@@ -1,8 +1,6 @@
 <?php
 // File: includes/helpers/class-wp-fce-helper-access-log.php
 
-use RuntimeException;
-
 /**
  * @extends WP_FCE_Helper_Base<WP_FCE_Model_Access_Log>
  */

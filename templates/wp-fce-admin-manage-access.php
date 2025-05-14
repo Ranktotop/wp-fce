@@ -39,6 +39,8 @@ usort($rules, function ($a, $b) {
                                 <th><?php esc_html_e('Product', 'wp-fce'); ?></th>
                                 <th><?php esc_html_e('Access/Type', 'wp-fce'); ?></th>
                                 <th><?php esc_html_e('Valid until', 'wp-fce'); ?></th>
+                                <th><?php esc_html_e('Comment', 'wp-fce'); ?></th>
+                                <th><?php esc_html_e('Action', 'wp-fce'); ?></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -48,35 +50,49 @@ usort($rules, function ($a, $b) {
                             ?>
                                 <tr data-value="rule_id=<?php echo esc_attr($rule->get_id()); ?>">
                                     <td><?php echo esc_html($user->get_login() . ' (' . $user->get_email() . ')'); ?></td>
-                                    <td><?php echo esc_html($product->get_title()); ?></td>
+                                    <td><?php echo esc_html($product->get_name()); ?></td>
                                     <td>
                                         <select name="fce_rule_mode[<?php echo (int) $rule->get_id(); ?>]" disabled>
-                                            <option value="grant" <?php selected($rule->get_mode(), 'grant'); ?>>
-                                                <?php _e('Zugriff gewähren', 'wp-fce'); ?>
+                                            <option value="allow" <?php selected($rule->get_override_type(), 'allow'); ?>>
+                                                <?php _e('Grant Access', 'wp-fce'); ?>
                                             </option>
-                                            <option value="deny" <?php selected($rule->get_mode(), 'deny'); ?>>
-                                                <?php _e('Zugriff sperren', 'wp-fce'); ?>
+                                            <option value="deny" <?php selected($rule->get_override_type(), 'deny'); ?>>
+                                                <?php _e('Revoke Access', 'wp-fce'); ?>
                                             </option>
                                         </select>
                                     </td>
                                     <td>
+                                        <?php
+                                        $vu = $rule->get_valid_until();
+                                        // Wenn kein Datum gesetzt, leer lassen
+                                        $vu_str = $vu instanceof \DateTime
+                                            ? $vu->format('Y-m-d\TH:i')
+                                            : '';
+                                        ?>
                                         <input
                                             type="datetime-local"
                                             name="valid_until[<?php echo (int) $rule->get_id(); ?>]"
-                                            value="<?php echo esc_attr(date('Y-m-d\TH:i', $rule->get_valid_until())); ?>"
+                                            value="<?php echo esc_attr($vu_str); ?>"
                                             disabled
                                             required>
+                                    </td>
+                                    <td>
+                                        <input
+                                            type="text"
+                                            name="comment[<?php echo (int) $rule->get_id(); ?>]"
+                                            value="<?php echo esc_attr($rule->get_comment()); ?>"
+                                            disabled>
                                     </td>
                                     <td>
                                         <button
                                             type="button"
                                             class="button button-primary wpfce_edit_access_rule_btn">
-                                            <?php esc_html_e('Bearbeiten', 'wp-fce'); ?>
+                                            <?php esc_html_e('Edit', 'wp-fce'); ?>
                                         </button>
                                         <button
                                             type="button"
                                             class="button button-primary delete wpfce_delete_access_rule_btn">
-                                            ✕ <?php esc_html_e('Löschen', 'wp-fce'); ?>
+                                            ✕ <?php esc_html_e('Delete', 'wp-fce'); ?>
                                         </button>
                                     </td>
                                 </tr>
@@ -91,9 +107,9 @@ usort($rules, function ($a, $b) {
 
         <!-- Neues Produkt anlegen -->
         <div class="fce-section fce-section-create">
-            <h2><?php esc_html_e('Neue Regel hinzufügen', 'wp-fce'); ?></h2>
+            <h2><?php esc_html_e('Add Rule', 'wp-fce'); ?></h2>
             <p class="description">
-                <?php esc_html_e('Lege eine Regel an, die festlegt ob er Zugang erlaubt oder verboten ist.', 'wp-fce'); ?>
+                <?php esc_html_e('Manage access rules for existing users and products', 'wp-fce'); ?>
             </p>
 
             <form method="post" action="">
@@ -103,10 +119,10 @@ usort($rules, function ($a, $b) {
                 <table class="form-table">
                     <tbody>
                         <tr>
-                            <th><label for="user_id"><?php _e('Benutzer', 'wp-fce'); ?></label></th>
+                            <th><label for="user_id"><?php _e('User', 'wp-fce'); ?></label></th>
                             <td>
                                 <select name="user_id" id="user_id" required>
-                                    <option value=""><?php _e('Benutzer wählen…', 'wp-fce'); ?></option>
+                                    <option value="">-- <?php _e('Choose User', 'wp-fce'); ?> --</option>
                                     <?php foreach ($users as $user): ?>
                                         <option value="<?= esc_attr($user->get_id()); ?>">
                                             <?= esc_html($user->get_login() . ' (' . $user->get_email() . ')'); ?>
@@ -116,29 +132,35 @@ usort($rules, function ($a, $b) {
                             </td>
                         </tr>
                         <tr>
-                            <th><label for="product_id"><?php _e('Produkt', 'wp-fce'); ?></label></th>
+                            <th><label for="product_id"><?php _e('Product', 'wp-fce'); ?></label></th>
                             <td>
                                 <select name="product_id" id="product_id" required>
-                                    <option value=""><?php _e('Produkt wählen…', 'wp-fce'); ?></option>
+                                    <option value="">-- <?php _e('Choose product', 'wp-fce'); ?> --</option>
                                     <?php foreach ($products as $product): ?>
                                         <option value="<?= esc_attr($product->get_id()); ?>">
-                                            <?= esc_html($product->get_title()); ?>
+                                            <?= esc_html($product->get_name()); ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
                             </td>
                         </tr>
                         <tr>
-                            <th><label for="mode"><?php _e('Zugriffsmodus', 'wp-fce'); ?></label></th>
+                            <th><label for="mode"><?php _e('Access Mode', 'wp-fce'); ?></label></th>
                             <td>
                                 <select name="mode" id="mode" required>
-                                    <option value="grant"><?php _e('Zugriff gewähren', 'wp-fce'); ?></option>
-                                    <option value="deny"><?php _e('Zugriff sperren', 'wp-fce'); ?></option>
+                                    <option value="allow"><?php _e('Grant Access', 'wp-fce'); ?></option>
+                                    <option value="deny"><?php _e('Revoke Access', 'wp-fce'); ?></option>
                                 </select>
                             </td>
                         </tr>
                         <tr>
-                            <th><label for="valid_until"><?php _e('Gültig bis', 'wp-fce'); ?></label></th>
+                            <th><label for="comment"><?php _e('Comment', 'wp-fce'); ?></label></th>
+                            <td>
+                                <input type="text" name="comment" id="comment">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="valid_until"><?php _e('Valid until', 'wp-fce'); ?></label></th>
                             <td>
                                 <input type="datetime-local" name="valid_until" id="valid_until" required>
                             </td>
@@ -146,7 +168,7 @@ usort($rules, function ($a, $b) {
                     </tbody>
                 </table>
 
-                <?php submit_button(__('Überschreibung speichern', 'wp-fce')); ?>
+                <?php submit_button(__('Save Rule', 'wp-fce')); ?>
             </form>
         </div>
     </div>

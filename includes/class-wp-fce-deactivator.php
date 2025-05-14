@@ -25,7 +25,7 @@ class WP_FCE_Deactivator
 		$map = [
 			"{$p}fce_product_user"              => ['fk_fcup_user', 'fk_fcup_product'],
 			"{$p}fce_product_space"             => ['fk_fcps_product', 'fk_fcps_space'],
-			"{$p}fce_product_access_overrides"  => ['fk_fcao_user', 'fk_fcao_entity'],
+			"{$p}fce_product_access_overrides"  => ['fk_fcao_user', 'fk_fcao_product'],
 			"{$p}fce_access_log"                => ['fk_fcal_user'],
 		];
 		foreach ($map as $table => $keys) {

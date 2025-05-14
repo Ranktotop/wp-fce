@@ -5,9 +5,6 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-use DateTime;
-use RuntimeException;
-
 /**
  * @extends WP_FCE_Helper_Base<WP_FCE_Model_Ipn_Log>
  */
@@ -99,20 +96,42 @@ class WP_FCE_Helper_Ipn_Log extends WP_FCE_Helper_Base
         $product_id = $product->get_id();
 
         // 5) upsert product-user access
-        $pu = WP_FCE_Helper_Product_User::get_by_user_product_transaction(
+        $existing = WP_FCE_Helper_Product_User::get_by_user_product_transaction(
             $user_id,
             $product_id,
             $transaction_id
-        ) ?? new WP_FCE_Model_Product_User();
+        );
 
-        $pu->user_id        = $user_id;
-        $pu->product_id     = $product_id;
-        $pu->source         = $source;
-        $pu->transaction_id = $transaction_id;
-        $pu->start_date     = $ipn_date;
-        $pu->expiry_date    = $expiry_date;
-        $pu->status         = 'active';
-        $pu->note           = 'Processed by IPN';
-        $pu->save();
+        if ($existing) {
+            $existing->set_source($source);
+            $existing->set_transaction_id($transaction_id);
+            $existing->set_start_date($ipn_date);
+            $existing->set_expiry_date($expiry_date);
+            $existing->set_status($ipnLog->is_expired() ? 'expired' : 'active');
+            $existing->set_note('Processed by IPN');
+            $existing->save();
+        } else {
+            WP_FCE_Helper_Product_User::create(
+                $user_id,
+                $product_id,
+                $source,
+                $transaction_id,
+                $ipn_date,
+                $expiry_date,
+                $ipnLog->is_expired() ? 'expired' : 'active',
+                'Processed by IPN'
+            );
+        }
+    }
+
+    /**
+     * Retrieve all IPN logs for a given product SKU.
+     *
+     * @param  string  $sku
+     * @return WP_FCE_Model_Ipn_Log[]
+     */
+    public static function get_for_sku(string $sku): array
+    {
+        return static::find(['external_product_id' => $sku]);
     }
 }

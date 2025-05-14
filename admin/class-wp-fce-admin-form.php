@@ -73,8 +73,7 @@ class Wp_Fce_Admin_Form_Handler
         }
 
         try {
-            $helper = new WP_FCE_Helper_Product();
-            $helper->create($sku, $name, $desc);
+            WP_FCE_Helper_Product::create($sku, $name, $desc);
 
             wp_safe_redirect(add_query_arg('fce_success', urlencode(__('Product created successfully.', 'wp-fce')), $_SERVER['REQUEST_URI']));
             exit;
@@ -133,8 +132,11 @@ class Wp_Fce_Admin_Form_Handler
 
             // 5) Neue Mappings anlegen und retroaktiv Zugänge vergeben
             foreach ($space_ids as $space_id) {
-                WP_FCE_Helper_Product_Space::create_mapping_and_assign($product_id, $space_id);
+                WP_FCE_Helper_Product_Space::create_mapping_and_assign_users($product_id, $space_id);
             }
+
+            //update access
+            WP_FCE_Cron::check_expirations();
 
             // 6) Erfolg – Redirect mit Hinweis
             $redirect_url = add_query_arg(
@@ -191,8 +193,11 @@ class Wp_Fce_Admin_Form_Handler
 
             // 5) Neue Mappings anlegen und retroaktiv Zugänge vergeben
             foreach ($new_space_ids as $space_id) {
-                WP_FCE_Helper_Product_Space::create_mapping_and_assign($product_id, $space_id);
+                WP_FCE_Helper_Product_Space::create_mapping_and_assign_users($product_id, $space_id);
             }
+
+            //update access
+            WP_FCE_Cron::check_expirations();
 
             // 6) Erfolg – Redirect mit Hinweis
             $redirect_url = add_query_arg(
@@ -229,38 +234,36 @@ class Wp_Fce_Admin_Form_Handler
         $user_id     = (int) ($_POST['user_id'] ?? 0);
         $product_id  = (int) ($_POST['product_id'] ?? 0);
         $mode        = sanitize_text_field($_POST['mode'] ?? '');
+        $comment        = sanitize_text_field($_POST['comment'] ?? '');
         $valid_until = sanitize_text_field($_POST['valid_until'] ?? '');
 
         if (
             !$user_id ||
             !$product_id ||
-            !in_array($mode, ['grant', 'deny'], true) ||
+            !in_array($mode, ['allow', 'deny'], true) ||
             empty($valid_until)
         ) {
             add_action('admin_notices', function () {
-                echo '<div class="notice notice-error"><p>' . esc_html__('Ungültige Eingaben für Override.', 'wp-fce') . '</p></div>';
+                echo '<div class="notice notice-error"><p>' . esc_html__('Invalid form data for access override.', 'wp-fce') . '</p></div>';
             });
             return;
         }
 
         // Konvertiere ins externe Produkt-ID-Format
         $product = WP_FCE_Model_Product::load_by_id($product_id);
-        $timestamp = strtotime($valid_until);
 
         try {
-            $helper = new WP_FCE_Helper_Access_Override();
-
-            $existing = $helper->get_active_override($user_id, $product->get_id());
+            $existing = WP_FCE_Helper_Access_Override::get_latest_override_by_product_user($user_id, $product->get_id(), false);
 
             if ($existing) {
-                $helper->update_override_by_id($existing->get_id(), $mode, $timestamp);
+                WP_FCE_Helper_Access_Override::patch_override($existing->get_id(), $valid_until, $mode, $comment);
             } else {
-                $helper->create_override($user_id, $product->get_id(), $mode, $timestamp);
+                $existing =
+                    WP_FCE_Helper_Access_Override::add_override($user_id, $product->get_id(), $mode, $valid_until, $comment);
             }
 
             //update access
-            $access_manager = new WP_FCE_Access_Manager();
-            $access_manager->update_access($user_id, $product->get_id(), null, "admin");
+            WP_FCE_Cron::check_expirations();
 
             wp_safe_redirect(add_query_arg('fce_success', urlencode(__('Zugriffsüberschreibung gespeichert.', 'wp-fce')), $_SERVER['REQUEST_URI']));
             exit;

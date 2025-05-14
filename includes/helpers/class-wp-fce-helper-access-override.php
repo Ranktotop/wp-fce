@@ -1,8 +1,6 @@
 <?php
 // File: includes/helpers/class-wp-fce-helper-access-override.php
 
-use RuntimeException;
-
 /**
  * @extends WP_FCE_Helper_Base<WP_FCE_Model_Access_Override>
  */
@@ -23,33 +21,42 @@ class WP_FCE_Helper_Access_Override extends WP_FCE_Helper_Base
     protected static string $model_class = WP_FCE_Model_Access_Override::class;
 
     /**
-     * Fetch the most recent override_type and comment for a given user/product.
+     * Fetch the most recent for a given user/product.
      *
      * @param  int $user_id
      * @param  int $product_id
-     * @return array{override_type:string,comment:string|null}|null
+     * @param  bool $only_active Only return the first override whose valid_until is NULL or in the future
+     * @return WP_FCE_Model_Access_Override|null
      */
-    public static function get_latest_override_by_product(int $user_id, int $product_id): ?array
+    public static function get_latest_override_by_product_user(int $user_id, int $product_id, bool $only_active = false): ?WP_FCE_Model_Access_Override
     {
+        // Retrieve all overrides for this user & product, newest first
+        /** @var WP_FCE_Model_Access_Override[] $rows */
         $rows = static::find(
             [
                 'user_id'    => $user_id,
                 'product_id' => $product_id,
             ],
-            ['created_at' => 'DESC'],
-            1
+            ['created_at' => 'DESC']
         );
 
         if (empty($rows)) {
             return null;
         }
 
-        /** @var WP_FCE_Model_Access_Override $ov */
-        $ov = $rows[0];
-        return [
-            'override_type' => $ov->get_override_type(),
-            'comment'       => $ov->get_comment(),
-        ];
+        // Only return the first override whose valid_until is NULL or in the future
+        if ($only_active) {
+            foreach ($rows as $ov) {
+                if ($ov->is_valid()) {
+                    return $ov;
+                }
+            }
+            // no active found
+            return null;
+        }
+
+        // Return the first override
+        return $rows[0];
     }
 
     /**
@@ -66,8 +73,13 @@ class WP_FCE_Helper_Access_Override extends WP_FCE_Helper_Base
         int $user_id,
         int $product_id,
         string $override_type,
+        \DateTime|int|string $valid_until,
         ?string $comment = null
     ): int {
+
+        // Normalize to DateTime|null
+        $valid_until = static::normalizeDateTime($valid_until);
+
         /** @var WP_FCE_Model_Access_Override $ov */
         $ov = new static::$model_class();
         $ov->user_id       = $user_id;
@@ -75,7 +87,25 @@ class WP_FCE_Helper_Access_Override extends WP_FCE_Helper_Base
         $ov->override_type = $override_type;
         $ov->source        = 'admin';
         $ov->comment       = $comment;
+        $ov->valid_until   = $valid_until;
         $ov->save();
+
+        // If the user does not have an entry for this product yet, create one
+        $existing = WP_FCE_Helper_Product_User::get_by_user_product($user_id, $product_id);
+        $now      = new \DateTime('now', new \DateTimeZone(wp_timezone_string()));
+
+        if ($existing === null && $override_type === 'allow') {
+            WP_FCE_Helper_Product_User::create(
+                $user_id,
+                $product_id,
+                'admin',
+                'override-manual',
+                $now,
+                $valid_until,
+                'active',
+                'Zugang manuell durch Admin-Override erzeugt'
+            );
+        }
 
         return $ov->get_id();
     }
@@ -100,6 +130,46 @@ class WP_FCE_Helper_Access_Override extends WP_FCE_Helper_Base
                 $success = false;
             }
         }
+
+        // Delete dummy entries if existing
+        WP_FCE_Helper_Product_User::delete_admin_dummy($user_id, $product_id);
+
+
         return $success;
+    }
+
+    public static function patch_override(int $override_id, \DateTime|int|string $valid_until, string $mode, ?string $comment = null)
+    {
+        $ov = static::get_by_id($override_id);
+
+        if ($ov === null) {
+            throw new \Exception(sprintf(__('Override not found by ID %d.', 'wp-fce'), $override_id));
+        }
+        $ov->set_valid_until($valid_until);
+        $ov->set_override_type($mode);
+        $ov->set_comment($comment);
+        $ov->save();
+
+        if ($ov->is_deny()) {
+            //remove dummy entry
+            WP_FCE_Helper_Product_User::delete_admin_dummy($ov->get_user_id(), $ov->get_product_id());
+        } else if ($ov->is_allow()) {
+            // If the user does not have an entry for this product yet, create one
+            $existing = WP_FCE_Helper_Product_User::get_by_user_product($ov->get_user_id(), $ov->get_product_id());
+            $now      = new \DateTime('now', new \DateTimeZone(wp_timezone_string()));
+
+            if ($existing === null) {
+                WP_FCE_Helper_Product_User::create(
+                    $ov->get_user_id(),
+                    $ov->get_product_id(),
+                    'admin',
+                    'override-manual',
+                    $now,
+                    $valid_until,
+                    'active',
+                    'Zugang manuell durch Admin-Override erzeugt'
+                );
+            }
+        }
     }
 }

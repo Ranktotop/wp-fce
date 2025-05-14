@@ -161,14 +161,20 @@ class Wp_Fce_Admin
 		Redux::set_section('wp_fce_options', [
 			'title'  => __('API', 'wp-fce'),
 			'id'     => 'general_section',
-			'desc'   => __('API-Einstellungen', 'wp-fce'),
+			'desc'   => __('API-Settings', 'wp-fce'),
 			'fields' => [
 				[
-					'id'    => 'api_key',
+					'id'    => 'api_key_ipn',
 					'type'  => 'text',
-					'title' => __('API Key', 'wp-fce'),
-					'desc'  => __('Wird zur Authentifizierung von externen Aufrufen genutzt.', 'wp-fce'),
+					'title' => __('API Key (IPN)', 'wp-fce'),
+					'desc'  => __('Used to validate IPN requests.', 'wp-fce'),
 				],
+				[
+					'id'    => 'api_key_admin',
+					'type'  => 'text',
+					'title' => __('API Key (Admin)', 'wp-fce'),
+					'desc'  => __('Used to validate Admin requests to the REST API.', 'wp-fce'),
+				]
 			],
 		]);
 		Redux::set_section('wp_fce_options', [

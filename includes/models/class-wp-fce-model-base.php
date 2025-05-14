@@ -336,4 +336,20 @@ abstract class WP_FCE_Model_Base
     {
         return $this->table_name;
     }
+
+    /**
+     * Normalize a “date” input into a DateTime or null.
+     *
+     * @param  \DateTime|int|string|null $input
+     *   - null: bleibt null
+     *   - DateTime: wird direkt zurückgegeben
+     *   - int|numeric string: UNIX‐Timestamp
+     *   - sonstiger string: MySQL-Datetime ("Y-m-d H:i:s")
+     * @return \DateTime|null
+     * @throws \InvalidArgumentException on invalid string
+     */
+    protected static function normalizeDateTime(\DateTime|int|string|null $input): ?\DateTime
+    {
+        return WP_FCE_Helper_Base::normalizeDateTime($input);
+    }
 }

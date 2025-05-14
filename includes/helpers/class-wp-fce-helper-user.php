@@ -1,8 +1,6 @@
 <?php
 // File: includes/helpers/class-wp-fce-helper-user.php
 
-use RuntimeException;
-
 /**
  * @extends WP_FCE_Helper_Base<WP_FCE_Model_User>
  */
@@ -23,6 +21,67 @@ class WP_FCE_Helper_User extends WP_FCE_Helper_Base
     protected static string $model_class = WP_FCE_Model_User::class;
 
     /**
+     * Load multiple users by their IDs.
+     *
+     * @param  int[]              $ids
+     * @return WP_FCE_Model_User[]
+     */
+    public static function get_by_ids(array $ids): array
+    {
+        global $wpdb;
+        if (empty($ids)) {
+            return [];
+        }
+
+        $placeholders = implode(',', array_fill(0, count($ids), '%d'));
+        $sql = $wpdb->prepare(
+            "SELECT ID, user_login, user_email, display_name
+             FROM {$wpdb->users}
+             WHERE ID IN ($placeholders)",
+            ...$ids
+        );
+        $rows = $wpdb->get_results($sql, ARRAY_A) ?: [];
+
+        return array_map(
+            fn(array $r) => static::$model_class::load_by_row($r),
+            $rows
+        );
+    }
+
+    /**
+     * Load a single user by ID.
+     *
+     * @param  int                $id
+     * @return WP_FCE_Model_User
+     * @throws RuntimeException   If not found.
+     */
+    public static function get_by_id(int $id): WP_FCE_Model_User
+    {
+        return WP_FCE_Model_User::load_by_id($id);
+    }
+
+    /**
+     * Load all users, ordered by display_name.
+     *
+     * @return WP_FCE_Model_User[]
+     */
+    public static function get_all(): array
+    {
+        global $wpdb;
+        $rows = $wpdb->get_results(
+            "SELECT ID, user_login, user_email, display_name
+             FROM {$wpdb->users}
+             ORDER BY display_name ASC",
+            ARRAY_A
+        ) ?: [];
+
+        return array_map(
+            fn(array $r) => static::$model_class::load_by_row($r),
+            $rows
+        );
+    }
+
+    /**
      * Find a user by email.
      *
      * @param  string                $email
@@ -30,17 +89,30 @@ class WP_FCE_Helper_User extends WP_FCE_Helper_Base
      */
     public static function get_by_email(string $email): ?WP_FCE_Model_User
     {
-        return static::findOneBy(['user_email' => $email]);
+        global $wpdb;
+        $row = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT ID, user_login, user_email, display_name
+                 FROM {$wpdb->users}
+                 WHERE user_email = %s",
+                sanitize_email($email)
+            ),
+            ARRAY_A
+        );
+        if (! $row) {
+            return null;
+        }
+        return static::$model_class::load_by_row($row);
     }
 
     /**
-     * Create a new WP user and return its model.
+     * Create a new WP user by email (and optional login/password).
      *
      * @param  string                $email
-     * @param  string                $login    Optional. If empty, derived from email.
-     * @param  string                $password Optional. If empty, a random password is generated.
+     * @param  string                $login
+     * @param  string                $password
      * @return WP_FCE_Model_User
-     * @throws RuntimeException      On invalid email or WP error.
+     * @throws RuntimeException      On error.
      */
     public static function create(string $email, string $login = '', string $password = ''): WP_FCE_Model_User
     {
@@ -74,18 +146,18 @@ class WP_FCE_Helper_User extends WP_FCE_Helper_Base
         ];
         $user_id = wp_insert_user($userdata);
         if (is_wp_error($user_id)) {
-            throw new RuntimeException('WP insert_user error: ' . $user_id->get_error_message());
+            throw new RuntimeException('wp_insert_user error: ' . $user_id->get_error_message());
         }
 
-        return static::get_by_id($user_id);
+        return static::get_by_id((int)$user_id);
     }
 
     /**
      * Get or create a user by email.
      *
      * @param  string                $email
-     * @param  string                $login    Optional login for creation.
-     * @param  string                $password Optional password for creation.
+     * @param  string                $login
+     * @param  string                $password
      * @return WP_FCE_Model_User|null
      */
     public static function get_or_create(string $email, string $login = '', string $password = ''): ?WP_FCE_Model_User
@@ -94,22 +166,11 @@ class WP_FCE_Helper_User extends WP_FCE_Helper_Base
         if ($user) {
             return $user;
         }
-
         try {
             return static::create($email, $login, $password);
         } catch (\Exception $e) {
-            error_log("Failed to get or create user '{$email}': " . $e->getMessage());
+            error_log("FCE get_or_create user failed: " . $e->getMessage());
             return null;
         }
-    }
-
-    /**
-     * Retrieve all users, ordered by display_name.
-     *
-     * @return WP_FCE_Model_User[]
-     */
-    public static function get_all(): array
-    {
-        return static::find([], ['display_name' => 'ASC']);
     }
 }

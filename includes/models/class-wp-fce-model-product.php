@@ -112,6 +112,30 @@ class WP_FCE_Model_Product extends WP_FCE_Model_Base
     }
 
     /**
+     * Get all FluentCommunity spaces assigned to this product.
+     *
+     * This method retrieves the unique space IDs mapped to the product and
+     * returns the corresponding community spaces ordered by title.
+     *
+     * @return WP_FCE_Model_Fcom[]
+     */
+    public function get_mapped_spaces(): array
+    {
+        // Extract all space IDs
+        $space_ids = array_unique(array_map(fn($m) => $m->get_space_id(), $this->get_mappings()));
+
+        if (empty($space_ids)) {
+            return [];
+        }
+
+        // 3) Fetch only those spaces of type 'community'
+        return WP_FCE_Helper_Fcom::find(
+            ['id'   => $space_ids],
+            ['title' => 'ASC']
+        );
+    }
+
+    /**
      * Get all FluentCommunity "space" entities mapped to this product.
      *
      * @return WP_FCE_Model_Fcom[]

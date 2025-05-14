@@ -157,4 +157,26 @@ abstract class WP_FCE_Helper_Base
     {
         return static::find([]);
     }
+
+    public static function normalizeDateTime(\DateTime|int|string|null $input): ?\DateTime
+    {
+        if (null === $input) {
+            return null;
+        }
+        if ($input instanceof \DateTime) {
+            return $input;
+        }
+        // Timestamp?
+        if (is_int($input) || (is_string($input) && ctype_digit($input))) {
+            $dt = new \DateTime("@{$input}");
+            $dt->setTimezone(new \DateTimeZone(wp_timezone_string()));
+            return $dt;
+        }
+        // MySQL-Datetime
+        try {
+            return new \DateTime((string)$input, new \DateTimeZone(wp_timezone_string()));
+        } catch (\Exception $e) {
+            throw new \InvalidArgumentException(sprintf(__("Failed to normalize to Datetime. Invalid datetime value given: %s", 'wp-fce'), $input));
+        }
+    }
 }

@@ -1,8 +1,6 @@
 <?php
 // File: includes/helpers/class-wp-fce-helper-product.php
 
-use RuntimeException;
-
 /**
  * @extends WP_FCE_Helper_Base<WP_FCE_Model_Product>
  */

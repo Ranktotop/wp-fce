@@ -1,9 +1,6 @@
 <?php
 // File: includes/models/class-wp-fce-model-user.php
 
-use DateTime;
-use RuntimeException;
-
 /**
  * Model for WP users (wp_users table).
  *
@@ -52,7 +49,24 @@ class WP_FCE_Model_User extends WP_FCE_Model_Base
     public string $display_name = '';
 
     /**
+     * Factory: create an instance from a raw DB row.
+     * We map 'ID' → 'id' so the Base hydrator finds our property.
+     *
+     * @param  array<string,mixed> $row
+     * @return static
+     */
+    public static function load_by_row(array $row): static
+    {
+        if (isset($row['ID'])) {
+            $row['id'] = $row['ID'];
+            unset($row['ID']);
+        }
+        return parent::load_by_row($row);
+    }
+
+    /**
      * Load a WP user by ID.
+     * Override the base method to alias the uppercase 'ID' column.
      *
      * @param  int           $id
      * @return static
@@ -61,26 +75,21 @@ class WP_FCE_Model_User extends WP_FCE_Model_Base
     public static function load_by_id(int $id): static
     {
         global $wpdb;
-        $row = $wpdb->get_row(
-            $wpdb->prepare(
-                "SELECT ID, user_login, user_email, display_name
-                 FROM {$wpdb->users}
-                 WHERE ID = %d",
-                $id
-            ),
-            ARRAY_A
+
+        // Alias 'ID' to 'id' so hydrateRow() works
+        $sql = $wpdb->prepare(
+            "SELECT ID AS id, user_login, user_email, display_name
+             FROM {$wpdb->users}
+             WHERE ID = %d",
+            $id
         );
+        $row = $wpdb->get_row($sql, ARRAY_A);
+
         if (! $row) {
             throw new RuntimeException("WP user {$id} not found.");
         }
 
-        // Map column names to our property keys
-        return static::load_by_row([
-            'id'           => (int)   $row['ID'],
-            'user_login'   =>         $row['user_login'],
-            'user_email'   =>         $row['user_email'],
-            'display_name' =>         $row['display_name'],
-        ]);
+        return static::load_by_row($row);
     }
 
     /**

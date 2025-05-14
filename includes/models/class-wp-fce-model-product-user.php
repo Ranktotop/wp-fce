@@ -1,9 +1,6 @@
 <?php
 // File: includes/models/class-wp-fce-model-product-user.php
 
-use DateTime;
-use RuntimeException;
-
 /**
  * Model for entries in wp_fce_product_user.
  *
@@ -162,6 +159,16 @@ class WP_FCE_Model_Product_User extends WP_FCE_Model_Base
     }
 
     /**
+     * Get all FluentCommunity spaces (communities) assigned to this product.
+     *
+     * @return WP_FCE_Model_Product_Space[]
+     */
+    public function get_mapped_spaces(): array
+    {
+        return WP_FCE_Helper_Product_Space::get_for_product($this->get_product_id());
+    }
+
+    /**
      * Set the start date.
      *
      * @param  DateTime $start_date
@@ -195,6 +202,57 @@ class WP_FCE_Model_Product_User extends WP_FCE_Model_Base
     {
         $this->status = $status;
         return $this;
+    }
+
+    public function set_source(string $source): static
+    {
+        $this->source = $source;
+        return $this;
+    }
+
+    public function set_transaction_id(string $transaction_id): static
+    {
+        $this->transaction_id = $transaction_id;
+        return $this;
+    }
+
+    /**
+     * Renew this entry by setting a new expiry date.
+     * - If the given date is in the future, status becomes 'active'.
+     * - Otherwise, status becomes 'expired'.
+     *
+     * @param  DateTime $expiry_date The new expiry date.
+     * @return void
+     * @throws \Exception on DB error
+     */
+    public function renew(?DateTime $expiry_date = null): void
+    {
+        // 1) If no date is given, used current date
+        if (null === $expiry_date) {
+            $expiry_date = $this->get_expiry_date();
+        } else {
+            $this->set_expiry_date($expiry_date);
+        }
+
+        $now = new DateTime(current_time('mysql'));
+        //If expiry date is in the future or not set, set status to active
+        if ($expiry_date === null || $expiry_date > $now) {
+            $this->set_status('active');
+        } else {
+            $this->set_status('expired');
+        }
+
+        $this->save();
+    }
+
+    public function is_active(): bool
+    {
+        return $this->get_status() === 'active';
+    }
+
+    public function is_expired(): bool
+    {
+        return $this->get_status() === 'expired';
     }
 
     /**

@@ -47,8 +47,13 @@ class Wp_Fce_Admin_Ajax_Handler
         }
 
         try {
-            $helper = new WP_FCE_Helper_Product();
-            $helper->delete((int) $data['product_id']);
+            //Before we delete the product, we remove all users from product exclusive spaces
+            $exclusive_spaces = WP_FCE_Helper_Fcom::get_spaces_exclusive_to_product((int) $data['product_id']);
+            foreach ($exclusive_spaces as $space) {
+                $space->revoke_all_user_access();
+            }
+            WP_FCE_Helper_Product::delete((int) $data['product_id']);
+
             return ['state' => true, 'message' => __('Product successfully deleted', 'wp-fce')];
         } catch (\Exception $e) {
             return ['state' => false, 'message' => $e->getMessage()];
@@ -74,8 +79,7 @@ class Wp_Fce_Admin_Ajax_Handler
         $desc = sanitize_textarea_field($data['description'] ?? '');
 
         try {
-            $helper = new WP_FCE_Helper_Product();
-            $helper->update((int) $data['product_id'], $name, $desc);
+            WP_FCE_Helper_Product::update((int) $data['product_id'], $name, $desc);
             return ['state' => true, 'message' => __('Product successfully updated', 'wp-fce')];
         } catch (\Exception $e) {
             return ['state' => false, 'message' => $e->getMessage()];
@@ -140,10 +144,12 @@ class Wp_Fce_Admin_Ajax_Handler
         $product_id = (int) $data['product_id'];
 
         try {
-            // 2) Helper-Aufruf zum Entfernen aller Mappings
+            // Remove all space mappings
             WP_FCE_Helper_Product_Space::remove_mappings_for_product($product_id);
 
-            // 3) Erfolgs-Antwort
+            //update access
+            WP_FCE_Cron::check_expirations();
+
             return [
                 'state'   => true,
                 'message' => sprintf(__('All mappings successfully deleted for product #%d', 'wp-fce'), $product_id)
@@ -165,19 +171,20 @@ class Wp_Fce_Admin_Ajax_Handler
     private function delete_access_rule(array $data, array $meta): array
     {
         if (!isset($data['rule_id']) || !is_numeric($data['rule_id'])) {
-            return ['state' => false, 'message' => __('Ungültige Regel-ID', 'wp-fce')];
+            return ['state' => false, 'message' => __('Invalid rule ID', 'wp-fce')];
         }
 
         try {
-            $helper = new WP_FCE_Helper_Access_Override();
-            $rule = $helper->get_by_id((int) $data['rule_id']);
-            $helper->delete_override_by_id((int) $data['rule_id']);
+            $rule = WP_FCE_Helper_Access_Override::get_by_id((int) $data['rule_id']);
+            if (!$rule) {
+                return ['state' => false, 'message' => __('Rule not found', 'wp-fce')];
+            }
+            WP_FCE_Helper_Access_Override::remove_overrides($rule->get_user_id(), $rule->get_product_id());
 
             //update access
-            $access_manager = new WP_FCE_Access_Manager();
-            $access_manager->update_access($rule->get_user_id(), $rule->get_product_id(), null, "admin");
+            WP_FCE_Cron::check_expirations();
 
-            return ['state' => true, 'message' => __('Regel erfolgreich gelöscht', 'wp-fce')];
+            return ['state' => true, 'message' => __('Rule successfully deleted', 'wp-fce')];
         } catch (\Exception $e) {
             return ['state' => false, 'message' => $e->getMessage()];
         }
@@ -186,27 +193,30 @@ class Wp_Fce_Admin_Ajax_Handler
     private function update_access_rule(array $data, array $meta): array
     {
         if (!isset($data['rule_id']) || !is_numeric($data['rule_id'])) {
-            return ['state' => false, 'message' => __('Ungültige Regel-ID', 'wp-fce')];
+            return ['state' => false, 'message' => __('Invalid rule ID', 'wp-fce')];
         }
 
         $mode = sanitize_text_field($data['mode'] ?? '');
-        $valid_until_raw = sanitize_text_field($data['valid_until'] ?? '');
-        $valid_until_ts  = strtotime($valid_until_raw);
+        $valid_until = sanitize_text_field($data['valid_until'] ?? '');
+        $comment = sanitize_text_field($data['comment'] ?? '');
 
-        if (!$valid_until_ts) {
-            return ['state' => false, 'message' => __('Ungültiges Datum', 'wp-fce')];
+        if (!$valid_until) {
+            return ['state' => false, 'message' => __('Invalid valid until date', 'wp-fce')];
         }
 
         try {
-            $helper = new WP_FCE_Helper_Access_Override();
-            $rule = $helper->get_by_id((int) $data['rule_id']);
-            $helper->update_override_by_id((int) $data['rule_id'], $mode, $valid_until_ts);
+            $rule = WP_FCE_Helper_Access_Override::get_by_id((int) $data['rule_id']);
+            if (!$rule) {
+                return ['state' => false, 'message' => __('Rule not found', 'wp-fce')];
+            }
+
+            //patch rule
+            WP_FCE_Helper_Access_Override::patch_override($rule->get_id(), $valid_until, $mode, $comment);
 
             //update access
-            $access_manager = new WP_FCE_Access_Manager();
-            $access_manager->update_access($rule->get_user_id(), $rule->get_product_id(), null, "admin");
+            WP_FCE_Cron::check_expirations();
 
-            return ['state' => true, 'message' => __('Regel erfolgreich aktualisiert', 'wp-fce')];
+            return ['state' => true, 'message' => __('Rule successfully updated', 'wp-fce')];
         } catch (\Exception $e) {
             return ['state' => false, 'message' => $e->getMessage()];
         }

@@ -137,6 +137,7 @@ class WP_FCE_Activator
 		`source`        ENUM('admin','import') NOT NULL DEFAULT 'admin',
 		`comment`       TEXT NULL,
 		`created_at`    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		`valid_until`   DATETIME    NULL,
 		PRIMARY KEY (`id`),
 		KEY `idx_user_product` (`user_id`, `product_id`)
 	) ENGINE=InnoDB {$c};";

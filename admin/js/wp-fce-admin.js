@@ -120,13 +120,14 @@
 			const $nameField = $row.find('input[name^="fce_product_edit_product_name"]');
 			const $descField = $row.find('textarea[name^="fce_product_edit_product_description"]');
 
-			if ($btn.text().trim() === wp_fce.label_edit) {
-				// Felder aktivieren
+			// Zustand prüfen: Bearbeitungsmodus aktiv?
+			if (!$btn.hasClass("active")) {
+				// Bearbeitungsmodus aktivieren
 				$nameField.prop('disabled', false);
 				$descField.prop('disabled', false);
-				$btn.text(wp_fce.label_save);
+				$btn.addClass("active").text(wp_fce.label_save);
 			} else {
-				// Felder deaktivieren & speichern
+				// Speichern und Felder deaktivieren
 				const dataItem = $row.data('value');
 				const metaData = wpfce_queryToJSON(dataItem);
 
@@ -155,7 +156,7 @@
 							wpfce_show_notice(wp_fce.notice_success, 'success');
 							$nameField.prop('disabled', true);
 							$descField.prop('disabled', true);
-							$btn.text(wp_fce.label_edit);
+							$btn.removeClass("active").text(wp_fce.label_edit);
 						} else {
 							wpfce_show_notice(wp_fce.notice_error + ': ' + result.message, 'error');
 							console.log(result.message);
@@ -173,6 +174,7 @@
 			}
 		});
 	}
+
 
 	function wpfce_handle_click_edit_mapping_btn() {
 		$('.wpfce_edit_mapping_btn').click(function () {
@@ -326,19 +328,23 @@
 			// Felder holen
 			const $modeField = $row.find('select[name^="fce_rule_mode"]');
 			const $validField = $row.find('input[name^="valid_until"]');
+			const $commentField = $row.find('input[name^="comment"]');
 
-			if ($btn.text().trim() === wp_fce.label_edit) {
-				// Felder aktivieren
+			// Zustand prüfen: Bearbeitungsmodus aktiv?
+			if (!$btn.hasClass("active")) {
+				// Bearbeitungsmodus aktivieren
 				$modeField.prop('disabled', false);
 				$validField.prop('disabled', false);
-				$btn.text(wp_fce.label_save);
+				$commentField.prop('disabled', false);
+				$btn.addClass("active").text(wp_fce.label_save);
 			} else {
-				// Felder deaktivieren & speichern
+				// Speichern und Felder deaktivieren
 				const dataItem = $row.data('value');
 				const metaData = wpfce_queryToJSON(dataItem);
 
 				metaData.mode = $modeField.val();
 				metaData.valid_until = $validField.val();
+				metaData.comment = $commentField.val();
 
 				const dataJSON = {
 					action: 'wp_fce_handle_ajax_callback',
@@ -362,7 +368,8 @@
 							wpfce_show_notice(wp_fce.notice_success, 'success');
 							$modeField.prop('disabled', true);
 							$validField.prop('disabled', true);
-							$btn.text(wp_fce.label_edit);
+							$commentField.prop('disabled', true);
+							$btn.removeClass("active").text(wp_fce.label_edit);
 						} else {
 							wpfce_show_notice(wp_fce.notice_error + ': ' + result.message, 'error');
 							console.log(result.message);

@@ -5,9 +5,6 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-use DateTime;
-use RuntimeException;
-
 /**
  * @extends WP_FCE_Helper_Base<WP_FCE_Model_Product_Space>
  */
@@ -61,18 +58,18 @@ class WP_FCE_Helper_Product_Space extends WP_FCE_Helper_Base
      * @return void
      * @throws Exception On DB error or missing product.
      */
-    public static function create_mapping_and_assign(
+    public static function create_mapping_and_assign_users(
         int    $product_id,
         int    $space_id
     ): void {
-        // 1) Insert mapping via Model
+        // Create the mapping first
         $mapping = new static::$model_class();
         $mapping->product_id  = $product_id;
         $mapping->space_id    = $space_id;
         $mapping->save();
 
-        // 2) Retroactive access
-        static::assign_retroactive_access($product_id, $space_id);
+        // Process ipns and assign access
+        static::assign_retroactive_access($product_id);
     }
 
     /**
@@ -99,70 +96,57 @@ class WP_FCE_Helper_Product_Space extends WP_FCE_Helper_Base
      * @throws Exception On missing product or DB errors.
      */
     public static function assign_retroactive_access(
-        int    $product_id,
-        int    $space_id
+        int    $product_id
     ): void {
-        global $wpdb;
 
-        // 1) Get SKU from product model
+        // Get SKU from product model
         $product = WP_FCE_Helper_Product::get_by_id($product_id);
         $sku     = $product->get_sku();
         if (! $sku) {
-            throw new \Exception("Product ID {$product_id} not found.");
+            throw new \Exception("SKU not found for product {$product_id}");
         }
 
-        // 2) Load all IPN logs for this SKU
-        $ipn_table = $wpdb->prefix . 'fce_ipn_log';
-        $logs = $wpdb->get_results(
-            $wpdb->prepare(
-                "SELECT user_email, transaction_id, ipn_date, ipn
-                 FROM {$ipn_table}
-                 WHERE external_product_id = %s",
-                $sku
-            ),
-            ARRAY_A
-        ) ?: [];
+        // Load all IPN logs for this SKU
+        $logs = WP_FCE_Helper_Ipn_Log::get_for_sku($sku);
 
-        // 3) For each log, ensure a WP user exists and upsert a product_user entry
-        foreach ($logs as $row) {
-            $payload = json_decode($row['ipn'], true);
-            $start_date  = new DateTime($row['ipn_date']);
-            $expiry_date = ! empty($payload['expiry_date'])
-                ? new DateTime($payload['expiry_date'])
-                : null;
+        // For each ipn, ensure a WP user exists and create a product_user entry
+        foreach ($logs as $log) {
+            $start_date  = $log->get_ipn_date();
+            $expiry_date = $log->get_paid_until();
 
-            // a) Ensure WP user
-            $wp_user = get_user_by('email', $row['user_email']);
-            if ($wp_user) {
-                $user_id = $wp_user->ID;
-            } else {
-                $login = sanitize_user(current(explode('@', $row['user_email'])), true);
-                $user_id = wp_insert_user([
-                    'user_login' => $login,
-                    'user_email' => $row['user_email'],
-                    'user_pass'  => wp_generate_password(),
-                ]);
-                if (is_wp_error($user_id)) {
-                    continue;
-                }
+            // Get/Create wp user
+            $login = sanitize_user(current(explode('@', $log->get_user_email())), true);
+            $wp_user = WP_FCE_Helper_User::get_or_create($log->get_user_email(), $login, wp_generate_password());
+            if ($wp_user == null) {
+                continue;
             }
 
-            // b) Upsert via Product_User helper
-            $pu = WP_FCE_Helper_Product_User::get_by_user_product_transaction(
-                $user_id,
+            // Create/update product_user
+            $existing = WP_FCE_Helper_Product_User::get_by_user_product_transaction(
+                $wp_user->get_id(),
                 $product_id,
-                $row['transaction_id']
-            ) ?? new WP_FCE_Model_Product_User();
-
-            $pu->user_id        = $user_id;
-            $pu->product_id     = $product_id;
-            $pu->source         = 'ipn';
-            $pu->transaction_id = $row['transaction_id'];
-            $pu->start_date     = $start_date;
-            $pu->expiry_date    = $expiry_date;
-            $pu->status         = 'active';
-            $pu->note           = 'Retroactive via mapping';
-            $pu->save();
+                $log->get_transaction_id()
+            );
+            if ($existing != null) {
+                $existing->set_source('ipn');
+                $existing->set_transaction_id($log->get_transaction_id());
+                $existing->set_start_date($start_date);
+                $existing->set_expiry_date($expiry_date);
+                $existing->set_status($log->is_expired() ? 'expired' : 'active');
+                $existing->set_note('Retroactive via IPN');
+                $existing->save();
+            } else {
+                WP_FCE_Helper_Product_User::create(
+                    $wp_user->get_id(),
+                    $product_id,
+                    'ipn',
+                    $log->get_transaction_id(),
+                    $start_date,
+                    $expiry_date,
+                    $log->is_expired() ? 'expired' : 'active',
+                    'Retroactive via IPN'
+                );
+            }
         }
     }
 }

@@ -39,27 +39,26 @@ class WP_FCE_Access_Evaluator
         }
 
         // 1) Hole alle Produkt-IDs, die dieser User jemals hatte (egal ob aktiv/abgelaufen)
-        $all_product_ids = WP_FCE_Helper_Product_User::get_all_product_ids($user_id);
-        //TODO
+        $all_product_entries = WP_FCE_Helper_Product_User::get_for_user($user_id);
 
-        foreach ($all_product_ids as $prod_id) {
+        foreach ($all_product_entries as $entry) {
             // 1a) Override prüfen (hat Vorrang vor Aktivitätsprüfung)
-            $override = WP_FCE_Helper_Access_Override::get_latest_override_by_product($user_id, $prod_id);
+            $override = WP_FCE_Helper_Access_Override::get_latest_override_by_product_user($user_id, $entry->get_product_id(), true);
             if ($override) {
-                if ($override['override_type'] === 'deny') {
+                if ($override->is_deny()) {
                     continue; // explizit verweigert → ignorieren
                 }
-                if ($override['override_type'] === 'allow') {
+                if ($override->is_allow()) {
                     return self::$cache[$key] = true; // Zugriff sofort erlauben
                 }
             }
         }
 
         // 2) Jetzt nur aktive Produkte ohne Override prüfen
-        $active_product_ids = WP_FCE_Helper_Product_User::get_active_product_ids($user_id);
+        $active_product_entries = WP_FCE_Helper_Product_User::get_active_for_user($user_id);
 
-        foreach ($active_product_ids as $prod_id) {
-            if (WP_FCE_Helper_Product_Space::has_mapping($prod_id, $entity_id)) {
+        foreach ($active_product_entries as $entry) {
+            if (WP_FCE_Helper_Product_Space::has_mapping($entry->get_product_id(), $entity_id)) {
                 return self::$cache[$key] = true;
             }
         }
@@ -69,14 +68,15 @@ class WP_FCE_Access_Evaluator
     }
 
     /**
-     * Liefert alle Quellen, die zur Zugriff-Entscheidung geführt haben.
+     * Determine which products or overrides grant or deny access,
+     * and return a breakdown of sources.
      *
-     * @param int    $user_id
-     * @param string $entity_type
-     * @param int    $entity_id
+     * @param  int    $user_id
+     * @param  string $entity_type
+     * @param  int    $entity_id
      * @return array{
      *   override: array{product_id:int,override_type:string}|null,
-     *   products: array<int,array{product_id:int,valid:bool,mapped:bool,override?:string}>,
+     *   products: array<int,array{product_id:int,override?:string,mapped:bool}>,
      *   final: bool
      * }
      */
@@ -88,49 +88,60 @@ class WP_FCE_Access_Evaluator
             'final'    => false,
         ];
 
-        $product_ids = WP_FCE_Helper_Product_User::get_active_product_ids($user_id);
+        // 1) Alle aktiven product_user-Einträge für den User holen
+        $entries = WP_FCE_Helper_Product_User::get_active_for_user($user_id);
 
-        foreach ($product_ids as $prod_id) {
-            $override = WP_FCE_Helper_Access_Override::get_latest_override_by_product($user_id, $prod_id);
+        foreach ($entries as $entry) {
+            $prod_id  = $entry->get_product_id();
+            // 2a) Neuesten Override für diesen User+Produkt prüfen
+            $overrideModel = WP_FCE_Helper_Access_Override::get_latest_override_by_product_user(
+                $user_id,
+                $prod_id,
+                true
+            );
+
+            // 2b) Mapping prüfen
             $is_mapped = WP_FCE_Helper_Product_Space::has_mapping($prod_id, $entity_id);
 
-            $entry = [
+            $prodInfo = [
                 'product_id' => $prod_id,
-                'valid'      => true,
                 'mapped'     => $is_mapped,
             ];
 
-            if ($override) {
-                $entry['override'] = $override['override_type'];
+            if ($overrideModel) {
+                $type = $overrideModel->get_override_type();
+                $prodInfo['override'] = $type;
 
-                if ($override['override_type'] === 'allow') {
+                if ($overrideModel->is_allow()) {
+                    // Allow override schlägt alles
                     $result['override'] = [
                         'product_id'    => $prod_id,
                         'override_type' => 'allow',
                     ];
-                    $result['products'][] = $entry;
-                    $result['final'] = true;
+                    $result['products'][] = $prodInfo;
+                    $result['final']      = true;
                     return $result;
                 }
 
-                if ($override['override_type'] === 'deny') {
-                    // Zugriff explizit verweigert – Produkt überspringen
-                    $result['products'][] = $entry;
+                if ($overrideModel->is_deny()) {
+                    // Deny override: Produkt bleibt mit override markiert, Suche fortsetzen
+                    $result['products'][] = $prodInfo;
                     continue;
                 }
             }
 
-            // Produkt mapped und nicht per Override verboten?
+            // 3) Kein Override oder Override neutral: bei Mapping Zugriff gewähren
             if ($is_mapped) {
-                $result['products'][] = $entry;
-                $result['final'] = true;
+                $result['products'][] = $prodInfo;
+                $result['final']      = true;
                 return $result;
             }
 
-            $result['products'][] = $entry;
+            // 4) Weder override noch Mapping → einfach mitschreiben
+            $result['products'][] = $prodInfo;
         }
 
-        // Keine erlaubten Produkte gefunden
+        // 5) Keine allow-/mapped-Produkte gefunden
         return $result;
     }
 }

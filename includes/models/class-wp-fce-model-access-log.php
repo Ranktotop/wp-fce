@@ -1,9 +1,6 @@
 <?php
 // File: includes/models/class-wp-fce-model-access-log.php
 
-use DateTime;
-use RuntimeException;
-
 /**
  * Model for entries in wp_fce_access_log.
  *

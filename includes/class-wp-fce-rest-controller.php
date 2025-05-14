@@ -39,7 +39,7 @@ class WP_FCE_REST_Controller
         register_rest_route($ns, '/access/status', [
             'methods'             => WP_REST_Server::READABLE,
             'callback'            => [$this, 'get_access_status'],
-            'permission_callback' => [$this, 'permission_check_access'],
+            'permission_callback' => [$this, 'permission_check_admin'],
             'args'                => [
                 'user_id'     => ['required' => true,  'validate_callback' => 'is_numeric'],
                 'entity_id'   => ['required' => true,  'validate_callback' => 'is_numeric'],
@@ -51,7 +51,7 @@ class WP_FCE_REST_Controller
         register_rest_route($ns, '/access/sources', [
             'methods'             => WP_REST_Server::READABLE,
             'callback'            => [$this, 'get_access_sources_endpoint'],
-            'permission_callback' => [$this, 'permission_check_access'],
+            'permission_callback' => [$this, 'permission_check_admin'],
             'args'                => [
                 'user_id'     => ['required' => true,  'validate_callback' => 'is_numeric'],
                 'entity_id'   => ['required' => true,  'validate_callback' => 'is_numeric'],
@@ -63,7 +63,7 @@ class WP_FCE_REST_Controller
         register_rest_route($ns, '/mapping', [
             'methods'             => WP_REST_Server::CREATABLE,
             'callback'            => [$this, 'create_mapping_endpoint'],
-            'permission_callback' => [$this, 'permission_check_manage'],
+            'permission_callback' => [$this, 'permission_check_admin'],
             'args'                => [
                 'product_id' => ['required' => true, 'validate_callback' => 'is_numeric'],
                 'space_id'   => ['required' => true, 'validate_callback' => 'is_numeric'],
@@ -74,7 +74,7 @@ class WP_FCE_REST_Controller
         register_rest_route($ns, '/mapping/(?P<product_id>\\d+)', [
             'methods'             => WP_REST_Server::DELETABLE,
             'callback'            => [$this, 'delete_mapping_endpoint'],
-            'permission_callback' => [$this, 'permission_check_manage'],
+            'permission_callback' => [$this, 'permission_check_admin'],
             'args'                => [
                 'product_id' => ['validate_callback' => 'is_numeric'],
             ],
@@ -84,13 +84,14 @@ class WP_FCE_REST_Controller
         register_rest_route($ns, '/override', [
             'methods'             => WP_REST_Server::CREATABLE,
             'callback'            => [$this, 'create_override_endpoint'],
-            'permission_callback' => [$this, 'permission_check_manage'],
+            'permission_callback' => [$this, 'permission_check_admin'],
             'args'                => [
                 'user_id'      => ['required' => true, 'validate_callback' => 'is_numeric'],
                 'product_id'   => ['required' => true, 'validate_callback' => 'is_numeric'],
                 'override_type' => ['required' => true, 'validate_callback' => function ($v) {
                     return in_array($v, ['allow', 'deny'], true);
                 }],
+                'valid_until'  => ['required' => false, 'validate_callback' => 'is_numeric'],
                 'comment'      => ['required' => false],
             ],
         ]);
@@ -99,7 +100,7 @@ class WP_FCE_REST_Controller
         register_rest_route($ns, '/override', [
             'methods'             => WP_REST_Server::DELETABLE,
             'callback'            => [$this, 'delete_override_endpoint'],
-            'permission_callback' => [$this, 'permission_check_manage'],
+            'permission_callback' => [$this, 'permission_check_admin'],
             'args'                => [
                 'user_id'    => ['required' => true, 'validate_callback' => 'is_numeric'],
                 'product_id' => ['required' => true, 'validate_callback' => 'is_numeric'],
@@ -234,7 +235,7 @@ class WP_FCE_REST_Controller
         $sid = (int) $request->get_param('space_id');
 
         try {
-            WP_FCE_Helper_Product_Space::create_mapping_and_assign($pid, $sid);
+            WP_FCE_Helper_Product_Space::create_mapping_and_assign_users($pid, $sid);
             return rest_ensure_response(['success' => true]);
         } catch (\Exception $e) {
             return new WP_Error('mapping_error', $e->getMessage(), ['status' => 500]);
@@ -257,6 +258,77 @@ class WP_FCE_REST_Controller
     }
 
     /**
+     * Endpoint zum Anlegen eines Overrides.
+     *
+     * @param WP_REST_Request $request
+     * @return WP_REST_Response|WP_Error
+     */
+    public function create_override_endpoint(WP_REST_Request $request)
+    {
+        $user_id       = (int) $request->get_param('user_id');
+        $product_id    = (int) $request->get_param('product_id');
+        $override_type = $request->get_param('override_type');
+        $comment       = $request->get_param('comment') ?: null;
+        $valid_until = $request->get_param('valid_until');
+
+        try {
+            // Override anlegen – wir nutzen 'product' als entity_type
+            $override_id = WP_FCE_Helper_Access_Override::add_override(
+                $user_id,
+                $product_id,
+                $override_type,
+                $valid_until,
+                $comment
+            );
+
+            return new WP_REST_Response([
+                'success'     => true,
+                'override_id' => $override_id,
+            ], 201);
+        } catch (Exception $e) {
+            return new WP_Error(
+                'fce_override_create_failed',
+                $e->getMessage(),
+                ['status' => 500]
+            );
+        }
+    }
+
+    /**
+     * Endpoint zum Löschen aller Admin-Overrides für ein Produkt/User-Kombination.
+     *
+     * @param WP_REST_Request $request
+     * @return WP_REST_Response|WP_Error
+     */
+    public function delete_override_endpoint(WP_REST_Request $request)
+    {
+        $user_id    = (int) $request->get_param('user_id');
+        $product_id = (int) $request->get_param('product_id');
+
+        try {
+            // Alle Overrides entfernen
+            $ok = WP_FCE_Helper_Access_Override::remove_overrides(
+                $user_id,
+                $product_id
+            );
+
+            if (! $ok) {
+                throw new \Exception('No overrides deleted.');
+            }
+
+            return new WP_REST_Response([
+                'success' => true,
+            ], 200);
+        } catch (Exception $e) {
+            return new WP_Error(
+                'fce_override_delete_failed',
+                $e->getMessage(),
+                ['status' => 500]
+            );
+        }
+    }
+
+    /**
      * Prüft, ob das übergebene Entity-Type gültig ist.
      */
     public function validate_entity_type($param): bool
@@ -269,7 +341,7 @@ class WP_FCE_REST_Controller
      */
     public function permission_check_ipn(WP_REST_Request $request): bool
     {
-        $sent_key = sanitize_text_field($request->get_param('apikey'));
+        $sent_key = sanitize_text_field($request->get_param('api_key_ipn'));
         // check if param exists
         if (empty($sent_key)) {
             return false;
@@ -279,7 +351,7 @@ class WP_FCE_REST_Controller
         $options = get_option('wp_fce_options', []);
 
         // Extract expected key
-        $expected_key = isset($options['api_key']) ? sanitize_text_field($options['api_key']) : '';
+        $expected_key = isset($options['api_key_ipn']) ? sanitize_text_field($options['api_key_ipn']) : '';
 
         // If either key is missing, fail
         if (empty($expected_key)) {
@@ -293,9 +365,27 @@ class WP_FCE_REST_Controller
     /**
      * Berechtigung für Access-Abfragen (z.B. nutzerbezogen).
      */
-    public function permission_check_access(WP_REST_Request $request): bool
+    public function permission_check_admin(WP_REST_Request $request): bool
     {
-        return current_user_can('read');
+        $sent_key = sanitize_text_field($request->get_param('api_key_admin'));
+        // check if param exists
+        if (empty($sent_key)) {
+            return false;
+        }
+
+        // Get stored options array from Redux
+        $options = get_option('wp_fce_options', []);
+
+        // Extract expected key
+        $expected_key = isset($options['api_key_admin']) ? sanitize_text_field($options['api_key_admin']) : '';
+
+        // If either key is missing, fail
+        if (empty($expected_key)) {
+            return false;
+        }
+
+        // Use hash_equals to prevent timing attacks when comparing secrets
+        return hash_equals($expected_key, $sent_key);
     }
 
     /**

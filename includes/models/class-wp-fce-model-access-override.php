@@ -1,9 +1,6 @@
 <?php
 // File: includes/models/class-wp-fce-model-access-override.php
 
-use DateTime;
-use RuntimeException;
-
 /**
  * Model for entries in wp_fce_product_access_overrides.
  *
@@ -32,6 +29,7 @@ class WP_FCE_Model_Access_Override extends WP_FCE_Model_Base
         'source'        => '%s',
         'comment'       => '%s',
         'created_at'    => '%s',
+        'valid_until'   => '%s',
     ];
 
     /**
@@ -48,6 +46,7 @@ class WP_FCE_Model_Access_Override extends WP_FCE_Model_Base
      */
     protected static array $casts = [
         'created_at' => 'datetime',
+        'valid_until' => 'datetime'
     ];
 
     /** @var int|null Primary key */
@@ -71,6 +70,9 @@ class WP_FCE_Model_Access_Override extends WP_FCE_Model_Base
     /** @var DateTime When this override was created */
     public DateTime $created_at;
 
+    /** @var DateTime When this override expires */
+    public ?DateTime $valid_until = null;
+
     /**
      * Get the WP user ID.
      *
@@ -79,6 +81,16 @@ class WP_FCE_Model_Access_Override extends WP_FCE_Model_Base
     public function get_user_id(): int
     {
         return $this->user_id;
+    }
+
+    /**
+     * Retrieve the user associated with this access override.
+     *
+     * @return WP_FCE_Model_User The user entity.
+     */
+    public function get_user(): WP_FCE_Model_User
+    {
+        return WP_FCE_Model_User::load_by_id($this->user_id);
     }
 
     /**
@@ -92,6 +104,23 @@ class WP_FCE_Model_Access_Override extends WP_FCE_Model_Base
     }
 
     /**
+     * Retrieve the product associated with this product-space mapping.
+     *
+     * @return WP_FCE_Model_Product The product entity.
+     */
+
+    public function get_product(): WP_FCE_Model_Product
+    {
+        return WP_FCE_Model_Product::load_by_id($this->product_id);
+    }
+
+    /** @return DateTime|null */
+    public function get_valid_until(): ?DateTime
+    {
+        return $this->valid_until;
+    }
+
+    /**
      * Get the override type.
      *
      * @return string
@@ -99,6 +128,16 @@ class WP_FCE_Model_Access_Override extends WP_FCE_Model_Base
     public function get_override_type(): string
     {
         return $this->override_type;
+    }
+
+    public function is_allow(): bool
+    {
+        return $this->override_type === 'allow';
+    }
+
+    public function is_deny(): bool
+    {
+        return $this->override_type === 'deny';
     }
 
     /**
@@ -140,6 +179,37 @@ class WP_FCE_Model_Access_Override extends WP_FCE_Model_Base
     public function set_comment(?string $comment): static
     {
         $this->comment = $comment;
+        return $this;
+    }
+
+    /**
+     * Set a new source.
+     *
+     * @param  string $comment
+     * @return static
+     */
+    public function set_source(string $source): static
+    {
+        $this->source = $source;
+        return $this;
+    }
+
+    public function set_valid_until(\DateTime|int|string|null $dt): static
+    {
+        $this->valid_until = self::normalizeDateTime($dt);
+        return $this;
+    }
+
+    public function is_valid(): bool
+    {
+        $now = new \DateTime(current_time('mysql'));
+        $validUntil = $this->get_valid_until();
+        return $validUntil === null || $validUntil > $now;
+    }
+
+    public function set_override_type(string $type): static
+    {
+        $this->override_type = $type;
         return $this;
     }
 }

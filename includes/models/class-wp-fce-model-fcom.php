@@ -115,4 +115,55 @@ class WP_FCE_Model_Fcom extends WP_FCE_Model_Base
     {
         return $this->type;
     }
+
+    /**
+     * Grant a user access to this entity. If the entity is a community/space, the user will be added to it with the given role.
+     * If the entity is a course, the user will be enrolled in the course.
+     *
+     * @param int    $user_id The ID of the user to add.
+     * @param string $role    The role to assign to the user, defaults to "member".
+     * @param string $source  The source of the access grant, defaults to "by_automation".
+     */
+    public function grant_user_access(int $user_id, string $role = "member", string $source = "by_automation"): void
+    {
+        if ($this->is_space()) {
+            \FluentCommunity\App\Services\Helper::addToSpace($this->get_id(), $user_id, $role, $source);
+        } else if ($this->is_course()) {
+            \FluentCommunity\Modules\Course\Services\CourseHelper::enrollCourse($this->get_id(), $user_id);
+        }
+    }
+
+    /**
+     * Revoke access to this course/space for a given user.
+     *
+     * @param int $user_id
+     * @param string $source
+     * @return void
+     */
+    public function revoke_user_access(int $user_id, string $source = "by_automation"): void
+    {
+        if ($this->is_space()) {
+            \FluentCommunity\App\Services\Helper::removeFromSpace($this->get_id(), $user_id, $source);
+        } else if ($this->is_course()) {
+            \FluentCommunity\Modules\Course\Services\CourseHelper::leaveCourse($this->get_id(), $user_id);
+        }
+    }
+
+    /**
+     * Revoke access to this course/space for all users.
+     *
+     * @param string $source The source of the access revoke, defaults to "by_automation".
+     * @return void
+     */
+    public function revoke_all_user_access(string $source = "by_automation"): void
+    {
+        $users = WP_FCE_Helper_User::get_all();
+        foreach ($users as $user) {
+            if ($this->is_space()) {
+                \FluentCommunity\App\Services\Helper::removeFromSpace($this->get_id(), $user->get_id(), $source);
+            } else if ($this->is_course()) {
+                \FluentCommunity\Modules\Course\Services\CourseHelper::leaveCourse($this->get_id(), $user->get_id());
+            }
+        }
+    }
 }

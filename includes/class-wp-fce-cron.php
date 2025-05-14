@@ -58,32 +58,47 @@ class WP_FCE_Cron
      */
     public static function check_expirations(): void
     {
-        global $wpdb;
+        // Get all product-user entries with valid expiry dates
+        $entries  = WP_FCE_Helper_Product_User::get_with_expiry_date();
 
-        $now   = current_time('mysql');
-        $table = $wpdb->prefix . 'fce_product_user';
+        //Set state to expired/active based on expiry dates
+        foreach ($entries as $entry) {
+            $entry->renew();
+        }
 
-        // Fetch all active entries whose expiry_date <= now
-        $expired = $wpdb->get_results(
-            $wpdb->prepare(
-                "SELECT id FROM {$table}
-                 WHERE status = %s
-                   AND expiry_date IS NOT NULL
-                   AND expiry_date <= %s",
-                'active',
-                $now
-            ),
-            ARRAY_A
-        );
+        //sync access
+        self::sync_space_accesses();
+    }
 
-        foreach ($expired as $row) {
-            $wpdb->update(
-                $table,
-                ['status' => 'expired'],
-                ['id' => (int) $row['id']],
-                ['%s'],
-                ['%d']
-            );
+    /**
+     * Syncs all product-user entries with their mapped spaces.
+     *
+     * Iterates over all product-user entries and checks if the user has access to the mapped spaces.
+     * If the entry is active, the user is given access to all mapped spaces.
+     * If the entry is inactive, the user is only revoked from the space if there is no other active
+     * product-user entry for the same space.
+     *
+     * @return void
+     */
+    public static function sync_space_accesses(): void
+    {
+        $all = WP_FCE_Helper_Product_User::get_all();
+        foreach ($all as $entry) {
+            $is_active = $entry->is_active();
+
+            foreach ($entry->get_mapped_spaces() as $mapping) {
+                $space = $mapping->get_space();
+                if ($is_active) {
+                    // Zugriff sicherstellen
+                    $space->grant_user_access($entry->get_user_id());
+                } else {
+                    // Nur entfernen, wenn KEIN anderes aktives Produkt auf diesen Space mapped ist
+                    $other_active = WP_FCE_Helper_Product_User::has_other_active_product_for_space($entry->get_user_id(), $entry->get_product_id(), $space->get_id());
+                    if (! $other_active) {
+                        $space->revoke_user_access($entry->get_user_id());
+                    }
+                }
+            }
         }
     }
 }

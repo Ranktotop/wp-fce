@@ -1,8 +1,6 @@
 <?php
 // File: includes/models/class-wp-fce-model-product-space.php
 
-use RuntimeException;
-
 /**
  * Model for entries in wp_fce_product_space.
  *
@@ -84,5 +82,10 @@ class WP_FCE_Model_Product_Space extends WP_FCE_Model_Base
     public function get_space(): WP_FCE_Model_Fcom
     {
         return WP_FCE_Model_Fcom::load_by_id($this->space_id);
+    }
+
+    public function revoke()
+    {
+        //TODO
     }
 }
