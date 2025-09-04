@@ -1,8 +1,8 @@
 (function ($) {
     'use strict';
 
-    function wpfce_handle_click_delete_product_btn() {
-        $(".wpfce_delete_product_btn").click(function () {
+    function wpfce_handle_click_delete_access_rule_btn() {
+        $(".wpfce_delete_access_rule_btn").click(function () {
             const $btn = $(this);
             const $row = $btn.closest('tr');
 
@@ -10,7 +10,7 @@
             var metaData = wpfce_queryToJSON(dataItem);
 
             WPFCE_Modal.open({
-                message: wp_fce.msg_confirm_delete_product,
+                message: wp_fce.msg_confirm_delete_access_rule,
                 context: {
                     row: $row,
                     dataItem: dataItem,
@@ -19,7 +19,7 @@
                 onConfirm: function (ctx) {
                     var dataJSON = {
                         action: 'wp_fce_handle_ajax_callback',
-                        func: 'delete_product',
+                        func: 'delete_access_rule',
                         data: ctx.metaData,
                         meta: {},
                         _nonce: wp_fce._nonce
@@ -50,30 +50,34 @@
         });
     }
 
-    function wpfce_handle_click_edit_product_btn() {
-        $(".wpfce_edit_product_btn").click(function () {
+    function wpfce_handle_click_edit_access_rule_btn() {
+        $(".wpfce_edit_access_rule_btn").click(function () {
             const $btn = $(this);
             const $row = $btn.closest('tr');
 
-            const $nameField = $row.find('input[name^="fce_product_edit_product_name"]');
-            const $descField = $row.find('textarea[name^="fce_product_edit_product_description"]');
+            // Felder holen
+            const $modeField = $row.find('select[name^="fce_rule_mode"]');
+            const $validField = $row.find('input[name^="valid_until"]');
+            const $commentField = $row.find('input[name^="comment"]');
 
             if (!$btn.hasClass("active")) {
                 // Bearbeitungsmodus aktivieren
-                $nameField.prop('disabled', false);
-                $descField.prop('disabled', false);
+                $modeField.prop('disabled', false);
+                $validField.prop('disabled', false);
+                $commentField.prop('disabled', false);
                 $btn.addClass("active").text(wp_fce.label_save);
             } else {
                 // Speichern und Felder deaktivieren
                 const dataItem = $row.data('value');
                 const metaData = wpfce_queryToJSON(dataItem);
 
-                metaData.name = $nameField.val();
-                metaData.description = $descField.val();
+                metaData.mode = $modeField.val();
+                metaData.valid_until = $validField.val();
+                metaData.comment = $commentField.val();
 
                 const dataJSON = {
                     action: 'wp_fce_handle_ajax_callback',
-                    func: 'update_product',
+                    func: 'update_access_rule',
                     data: metaData,
                     meta: {},
                     _nonce: wp_fce._nonce
@@ -90,8 +94,9 @@
                         const result = typeof response === 'string' ? JSON.parse(response) : response;
                         if (result.state) {
                             wpfce_show_notice(wp_fce.notice_success, 'success');
-                            $nameField.prop('disabled', true);
-                            $descField.prop('disabled', true);
+                            $modeField.prop('disabled', true);
+                            $validField.prop('disabled', true);
+                            $commentField.prop('disabled', true);
                             $btn.removeClass("active").text(wp_fce.label_edit);
                         } else {
                             wpfce_show_notice(wp_fce.notice_error + ': ' + result.message, 'error');
@@ -108,10 +113,10 @@
         });
     }
 
-    // Document ready - nur Products
+    // Document ready - nur Access Rules
     $(document).ready(function () {
-        wpfce_handle_click_delete_product_btn();
-        wpfce_handle_click_edit_product_btn();
+        wpfce_handle_click_delete_access_rule_btn();
+        wpfce_handle_click_edit_access_rule_btn();
     });
 
 })(jQuery);

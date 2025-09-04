@@ -86,7 +86,7 @@ class Wp_Fce_Admin
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_scripts()
+	public function enqueue_scripts($hook_suffix = '')
 	{
 
 		/**
@@ -103,6 +103,27 @@ class Wp_Fce_Admin
 
 		wp_enqueue_script($this->wp_fce . '-modal', plugin_dir_url(__FILE__) . 'js/wpfce-modal.js', array('jquery'), $this->version, false);
 		wp_enqueue_script($this->wp_fce, plugin_dir_url(__FILE__) . 'js/wp-fce-admin.js', array('jquery'), $this->version, false);
+
+		// Seitenspezifische Skripte
+		if (strpos($hook_suffix, 'fce_settings') !== false) {
+			// Community-API Assets
+			$this->enqueue_community_api_assets($hook_suffix);
+		}
+
+		if ($hook_suffix === 'toplevel_page_fce_admin_manage_products') {
+			// Products Assets
+			$this->enqueue_products_assets($hook_suffix);
+		}
+
+		if ($hook_suffix === 'toplevel_page_fce_admin_map_products') {
+			// Mappings Assets  
+			$this->enqueue_mappings_assets($hook_suffix);
+		}
+
+		if ($hook_suffix === 'toplevel_page_fce_admin_manage_access') {
+			// Access Assets
+			$this->enqueue_access_assets($hook_suffix);
+		}
 
 		/**
 		 * In backend there is global ajaxurl variable defined by WordPress itself.
@@ -266,6 +287,54 @@ class Wp_Fce_Admin
 				]
 			],
 		]);
+		Redux::set_section('wp_fce_options', [
+			'title'  => __('Community-API', 'wp-fce'),
+			'id'     => 'community_api_section',
+			'icon'   => 'el el-key',
+			'desc'   => __('Community-API Settings', 'wp-fce'),
+			'fields' => [
+				[
+					'id'    => 'community_api_url',
+					'type'  => 'text',
+					'title' => __('API URL', 'wp-fce'),
+					'desc'  => __('Base URL of the Community API server', 'wp-fce'),
+					'default' => 'localhost',
+				],
+				[
+					'id'    => 'community_api_port',
+					'type'  => 'text',
+					'title' => __('API Port', 'wp-fce'),
+					'desc'  => __('Port of the Community API server', 'wp-fce'),
+					'default' => '8000',
+				],
+				[
+					'id'    => 'community_api_ssl',
+					'type'  => 'switch',
+					'title' => __('Use SSL', 'wp-fce'),
+					'desc'  => __('Enable SSL/HTTPS for API connections', 'wp-fce'),
+					'default' => false,
+				],
+				[
+					'id'    => 'community_api_master_token',
+					'type'  => 'text',
+					'title' => __('Master Token', 'wp-fce'),
+					'desc'  => __('Master token for administrative operations', 'wp-fce'),
+				],
+				[
+					'id'    => 'community_api_service_token',
+					'type'  => 'text',
+					'title' => __('Service Token', 'wp-fce'),
+					'desc'  => __('Service token for read-only operations', 'wp-fce'),
+				],
+				[
+					'id'      => 'community_api_test_button',
+					'type'    => 'raw',
+					'title'   => __('Connection Test', 'wp-fce'),
+					'content' => '<button type="button" class="button button-secondary" onclick="testCommunityAPIConnection()">' . __('Test Connection', 'wp-fce') . '</button>
+              <div id="community-api-test-result" style="margin-top: 10px;"></div>',
+				]
+			],
+		]);
 	}
 
 	/**
@@ -424,22 +493,52 @@ class Wp_Fce_Admin
 	}
 
 	/**
-	 * Lädt Skripte und Styles für die Produkte-Adminseite.
+	 * Lädt Skripte und Styles für die Community-API Einstellungen.
 	 *
 	 * @param string $hook_suffix Aktueller Admin-Page-Hook.
 	 */
-	public function enqueue_products_assets(string $hook_suffix): void
+	public function enqueue_community_api_assets(string $hook_suffix): void
 	{
-		// nur auf unserer Seite
-		if ($hook_suffix !== 'toplevel_page_fce_products') {
+		// Nur auf Redux-Einstellungsseiten laden
+		if (strpos($hook_suffix, 'fce_settings') === false) {
 			return;
 		}
 
 		// JS
 		wp_enqueue_script(
+			$this->wp_fce . '-community-api-js',
+			plugin_dir_url(__FILE__) . 'js/wp-fce-admin-community-api.js',
+			['jquery'],
+			$this->version,
+			true
+		);
+
+		// Konfig für AJAX im JS
+		wp_localize_script(
+			$this->wp_fce . '-community-api-js',
+			'FCE_CommunityAPI',
+			[
+				'ajaxUrl' => admin_url('admin-ajax.php'),
+				'nonce'   => wp_create_nonce('security_wp-fce'),
+				'messages' => [
+					'testing' => __('Testing...', 'wp-fce'),
+					'connection_failed' => __('Connection failed', 'wp-fce'),
+				]
+			]
+		);
+	}
+
+	/**
+	 * Lädt Skripte und Styles für die Produkte-Adminseite.
+	 *
+	 */
+	public function enqueue_products_assets(): void
+	{
+		// JS
+		wp_enqueue_script(
 			$this->wp_fce . '-products-js',
 			plugin_dir_url(__FILE__) . 'js/wp-fce-admin-products.js',
-			['jquery'],
+			['jquery', $this->wp_fce],
 			$this->version,
 			true
 		);
@@ -453,13 +552,65 @@ class Wp_Fce_Admin
 				'nonce'      => wp_create_nonce('fce_products_nonce'),
 			]
 		);
+	}
 
-		// (optional) CSS
-		wp_enqueue_style(
-			$this->wp_fce . '-products-css',
-			plugin_dir_url(__FILE__) . 'css/products-admin.css',
-			[],
-			$this->version
+	/**
+	 * Lädt Skripte und Styles für die Mappings-Adminseite.
+	 *
+	 */
+	public function enqueue_mappings_assets(): void
+	{
+		// JS
+		wp_enqueue_script(
+			$this->wp_fce . '-mappings-js',
+			plugin_dir_url(__FILE__) . 'js/wp-fce-admin-mappings.js',
+			['jquery', $this->wp_fce],  // Abhängigkeit von wp-fce-admin.js
+			$this->version,
+			true
+		);
+
+		// Konfig für AJAX im JS
+		wp_localize_script(
+			$this->wp_fce . '-mappings-js',
+			'FCE_Mappings',
+			[
+				'ajaxUrl' => admin_url('admin-ajax.php'),
+				'nonce'   => wp_create_nonce('security_wp-fce'),
+				'messages' => [
+					'loading' => __('Loading...', 'wp-fce'),
+					'error' => __('Error occurred', 'wp-fce'),
+				]
+			]
+		);
+	}
+
+	/**
+	 * Lädt Skripte und Styles für die Access-Adminseite.
+	 *
+	 */
+	public function enqueue_access_assets(): void
+	{
+		// JS
+		wp_enqueue_script(
+			$this->wp_fce . '-access-js',
+			plugin_dir_url(__FILE__) . 'js/wp-fce-admin-access.js',
+			['jquery', $this->wp_fce],  // Abhängigkeit von wp-fce-admin.js
+			$this->version,
+			true
+		);
+
+		// Konfig für AJAX im JS
+		wp_localize_script(
+			$this->wp_fce . '-access-js',
+			'FCE_Access',
+			[
+				'ajaxUrl' => admin_url('admin-ajax.php'),
+				'nonce'   => wp_create_nonce('security_wp-fce'),
+				'messages' => [
+					'loading' => __('Loading...', 'wp-fce'),
+					'error' => __('Error occurred', 'wp-fce'),
+				]
+			]
 		);
 	}
 

@@ -33,373 +33,8 @@
 	 * should strive to set a better example in our own work.
 	 */
 
-	function wpfce_show_notice(message, type = 'success') {
-		const $area = $('#wpfce-notice-area');
-		const className = type === 'success' ? 'wpfce-notice wpfce-notice-success' : 'wpfce-notice wpfce-notice-error';
-
-		const $notice = $(`
-		<div class="${className}">
-			<p>${message}</p>
-		</div>
-	`);
-
-		$area.html($notice);
-
-		setTimeout(() => {
-			$notice.fadeOut(500, function () {
-				$(this).remove();
-			});
-		}, 1500);
-	}
-	function wpfce_show_modal(modalId) {
-		$('#wpfce-modal-' + modalId).removeClass('hidden').show();
-	}
-	function wpfce_close_modal(modalId) {
-		$('#wpfce-modal-' + modalId).addClass('hidden').hide();
-	}
-
-	function wpfce_handle_click_delete_product_btn() {
-		$(".wpfce_delete_product_btn").click(function () {
-			const $btn = $(this);
-			const $row = $btn.closest('tr');
-
-			var dataItem = $row.data('value');
-			var metaData = wpfce_queryToJSON(dataItem);
-
-			WPFCE_Modal.open({
-				message: wp_fce.msg_confirm_delete_product,
-				context: {
-					row: $row,
-					dataItem: dataItem,
-					metaData: metaData
-				},
-				onConfirm: function (ctx) {
-					var dataJSON = {
-						action: 'wp_fce_handle_ajax_callback',
-						func: 'delete_product',
-						data: ctx.metaData,
-						meta: {},
-						_nonce: wp_fce._nonce
-					};
-					console.log(dataJSON);
-
-					$.ajax({
-						cache: false,
-						type: "POST",
-						url: wp_fce.ajax_url,
-						data: dataJSON,
-						success: function (response) {
-							const result = JSON.parse(response);
-							console.log(result);
-							if (result.state) {
-								wpfce_show_notice(wp_fce.notice_success, 'success');
-								ctx.row.fadeOut(300, function () {
-									$(this).remove();
-								});
-							} else {
-								wpfce_show_notice(wp_fce.notice_error + ': ' + result.message, 'error');
-								console.log(result.message);
-							}
-						},
-						error: function (xhr, status, error) {
-							console.log('Status: ' + xhr.status);
-							console.log('Error: ' + xhr.responseText);
-							wpfce_show_notice(wp_fce.notice_error + ': ' + xhr.status, 'error');
-						}
-					});
-				}
-			});
-		});
-	}
-	function wpfce_handle_click_edit_product_btn() {
-		$(".wpfce_edit_product_btn").click(function () {
-			const $btn = $(this);
-			const $row = $btn.closest('tr');
-
-			// Felder holen
-			const $nameField = $row.find('input[name^="fce_product_edit_product_name"]');
-			const $descField = $row.find('textarea[name^="fce_product_edit_product_description"]');
-
-			// Zustand prüfen: Bearbeitungsmodus aktiv?
-			if (!$btn.hasClass("active")) {
-				// Bearbeitungsmodus aktivieren
-				$nameField.prop('disabled', false);
-				$descField.prop('disabled', false);
-				$btn.addClass("active").text(wp_fce.label_save);
-			} else {
-				// Speichern und Felder deaktivieren
-				const dataItem = $row.data('value');
-				const metaData = wpfce_queryToJSON(dataItem);
-
-				metaData.name = $nameField.val();
-				metaData.description = $descField.val();
-
-				const dataJSON = {
-					action: 'wp_fce_handle_ajax_callback',
-					func: 'update_product',
-					data: metaData,
-					meta: {},
-					_nonce: wp_fce._nonce
-				};
-
-				$btn.prop('disabled', true).text('…');
-
-				$.ajax({
-					cache: false,
-					type: "POST",
-					url: wp_fce.ajax_url,
-					data: dataJSON,
-					success: function (response) {
-						const result = typeof response === 'string' ? JSON.parse(response) : response;
-						console.log(result);
-						if (result.state) {
-							wpfce_show_notice(wp_fce.notice_success, 'success');
-							$nameField.prop('disabled', true);
-							$descField.prop('disabled', true);
-							$btn.removeClass("active").text(wp_fce.label_edit);
-						} else {
-							wpfce_show_notice(wp_fce.notice_error + ': ' + result.message, 'error');
-							console.log(result.message);
-						}
-					},
-					error: function (xhr) {
-						console.log('Status: ' + xhr.status);
-						console.log('Error: ' + xhr.responseText);
-						wpfce_show_notice(wp_fce.notice_error + ': ' + xhr.status, 'error');
-					},
-					complete: function () {
-						$btn.prop('disabled', false);
-					}
-				});
-			}
-		});
-	}
-
-
-	function wpfce_handle_click_edit_mapping_btn() {
-		$('.wpfce_edit_mapping_btn').click(function () {
-			const productId = $(this).data('product-id');
-			const productTitle = $(this).data('product-title') || '';
-
-			if (!productId) return;
-
-			// Setze die Product-ID ins Hidden-Feld
-			$('#wpfce-edit-product-id').val(productId);
-
-			// Setze den Titel ins Modal
-			$('#wpfce-edit-product-title').text(productTitle);
-
-			// Lade Mappings via AJAX
-			$.post(wp_fce.ajax_url, {
-				action: 'wp_fce_handle_ajax_callback',
-				func: 'get_product_mapping',
-				data: { product_id: productId },
-				meta: {},
-				_nonce: wp_fce._nonce
-			}, function (response) {
-				const result = typeof response === 'string' ? JSON.parse(response) : response;
-				console.log(result);
-				if (!result.state || !result.mapping) return;
-
-				// Hole NUR die IDs als Strings
-				const mappedIds = result.mapping.map(entry => String(entry.id));
-
-				// Alle Checkboxen zurücksetzen
-				$('#wpfce-checkboxes-courses input[type="checkbox"], #wpfce-checkboxes-spaces input[type="checkbox"]').prop('checked', false);
-
-				// Checkboxen mit gemappten IDs aktivieren
-				$('#wpfce-checkboxes-courses input[type="checkbox"], #wpfce-checkboxes-spaces input[type="checkbox"]').each(function () {
-					if (mappedIds.includes($(this).val())) {
-						$(this).prop('checked', true);
-					}
-				});
-
-				wpfce_show_modal('edit-mapping');
-			});
-		});
-	}
-
-	function wpfce_handle_click_delete_mapping_btn() {
-		$('.wpfce_delete_product_mapping_btn').click(function () {
-			const $btn = $(this);
-			const $row = $btn.closest('tr');
-			const productId = $btn.data('product-id');
-
-			if (!productId) return;
-
-			WPFCE_Modal.open({
-				message: wp_fce.msg_confirm_delete_product_mapping,
-				context: {
-					row: $row,
-					product_id: productId
-				},
-				onConfirm: function (ctx) {
-					$.ajax({
-						method: 'POST',
-						url: wp_fce.ajax_url,
-						data: {
-							action: 'wp_fce_handle_ajax_callback',
-							func: 'delete_product_mapping',
-							data: {
-								product_id: ctx.product_id
-							},
-							meta: {},
-							_nonce: wp_fce._nonce
-						},
-						success: function (response) {
-							const result = typeof response === 'string' ? JSON.parse(response) : response;
-							console.log(result);
-							if (result.state) {
-								wpfce_show_notice(wp_fce.notice_success, 'success');
-								setTimeout(() => {
-									location.reload(); // ganze Seite neu laden
-								}, 800);
-							} else {
-								wpfce_show_notice(wp_fce.notice_error + ': ' + result.message, 'error');
-							}
-						},
-						error: function (xhr) {
-							console.error(xhr);
-							wpfce_show_notice(wp_fce.notice_error + ': ' + xhr.status, 'error');
-						}
-					});
-				}
-			});
-		});
-	}
-	function wpfce_handle_click_delete_access_rule_btn() {
-		$(".wpfce_delete_access_rule_btn").click(function () {
-			const $btn = $(this);
-			const $row = $btn.closest('tr');
-
-			var dataItem = $row.data('value');
-			var metaData = wpfce_queryToJSON(dataItem);
-
-			WPFCE_Modal.open({
-				message: wp_fce.msg_confirm_delete_access_rule,
-				context: {
-					row: $row,
-					dataItem: dataItem,
-					metaData: metaData
-				},
-				onConfirm: function (ctx) {
-					var dataJSON = {
-						action: 'wp_fce_handle_ajax_callback',
-						func: 'delete_access_rule',
-						data: ctx.metaData,
-						meta: {},
-						_nonce: wp_fce._nonce
-					};
-					console.log(dataJSON);
-
-					$.ajax({
-						cache: false,
-						type: "POST",
-						url: wp_fce.ajax_url,
-						data: dataJSON,
-						success: function (response) {
-							const result = JSON.parse(response);
-							console.log(result);
-							if (result.state) {
-								wpfce_show_notice(wp_fce.notice_success, 'success');
-								ctx.row.fadeOut(300, function () {
-									$(this).remove();
-								});
-							} else {
-								wpfce_show_notice(wp_fce.notice_error + ': ' + result.message, 'error');
-								console.log(result.message);
-							}
-						},
-						error: function (xhr, status, error) {
-							console.log('Status: ' + xhr.status);
-							console.log('Error: ' + xhr.responseText);
-							wpfce_show_notice(wp_fce.notice_error + ': ' + xhr.status, 'error');
-						}
-					});
-				}
-			});
-		});
-	}
-	function wpfce_handle_click_edit_access_rule_btn() {
-		$(".wpfce_edit_access_rule_btn").click(function () {
-			const $btn = $(this);
-			const $row = $btn.closest('tr');
-
-			// Felder holen
-			const $modeField = $row.find('select[name^="fce_rule_mode"]');
-			const $validField = $row.find('input[name^="valid_until"]');
-			const $commentField = $row.find('input[name^="comment"]');
-
-			// Zustand prüfen: Bearbeitungsmodus aktiv?
-			if (!$btn.hasClass("active")) {
-				// Bearbeitungsmodus aktivieren
-				$modeField.prop('disabled', false);
-				$validField.prop('disabled', false);
-				$commentField.prop('disabled', false);
-				$btn.addClass("active").text(wp_fce.label_save);
-			} else {
-				// Speichern und Felder deaktivieren
-				const dataItem = $row.data('value');
-				const metaData = wpfce_queryToJSON(dataItem);
-
-				metaData.mode = $modeField.val();
-				metaData.valid_until = $validField.val();
-				metaData.comment = $commentField.val();
-
-				const dataJSON = {
-					action: 'wp_fce_handle_ajax_callback',
-					func: 'update_access_rule',
-					data: metaData,
-					meta: {},
-					_nonce: wp_fce._nonce
-				};
-
-				$btn.prop('disabled', true).text('…');
-
-				$.ajax({
-					cache: false,
-					type: "POST",
-					url: wp_fce.ajax_url,
-					data: dataJSON,
-					success: function (response) {
-						const result = typeof response === 'string' ? JSON.parse(response) : response;
-						console.log(result);
-						if (result.state) {
-							wpfce_show_notice(wp_fce.notice_success, 'success');
-							$modeField.prop('disabled', true);
-							$validField.prop('disabled', true);
-							$commentField.prop('disabled', true);
-							$btn.removeClass("active").text(wp_fce.label_edit);
-						} else {
-							wpfce_show_notice(wp_fce.notice_error + ': ' + result.message, 'error');
-							console.log(result.message);
-						}
-					},
-					error: function (xhr) {
-						console.log('Status: ' + xhr.status);
-						console.log('Error: ' + xhr.responseText);
-						wpfce_show_notice(wp_fce.notice_error + ': ' + xhr.status, 'error');
-					},
-					complete: function () {
-						$btn.prop('disabled', false);
-					}
-				});
-			}
-		});
-	}
-
 	// Load Listener
 	$(document).ready(function () {
-		wpfce_handle_click_delete_product_btn();
-		wpfce_handle_click_edit_product_btn();
-		wpfce_handle_click_edit_mapping_btn();
-		wpfce_handle_click_delete_mapping_btn();
-		wpfce_handle_click_delete_access_rule_btn();
-		wpfce_handle_click_edit_access_rule_btn();
-
-		$('.wpfce-modal-close').on('click', function () {
-			wpfce_close_modal('edit-mapping');
-		});
 	});
 })(jQuery);
 
@@ -432,4 +67,32 @@ function wpfce_queryToJSON(dataItem) {
 		function (key, value) {
 			return key === "" ? value : decodeURIComponent(value);
 		}) : {};
+}
+
+// UTILITY FUNKTIONEN GLOBAL (nach der Closure):
+function wpfce_show_notice(message, type = 'success') {
+	const $area = jQuery('#wpfce-notice-area');  // ← jQuery statt $
+	const className = type === 'success' ? 'wpfce-notice wpfce-notice-success' : 'wpfce-notice wpfce-notice-error';
+
+	const $notice = jQuery(`
+        <div class="${className}">
+            <p>${message}</p>
+        </div>
+    `);
+
+	$area.html($notice);
+
+	setTimeout(() => {
+		$notice.fadeOut(500, function () {
+			jQuery(this).remove();  // ← jQuery statt $(this)
+		});
+	}, 1500);
+}
+
+function wpfce_show_modal(modalId) {
+	jQuery('#wpfce-modal-' + modalId).removeClass('hidden').show();  // ← jQuery statt $
+}
+
+function wpfce_close_modal(modalId) {
+	jQuery('#wpfce-modal-' + modalId).addClass('hidden').hide();     // ← jQuery statt $
 }

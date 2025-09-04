@@ -221,4 +221,87 @@ class Wp_Fce_Admin_Ajax_Handler
             return ['state' => false, 'message' => $e->getMessage()];
         }
     }
+
+    /**
+     * Tests the Community API connection
+     *
+     * @param array $data Should contain url, port, ssl, master_token, service_token
+     * @param array $meta Optional, ignored.
+     * @return array JSON response (success/fail)
+     */
+    private function test_community_api_connection(array $data, array $meta): array
+    {
+        $url = sanitize_text_field($data['url'] ?? '');
+        $port = sanitize_text_field($data['port'] ?? '');
+        $ssl = (bool)($data['ssl'] ?? false);
+        $master_token = sanitize_text_field(wp_unslash($data['master_token'] ?? ''));
+        $service_token = sanitize_text_field(wp_unslash($data['service_token'] ?? ''));
+
+        if (empty($url) || empty($master_token) || empty($service_token)) {
+            return ['state' => false, 'message' => __('Please fill in all required fields', 'wp-fce')];
+        }
+
+        // Build the full API URL
+        $protocol = $ssl ? 'https' : 'http';
+        $api_base_url = $protocol . '://' . $url . ':' . $port;
+
+        $results = [];
+
+        // Test 1: Master Token
+        $admin_response = wp_remote_get($api_base_url . '/system/verify/admin', [
+            'headers' => [
+                'auth-token' => $master_token,
+                'Accept' => 'application/json'
+            ],
+            'timeout' => 10
+        ]);
+
+        if (is_wp_error($admin_response)) {
+            $results['admin'] = 'Error: ' . $admin_response->get_error_message();
+        } else {
+            $status_code = wp_remote_retrieve_response_code($admin_response);
+            if ($status_code === 200) {
+                $results['admin'] = 'OK';
+            } else {
+                $results['admin'] = 'HTTP ' . $status_code;
+            }
+        }
+
+        // Test 2: Service Token
+        $service_response = wp_remote_get($api_base_url . '/system/verify/service', [
+            'headers' => [
+                'auth-token' => $service_token,
+                'Accept' => 'application/json'
+            ],
+            'timeout' => 10
+        ]);
+
+        if (is_wp_error($service_response)) {
+            $results['service'] = 'Error: ' . $service_response->get_error_message();
+        } else {
+            $status_code = wp_remote_retrieve_response_code($service_response);
+            if ($status_code === 200) {
+                $results['service'] = 'OK';
+            } else {
+                $results['service'] = 'HTTP ' . $status_code;
+            }
+        }
+
+        // Result summary
+        if ($results['admin'] === 'OK' && $results['service'] === 'OK') {
+            return [
+                'state' => true,
+                'message' => __('Both tokens verified successfully!', 'wp-fce') .
+                    '<br>Master Token: ' . $results['admin'] .
+                    '<br>Service Token: ' . $results['service']
+            ];
+        } else {
+            return [
+                'state' => false,
+                'message' => __('Token verification failed!', 'wp-fce') .
+                    '<br>Master Token: ' . $results['admin'] .
+                    '<br>Service Token: ' . $results['service']
+            ];
+        }
+    }
 }
