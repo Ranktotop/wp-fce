@@ -294,6 +294,13 @@ class Wp_Fce_Admin
 			'desc'   => __('Community-API Settings', 'wp-fce'),
 			'fields' => [
 				[
+					'id'    => 'community_api_enabled',
+					'type'  => 'switch',
+					'title' => __('Enable Community API', 'wp-fce'),
+					'desc'  => __('Enable the Community API for this site', 'wp-fce'),
+					'default' => false,
+				],
+				[
 					'id'    => 'community_api_url',
 					'type'  => 'text',
 					'title' => __('API URL', 'wp-fce'),
