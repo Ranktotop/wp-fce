@@ -40,6 +40,7 @@ class Wp_Fce_Public
 	 * @var      string    $version    The current version of this plugin.
 	 */
 	private $version;
+	private Wp_Fce_Public_Form_Handler $public_form_handler;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -116,9 +117,9 @@ class Wp_Fce_Public
 
 		$data['profile_nav_actions'][] = [
 			'css_class' => 'fce-link-orders',
-			'title'     => __('Payments', 'wp_fce'),
+			'title'     => __('Control Panel', 'wp_fce'),
 			'svg_icon'  => '',
-			'url'       => site_url('/wp-fce/payments'),
+			'url'       => site_url('/wp-fce/controlpanel'),
 		];
 
 		return $data;
@@ -143,7 +144,7 @@ class Wp_Fce_Public
 
 	public function register_front_end_routes(): void
 	{
-		add_rewrite_rule('^wp-fce/payments/?$', 'index.php?wp_fce_page=payments', 'top');
+		add_rewrite_rule('^wp-fce/controlpanel/?$', 'index.php?wp_fce_page=controlpanel', 'top');
 		add_filter('query_vars', function ($vars) {
 			$vars[] = 'wp_fce_page';
 			return $vars;
@@ -157,8 +158,8 @@ class Wp_Fce_Public
 	 */
 	public function load_custom_template($template)
 	{
-		if (get_query_var('wp_fce_page') === 'payments') {
-			return plugin_dir_path(dirname(__FILE__)) . 'templates/wp-fce-payments.php';
+		if (get_query_var('wp_fce_page') === 'controlpanel') {
+			return plugin_dir_path(dirname(__FILE__)) . 'templates/controlpanel/wp-fce-controlpanel.php';
 		}
 
 		return $template;
@@ -175,5 +176,24 @@ class Wp_Fce_Public
 	{
 		$controller = new Wp_Fce_Rest_Controller();
 		return $controller->handle_ipn($request);
+	}
+
+	/**
+	 * Registers the form handler for the public area.
+	 *
+	 * This function ensures that the Wp_Fce_Public_Form_Handler class is initialized
+	 * and calls the handle_public_form_callback method of that class to register the
+	 * form processing callback functions.
+	 *
+	 * @since 1.0.0
+	 */
+	public function register_form_handler(): void
+	{
+		//Make sure its initialized
+		if (!isset($this->public_form_handler)) {
+			$this->public_form_handler = new Wp_Fce_Public_Form_Handler();
+		}
+
+		$this->public_form_handler->handle_public_form_callback();
 	}
 }

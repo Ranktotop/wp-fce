@@ -145,6 +145,7 @@ class Wp_Fce
 		 * side of the site.
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wp-fce-public.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wp-fce-public-form.php';
 
 		/**
 		 * The model classes
@@ -171,6 +172,7 @@ class Wp_Fce
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-access-log.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-user.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-fcom.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-community-api.php';
 
 		/**
 		 * Controller classes
@@ -265,6 +267,7 @@ class Wp_Fce
 		//Add payments link on user profiles
 		$this->loader->add_action('fluent_community/portal_head', $plugin_public, 'enqueue_profile_link_css');
 		$this->loader->add_filter('fluent_community/profile_view_data', $plugin_public, 'add_profile_management_link', 10, 2);
+		$this->loader->add_action('init', $plugin_public, 'register_form_handler');
 	}
 
 	/**

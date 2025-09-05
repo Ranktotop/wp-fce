@@ -1,0 +1,179 @@
+body {
+    margin: 0;
+    font-family: 'Open Sans', Arial, sans-serif;
+    color: #f0f0f0;
+}
+
+.fce-controlpanel-wrapper {
+    max-width: 1200px;
+    margin: 60px auto;
+    padding: 40px;
+    background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.27) 1%, rgba(255, 255, 255, 0.15) 10%, rgba(255, 255, 255, 0.05) 19%, rgba(255, 255, 255, 0) 32%, rgba(255, 255, 255, 0.09) 100%);
+    border-radius: 35px;
+    border-width: 1px 1px 3px 2px;
+    border-color: rgba(255, 255, 255, 0.15) rgba(255, 255, 255, 0.15) rgba(255, 255, 255, 0.15) rgba(255, 255, 255, 0.27);
+    backdrop-filter: blur(8.5px);
+    box-shadow: 6px 6px 18px 0px rgba(0, 0, 0, 0.3);
+}
+
+.fce-controlpanel-wrapper h1 {
+    font-size: 28px;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #fff;
+}
+
+/*************** Tabs Styling ******************/
+
+.tab-navigation {
+    display: flex;
+    border-bottom: 2px solid #ffffff60;
+    margin-bottom: 20px;
+    gap: 0;
+}
+
+.tab-button {
+    background: #ffffff10;
+    border: none;
+    padding: 15px 25px;
+    cursor: pointer;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border: 1px solid #ffffff20;
+    border-bottom: none;
+    color: #ffffff66;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    margin-right: -1px;
+}
+
+.tab-button:hover {
+    background: #ffffff30;
+    color: #ffffffBB;
+}
+
+.tab-button.active {
+    background: #ffffff60;
+    color: #fff;
+    font-weight: bold;
+    border-bottom: 2px solid #ffffff60;
+    margin-bottom: -2px;
+    position: relative;
+    z-index: 1;
+}
+
+.tab-content {
+    display: none;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/*************** Widgets Styling ******************/
+
+.widgets-stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.widgets-stat-item-info {
+    background: #adefff30;
+    padding: 15px;
+    border-radius: 6px;
+    text-align: center;
+    border-left: 4px solid #45d4ffdd;
+}
+
+.widgets-stat-item-info .widgets-stat-item-number {
+    font-size: 2em;
+    font-weight: bold;
+    color: #45d4ffdd;
+    display: block;
+}
+
+.widgets-stat-item-info .widgets-stat-item-label {
+    color: #fff;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+/*************** Button Styling ******************/
+
+.back-link {
+    display: inline-block;
+    margin-top: 40px;
+    text-align: center;
+    background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.27) 1%, rgba(255, 255, 255, 0.15) 10%, rgba(255, 255, 255, 0.05) 19%, rgba(255, 255, 255, 0) 32%, rgba(255, 255, 255, 0.09) 100%);
+    border-radius: 10px;
+    border-width: 1px 1px 3px 2px;
+    border-color: rgba(255, 255, 255, 0.15) rgba(255, 255, 255, 0.15) rgba(255, 255, 255, 0.15) rgba(255, 255, 255, 0.27);
+    backdrop-filter: blur(8.5px);
+    box-shadow: 2px 2px 9px 0px rgba(0, 0, 0, 0.3);
+    color: #fff;
+    padding: 12px 24px;
+    text-decoration: none;
+    font-size: 15px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.back-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.02);
+}
+
+/*************** Table Styling ******************/
+
+.fce-table-wrapper {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.fce-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+}
+
+.fce-table th,
+.fce-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e0e0e0;
+}
+
+.fce-table th {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+}
+
+.fce-table a {
+    color: #45d4ffdd;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    transition: transform 0.1s ease;
+}
+
+.fce-table a:hover {
+    transform: scale(1.1);
+}

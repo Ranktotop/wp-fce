@@ -140,6 +140,7 @@ class WP_FCE_Helper_Ipn_Log extends WP_FCE_Helper_Base
 
     /**
      * Retrieve the latest IPN logs for a given user's email address.
+     * Latest means that for each external_product_id only the most recent ipn entry is returned.
      * 
      * @param  string  $user_email
      * @return WP_FCE_Model_Ipn_Log[]
