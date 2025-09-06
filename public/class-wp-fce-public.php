@@ -118,7 +118,7 @@ class Wp_Fce_Public
 
 		$data['profile_nav_actions'][] = [
 			'css_class' => 'fce-link-orders',
-			'title'     => __('Control Panel', 'wp_fce'),
+			'title'     => __('Control Panel', 'wp-fce'),
 			'svg_icon'  => '',
 			'url'       => site_url('/wp-fce/controlpanel'),
 		];

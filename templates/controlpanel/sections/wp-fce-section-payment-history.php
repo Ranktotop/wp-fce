@@ -28,11 +28,11 @@ function get_payment_details_link($ipn)
         return sprintf(
             '<a href="%s" target="_blank" rel="noopener">%s</a>',
             esc_url($management_link),
-            esc_html__('View Details', 'wp_fce')
+            esc_html__('View Details', 'wp-fce')
         );
     }
 
-    return esc_html__('No details available', 'wp_fce');
+    return esc_html__('No details available', 'wp-fce');
 }
 
 /**
@@ -76,7 +76,7 @@ $payment_stats = get_payment_statistics($ipns);
 
 ?>
 
-<h2><?php esc_html_e('Payment History', 'wp_fce'); ?></h2>
+<h2><?php esc_html_e('Payment History', 'wp-fce'); ?></h2>
 
 <?php if (!empty($ipns)): ?>
 
@@ -84,15 +84,15 @@ $payment_stats = get_payment_statistics($ipns);
     <div class="widgets-stats-container">
         <div class="widgets-stat-item-info">
             <span class="widgets-stat-item-number"><?= $payment_stats['total_payments']; ?></span>
-            <span class="widgets-stat-item-label"><?php esc_html_e('Total Payments', 'wp_fce'); ?></span>
+            <span class="widgets-stat-item-label"><?php esc_html_e('Total Payments', 'wp-fce'); ?></span>
         </div>
         <div class="widgets-stat-item-info">
             <span class="widgets-stat-item-number"><?= $payment_stats['recent_payments']; ?></span>
-            <span class="widgets-stat-item-label"><?php esc_html_e('Last 30 Days', 'wp_fce'); ?></span>
+            <span class="widgets-stat-item-label"><?php esc_html_e('Last 30 Days', 'wp-fce'); ?></span>
         </div>
         <div class="widgets-stat-item-info">
             <span class="widgets-stat-item-number"><?= count($payment_stats['payment_sources']); ?></span>
-            <span class="widgets-stat-item-label"><?php esc_html_e('Payment Sources', 'wp_fce'); ?></span>
+            <span class="widgets-stat-item-label"><?php esc_html_e('Payment Sources', 'wp-fce'); ?></span>
         </div>
     </div>
 
@@ -101,10 +101,10 @@ $payment_stats = get_payment_statistics($ipns);
         <table class="fce-table">
             <thead>
                 <tr>
-                    <th><?php esc_html_e('Order Date', 'wp_fce'); ?></th>
-                    <th><?php esc_html_e('Product ID', 'wp_fce'); ?></th>
-                    <th><?php esc_html_e('Payment Processor', 'wp_fce'); ?></th>
-                    <th><?php esc_html_e('Invoice and Details', 'wp_fce'); ?></th>
+                    <th><?php esc_html_e('Order Date', 'wp-fce'); ?></th>
+                    <th><?php esc_html_e('Product ID', 'wp-fce'); ?></th>
+                    <th><?php esc_html_e('Payment Processor', 'wp-fce'); ?></th>
+                    <th><?php esc_html_e('Invoice and Details', 'wp-fce'); ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -121,5 +121,5 @@ $payment_stats = get_payment_statistics($ipns);
     </div>
 
 <?php else: ?>
-    <p><?php esc_html_e('You have not made any payments yet.', 'wp_fce'); ?></p>
+    <p><?php esc_html_e('You have not made any payments yet.', 'wp-fce'); ?></p>
 <?php endif; ?>

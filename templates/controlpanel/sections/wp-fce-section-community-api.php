@@ -19,11 +19,11 @@ function get_transaction_details_link($management_link)
         return sprintf(
             '<a href="%s" target="_blank" rel="noopener">%s</a>',
             esc_url($management_link),
-            esc_html__('View Details', 'wp_fce')
+            esc_html__('View Details', 'wp-fce')
         );
     }
 
-    return esc_html__('No details available', 'wp_fce');
+    return esc_html__('No details available', 'wp-fce');
 }
 ?>
 
@@ -133,7 +133,7 @@ function get_transaction_details_link($management_link)
     }
 </style>
 
-<h2><?php esc_html_e('Community API', 'wp_fce'); ?></h2>
+<h2><?php esc_html_e('Community API', 'wp-fce'); ?></h2>
 
 <!-- Messages Container -->
 <div id="community-api-messages"></div>
@@ -143,13 +143,13 @@ function get_transaction_details_link($management_link)
     <!-- Setup Section -->
     <div class="widgets-stats-container">
         <div class="widgets-stat-item-<?php echo $community_api_helper->has_api_key() ? 'error' : 'info'; ?>">
-            <h3><?php esc_html_e('Connect Your Community Account', 'wp_fce'); ?></h3>
+            <h3><?php esc_html_e('Connect Your Community Account', 'wp-fce'); ?></h3>
             <!-- Manual Input Section -->
             <div id="community-api-manual-input">
                 <?php if ($community_api_helper->has_api_key()): ?>
-                    <p class="error"><?php esc_html_e('API Key seems to be invalid! Please enter a valid one!', 'wp_fce'); ?></p>
+                    <p class="error"><?php esc_html_e('API Key seems to be invalid! Please enter a valid one!', 'wp-fce'); ?></p>
                 <?php else: ?>
-                    <p><?php esc_html_e('Please enter your Community API key:', 'wp_fce'); ?></p>
+                    <p><?php esc_html_e('Please enter your Community API key:', 'wp-fce'); ?></p>
                 <?php endif; ?>
 
                 <form id="community-api-form" method="post" action="">
@@ -159,7 +159,7 @@ function get_transaction_details_link($management_link)
                     <input type="text" name="community_api_key" style="width:50%; text-align:center;" placeholder="<?php esc_attr_e('Enter your API key...', 'wp-fce'); ?>" required>
                     <br>
                     <button type="submit" class="default_button">
-                        <?php esc_html_e('Save API Key', 'wp_fce'); ?>
+                        <?php esc_html_e('Save API Key', 'wp-fce'); ?>
                     </button>
                 </form>
             </div>
@@ -171,31 +171,31 @@ function get_transaction_details_link($management_link)
     <!-- User Data Display -->
     <?php if ($community_api_helper->get_user_data()): ?>
 
-        <h3><?php esc_html_e('User Infos', 'wp_fce'); ?></h3>
+        <h3><?php esc_html_e('User Infos', 'wp-fce'); ?></h3>
         <div class="widgets-stats-container">
 
             <div class="widgets-stat-item-info">
-                <div class="widgets-stat-item-number"><?php esc_html_e('User ID', 'wp_fce'); ?></div>
+                <div class="widgets-stat-item-number"><?php esc_html_e('User ID', 'wp-fce'); ?></div>
                 <div class="widgets-stat-item-label"><?= esc_html($community_api_helper->get_user_data()['user_id'] ?? 'N/A'); ?></div>
             </div>
 
             <div class="widgets-stat-item-info">
-                <div class="widgets-stat-item-number"><?php esc_html_e('Name', 'wp_fce'); ?></div>
+                <div class="widgets-stat-item-number"><?php esc_html_e('Name', 'wp-fce'); ?></div>
                 <div class="widgets-stat-item-label"><?= esc_html($community_api_helper->get_user_data()['user_name'] ?? 'N/A'); ?></div>
             </div>
 
             <div class="widgets-stat-item-info">
-                <div class="widgets-stat-item-number"><?php esc_html_e('Email', 'wp_fce'); ?></div>
+                <div class="widgets-stat-item-number"><?php esc_html_e('Email', 'wp-fce'); ?></div>
                 <div class="widgets-stat-item-label"><?= esc_html($community_api_helper->get_user_data()['user_email'] ?? 'N/A'); ?></div>
             </div>
 
             <?php $current_balance = $community_api_helper->get_user_data()['current_balance'] ?? 0; ?>
             <div class="widgets-stat-item-<?php echo $current_balance > 0 ? 'info' : 'error'; ?>">
-                <div class="widgets-stat-item-number"><?php esc_html_e('Balance', 'wp_fce'); ?></div>
+                <div class="widgets-stat-item-number"><?php esc_html_e('Balance', 'wp-fce'); ?></div>
                 <div class="widgets-stat-item-label"><?= esc_html($current_balance); ?> Credits</div>
             </div>
         </div>
-        <h3><?php esc_html_e('Credentials', 'wp_fce'); ?></h3>
+        <h3><?php esc_html_e('Credentials', 'wp-fce'); ?></h3>
         <div class="credentials-container">
             <form method="post" action="">
                 <input type="hidden" name="wp_fce_form_action" value="set_community_api_credentials">
@@ -204,8 +204,8 @@ function get_transaction_details_link($management_link)
                 <table class="fce-table">
                     <thead>
                         <tr>
-                            <th><?php esc_html_e('Platform', 'wp_fce'); ?></th>
-                            <th><?php esc_html_e('API Key', 'wp_fce'); ?></th>
+                            <th><?php esc_html_e('Platform', 'wp-fce'); ?></th>
+                            <th><?php esc_html_e('API Key', 'wp-fce'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -231,7 +231,7 @@ function get_transaction_details_link($management_link)
                 </div>
             </form>
         </div>
-        <h3><?php esc_html_e('Transactions', 'wp_fce'); ?></h3>
+        <h3><?php esc_html_e('Transactions', 'wp-fce'); ?></h3>
         <!-- Transactions Container (wird per AJAX aktualisiert) -->
         <div id="transactions-container">
             <?php
@@ -248,7 +248,7 @@ function get_transaction_details_link($management_link)
                 <!-- Loading Overlay -->
                 <div id="transactions-loading-overlay" class="transactions-loading-overlay">
                     <div class="loading-spinner"></div>
-                    <span>Lade...</span>
+                    <span>Loading...</span>
                 </div>
 
                 <div id="transactions-slide-current" class="transactions-slide">
@@ -256,11 +256,11 @@ function get_transaction_details_link($management_link)
                         <table class="fce-table">
                             <thead>
                                 <tr>
-                                    <th><?php esc_html_e('Transaction Date', 'wp_fce'); ?></th>
-                                    <th><?php esc_html_e('Type', 'wp_fce'); ?></th>
-                                    <th><?php esc_html_e('Credits', 'wp_fce'); ?></th>
-                                    <th><?php esc_html_e('Invoice and Details', 'wp_fce'); ?></th>
-                                    <th><?php esc_html_e('Description', 'wp_fce'); ?></th>
+                                    <th><?php esc_html_e('Transaction Date', 'wp-fce'); ?></th>
+                                    <th><?php esc_html_e('Type', 'wp-fce'); ?></th>
+                                    <th><?php esc_html_e('Credits', 'wp-fce'); ?></th>
+                                    <th><?php esc_html_e('Invoice and Details', 'wp-fce'); ?></th>
+                                    <th><?php esc_html_e('Description', 'wp-fce'); ?></th>
                                 </tr>
                             </thead>
                             <tbody id="transactions-tbody">
@@ -276,7 +276,7 @@ function get_transaction_details_link($management_link)
                             </tbody>
                         </table>
                     <?php else: ?>
-                        <p><?php esc_html_e('You do not have any transactions yet.', 'wp_fce'); ?></p>
+                        <p><?php esc_html_e('You do not have any transactions yet.', 'wp-fce'); ?></p>
                     <?php endif; ?>
                 </div>
             </div>
@@ -415,18 +415,18 @@ function get_transaction_details_link($management_link)
                  */
                 function createTableHTML(transactions) {
                     if (!transactions || transactions.length === 0) {
-                        return '<p><?php esc_html_e('You do not have any transactions yet.', 'wp_fce'); ?></p>';
+                        return '<p><?php esc_html_e('You do not have any transactions yet.', 'wp-fce'); ?></p>';
                     }
 
                     let tableHTML = `
             <table class="fce-table">
                 <thead>
                     <tr>
-                        <th><?php esc_html_e('Transaction Date', 'wp_fce'); ?></th>
-                        <th><?php esc_html_e('Type', 'wp_fce'); ?></th>
-                        <th><?php esc_html_e('Credits', 'wp_fce'); ?></th>
-                        <th><?php esc_html_e('Invoice and Details', 'wp_fce'); ?></th>
-                        <th><?php esc_html_e('Description', 'wp_fce'); ?></th>
+                        <th><?php esc_html_e('Transaction Date', 'wp-fce'); ?></th>
+                        <th><?php esc_html_e('Type', 'wp-fce'); ?></th>
+                        <th><?php esc_html_e('Credits', 'wp-fce'); ?></th>
+                        <th><?php esc_html_e('Invoice and Details', 'wp-fce'); ?></th>
+                        <th><?php esc_html_e('Description', 'wp-fce'); ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -443,8 +443,8 @@ function get_transaction_details_link($management_link)
                         });
 
                         const detailsLink = tx.detail_url ?
-                            `<a href="${tx.detail_url}" target="_blank" rel="noopener"><?php esc_html_e('View Details', 'wp_fce'); ?></a>` :
-                            '<?php esc_html_e('No details available', 'wp_fce'); ?>';
+                            `<a href="${tx.detail_url}" target="_blank" rel="noopener"><?php esc_html_e('View Details', 'wp-fce'); ?></a>` :
+                            '<?php esc_html_e('No details available', 'wp-fce'); ?>';
 
                         tableHTML += `
                 <tr>
@@ -538,24 +538,24 @@ function get_transaction_details_link($management_link)
 <?php endif; ?>
 
 <?php if ($community_api_helper->get_make_plugin_url() || $community_api_helper->get_n8n_plugin_url() || $community_api_helper->get_documentation_url()): ?>
-    <h3><?php esc_html_e('Links/Resources', 'wp_fce'); ?></h3>
+    <h3><?php esc_html_e('Links/Resources', 'wp-fce'); ?></h3>
 <?php endif; ?>
 <div class="widgets-stats-container">
     <?php if ($community_api_helper->get_make_plugin_url()): ?>
         <div class="widgets-stat-item-info">
-            <span class="widgets-stat-item-number" style="font-size: 1.2em;"><?= esc_html_e('Make.com Plugin', 'wp_fce'); ?></span>
+            <span class="widgets-stat-item-number" style="font-size: 1.2em;"><?= esc_html_e('Make.com Plugin', 'wp-fce'); ?></span>
             <span class="widgets-stat-item-label"><?= get_transaction_details_link($community_api_helper->get_make_plugin_url()); ?></span>
         </div>
     <?php endif; ?>
     <?php if ($community_api_helper->get_n8n_plugin_url()): ?>
         <div class="widgets-stat-item-info">
-            <span class="widgets-stat-item-number" style="font-size: 1.2em;"><?= esc_html_e('n8n Plugin', 'wp_fce'); ?></span>
+            <span class="widgets-stat-item-number" style="font-size: 1.2em;"><?= esc_html_e('n8n Plugin', 'wp-fce'); ?></span>
             <span class="widgets-stat-item-label"><?= get_transaction_details_link($community_api_helper->get_n8n_plugin_url()); ?></span>
         </div>
     <?php endif; ?>
     <?php if ($community_api_helper->get_documentation_url()): ?>
         <div class="widgets-stat-item-info">
-            <span class="widgets-stat-item-number" style="font-size: 1.2em;"><?= esc_html_e('Documentation/Help', 'wp_fce'); ?></span>
+            <span class="widgets-stat-item-number" style="font-size: 1.2em;"><?= esc_html_e('Documentation/Help', 'wp-fce'); ?></span>
             <span class="widgets-stat-item-label"><?= get_transaction_details_link($community_api_helper->get_documentation_url()); ?></span>
         </div>
     <?php endif; ?>

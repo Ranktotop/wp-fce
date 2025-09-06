@@ -55,6 +55,9 @@ Access is automatically revoked unless another active product grants access to t
 
 == Changelog ==
 
+= 1.0.5 =
+* Fixed translation
+
 = 1.0.4 =
 * Fixed some bugs
 

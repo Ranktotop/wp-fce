@@ -45,7 +45,7 @@ $template_dir = plugin_dir_path(__FILE__);
 
 <head>
     <meta charset="UTF-8">
-    <title><?php esc_html_e('My Orders', 'wp_fce'); ?></title>
+    <title><?php esc_html_e('My Orders', 'wp-fce'); ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="<?= esc_url(plugins_url('templates/controlpanel/style.css', dirname(__DIR__))) ?>" media="all">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -67,16 +67,16 @@ $template_dir = plugin_dir_path(__FILE__);
     } ?>
 
     <div class="fce-controlpanel-wrapper">
-        <h1><?php esc_html_e('User Control Panel', 'wp_fce'); ?></h1>
+        <h1><?php esc_html_e('User Control Panel', 'wp-fce'); ?></h1>
 
         <!-- Tab Navigation -->
         <div class="tab-navigation">
             <button class="tab-button active" data-tab="payment-history">
-                <?php esc_html_e('Payment History', 'wp_fce'); ?>
+                <?php esc_html_e('Payment History', 'wp-fce'); ?>
             </button>
             <?php if ($enable_api_section): ?>
                 <button class="tab-button" data-tab="community-api">
-                    <?php esc_html_e('Community API', 'wp_fce'); ?>
+                    <?php esc_html_e('Community API', 'wp-fce'); ?>
                 </button>
             <?php endif; ?>
             <!-- Weitere Tabs können hier hinzugefügt werden -->
@@ -99,7 +99,7 @@ $template_dir = plugin_dir_path(__FILE__);
         <!-- Back Button -->
         <div class="back-button">
             <a href="<?= esc_url($back_url); ?>" class="back-link">
-                ← <?php esc_html_e('Back to Community', 'wp_fce'); ?>
+                ← <?php esc_html_e('Back to Community', 'wp-fce'); ?>
             </a>
         </div>
     </div>

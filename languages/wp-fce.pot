@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: FluentCommunity Extreme Add-On\n"
-"POT-Creation-Date: 2025-09-06 15:44+0200\n"
+"POT-Creation-Date: 2025-09-06 17:45+0200\n"
 "PO-Revision-Date: 2025-05-14 22:45+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -436,19 +436,19 @@ msgid "Control Panel"
 msgstr ""
 
 #: templates/controlpanel/sections/wp-fce-section-community-api.php:22
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:473
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:446
 #: templates/controlpanel/sections/wp-fce-section-payment-history.php:31
 msgid "View Details"
 msgstr ""
 
 #: templates/controlpanel/sections/wp-fce-section-community-api.php:26
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:474
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:447
 #: templates/controlpanel/sections/wp-fce-section-payment-history.php:35
 msgid "No details available"
 msgstr ""
 
 #: templates/controlpanel/sections/wp-fce-section-community-api.php:136
-#: templates/controlpanel/wp-fce-controlpanel.php:79
+#: templates/controlpanel/wp-fce-controlpanel.php:90
 msgid "Community API"
 msgstr ""
 
@@ -511,56 +511,56 @@ msgid "Transactions"
 msgstr ""
 
 #: templates/controlpanel/sections/wp-fce-section-community-api.php:259
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:452
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:425
 msgid "Transaction Date"
 msgstr ""
 
 #: templates/controlpanel/sections/wp-fce-section-community-api.php:260
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:453
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:426
 msgid "Type"
 msgstr ""
 
 #: templates/controlpanel/sections/wp-fce-section-community-api.php:261
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:454
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:427
 msgid "Credits"
 msgstr ""
 
 #: templates/controlpanel/sections/wp-fce-section-community-api.php:262
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:455
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:428
 #: templates/controlpanel/sections/wp-fce-section-payment-history.php:107
 msgid "Invoice and Details"
 msgstr ""
 
 #: templates/controlpanel/sections/wp-fce-section-community-api.php:263
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:456
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:429
 #: templates/wp-fce-admin-manage-products.php:33
 #: templates/wp-fce-admin-manage-products.php:101
 msgid "Description"
 msgstr ""
 
 #: templates/controlpanel/sections/wp-fce-section-community-api.php:279
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:445
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:418
 msgid "You do not have any transactions yet."
 msgstr ""
 
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:298
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:541
 msgid "Links/Resources"
 msgstr ""
 
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:303
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:546
 msgid "Make.com Plugin"
 msgstr ""
 
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:309
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:552
 msgid "n8n Plugin"
 msgstr ""
 
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:315
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:558
 msgid "Documentation/Help"
 msgstr ""
 
 #: templates/controlpanel/sections/wp-fce-section-payment-history.php:79
-#: templates/controlpanel/wp-fce-controlpanel.php:75
+#: templates/controlpanel/wp-fce-controlpanel.php:86
 msgid "Payment History"
 msgstr ""
 
@@ -593,15 +593,15 @@ msgstr ""
 msgid "You have not made any payments yet."
 msgstr ""
 
-#: templates/controlpanel/wp-fce-controlpanel.php:48
+#: templates/controlpanel/wp-fce-controlpanel.php:59
 msgid "My Orders"
 msgstr ""
 
-#: templates/controlpanel/wp-fce-controlpanel.php:70
+#: templates/controlpanel/wp-fce-controlpanel.php:81
 msgid "User Control Panel"
 msgstr ""
 
-#: templates/controlpanel/wp-fce-controlpanel.php:102
+#: templates/controlpanel/wp-fce-controlpanel.php:113
 msgid "Back to Community"
 msgstr ""
 
