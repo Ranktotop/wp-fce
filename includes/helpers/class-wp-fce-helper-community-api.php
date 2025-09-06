@@ -67,6 +67,10 @@ class WP_FCE_Helper_Community_API
         //if not set, try to fetch it from the API using the master key
         if ($api_key === null) {
             $api_key = $this->fetch_api_key_by_email();
+            if ($api_key !== null) {
+                //save to user meta for next time
+                update_user_meta($this->user->get_id(), 'wp_fce_community_api_key', $api_key);
+            }
         }
 
         //save result in cache
