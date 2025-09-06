@@ -48,93 +48,6 @@ function get_transaction_details_link($management_link)
         margin-top: 25px;
         text-align: center;
     }
-
-    /* Pagination Styling */
-    .transaction-pagination {
-        margin-top: 20px;
-        text-align: center;
-        padding: 15px 0;
-    }
-
-    .pagination-nav {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        background: #f8f9fa;
-        padding: 10px 15px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .page-btn {
-        background: #ffffff;
-        border: 1px solid #dee2e6;
-        color: #495057;
-        padding: 8px 12px;
-        cursor: pointer;
-        border-radius: 4px;
-        transition: all 0.2s ease;
-        text-decoration: none;
-        font-size: 14px;
-        min-width: 35px;
-        text-align: center;
-        user-select: none;
-    }
-
-    .page-btn:hover:not(.disabled):not(.current) {
-        background: #e9ecef;
-        border-color: #adb5bd;
-        color: #212529;
-    }
-
-    .page-btn.current {
-        background: #007bff;
-        border-color: #007bff;
-        color: white;
-        font-weight: bold;
-    }
-
-    .page-btn.disabled {
-        background: #f8f9fa;
-        border-color: #e9ecef;
-        color: #6c757d;
-        cursor: not-allowed;
-        opacity: 0.6;
-    }
-
-    .page-btn.nav-btn {
-        font-weight: bold;
-        min-width: 40px;
-    }
-
-    .transactions-loading {
-        text-align: center;
-        padding: 40px;
-        color: #6c757d;
-        font-style: italic;
-    }
-
-    .transactions-loading::after {
-        content: '';
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        border: 3px solid #f3f3f3;
-        border-top: 3px solid #007bff;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin-left: 10px;
-    }
-
-    @keyframes spin {
-        0% {
-            transform: rotate(0deg);
-        }
-
-        100% {
-            transform: rotate(360deg);
-        }
-    }
 </style>
 
 <h2><?php esc_html_e('Community API', 'wp_fce'); ?></h2>
@@ -279,8 +192,8 @@ function get_transaction_details_link($management_link)
 
             <!-- Pagination Navigation -->
             <?php if ($total_pages > 1): ?>
-                <div class="transaction-pagination">
-                    <div class="pagination-nav" id="pagination-nav">
+                <div class="pagination-container">
+                    <div class="pagination-navbar" id="pagination-nav">
                         <!-- Wird durch JavaScript generiert -->
                     </div>
                 </div>
@@ -293,55 +206,203 @@ function get_transaction_details_link($management_link)
     (function($) {
         'use strict';
 
-        function wpfce_handle_load_community_api_transactions_page_for_user() {
-            $(".pagination-nav").click(function() {
-                const $btn = $(this);
-                const $row = $btn.closest('tr');
+        // Pagination State
+        let currentPage = <?php echo $current_page; ?>;
+        let totalPages = <?php echo $total_pages; ?>;
+        const userId = <?php echo $user->get_id(); ?>;
 
-                var dataItem = {
-                    "user_id": 1
-                };
-                var metaData = {
-                    "page": 1,
-                    "page_size": 10
-                };
+        /**
+         * Lädt eine spezifische Seite via AJAX
+         */
+        function loadTransactionsPage(page) {
+            if (page < 1 || page > totalPages || page === currentPage) {
+                return;
+            }
 
-                const dataJSON = {
-                    action: 'wp_fce_handle_public_ajax_callback',
-                    func: 'load_community_api_transactions_page_for_user',
-                    data: dataItem,
-                    meta: metaData,
-                    _nonce: wp_fce._nonce
-                };
+            // Loading anzeigen
+            showTransactionsLoading();
 
-                $.ajax({
-                    cache: false,
-                    type: "POST",
-                    url: wp_fce.ajax_url,
-                    data: dataJSON,
-                    success: function(response) {
-                        const result = typeof response === 'string' ? JSON.parse(response) : response;
-                        if (result.state) {
-                            wpfce_show_notice("", 'success');
-                            $nameField.prop('disabled', true);
-                            $descField.prop('disabled', true);
-                            $btn.removeClass("active").text(wp_fce.label_edit);
-                        } else {
-                            wpfce_show_notice(result.message, 'error');
-                        }
-                    },
-                    error: function(xhr) {
-                        wpfce_show_notice(xhr.status, 'error');
-                    },
-                    complete: function() {
-                        $btn.prop('disabled', false);
+            // AJAX Request mit Ihrem bestehenden System
+            const dataJSON = {
+                action: 'wp_fce_handle_public_ajax_callback',
+                func: 'load_community_api_transactions_page_for_user',
+                data: {
+                    user_id: userId
+                },
+                meta: {
+                    page: page,
+                    page_size: 10
+                },
+                _nonce: wp_fce._nonce
+            };
+
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: wp_fce.ajax_url,
+                data: dataJSON,
+                success: function(response) {
+                    const result = typeof response === 'string' ? JSON.parse(response) : response;
+
+                    if (result.state) {
+                        // Tabelle aktualisieren
+                        updateTransactionsTable(result.transactions || []);
+
+                        // Pagination State aktualisieren
+                        currentPage = result.page || page;
+                        totalPages = result.total_pages || 1;
+
+                        // Navigation aktualisieren
+                        updatePaginationNav();
+                    } else {
+                        wpfce_show_notice(result.message || 'Fehler beim Laden der Transaktionen', 'error');
                     }
-                });
+                },
+                error: function(xhr) {
+                    wpfce_show_notice('Netzwerkfehler beim Laden der Transaktionen', 'error');
+                },
+                complete: function() {
+                    hideTransactionsLoading();
+                }
             });
         }
-        // Document ready - nur Products
+
+        /**
+         * Zeigt Loading-Indikator
+         */
+        function showTransactionsLoading() {
+            $('#transactions-table-wrapper').html('<div class="transactions-loading">Lade Transaktionen...</div>');
+        }
+
+        /**
+         * Versteckt Loading-Indikator
+         */
+        function hideTransactionsLoading() {
+            // Loading wird durch updateTransactionsTable ersetzt
+        }
+
+        /**
+         * Aktualisiert die Transaktions-Tabelle
+         */
+        function updateTransactionsTable(transactions) {
+            const $tableWrapper = $('#transactions-table-wrapper');
+
+            if (!transactions || transactions.length === 0) {
+                $tableWrapper.html('<p><?php esc_html_e('You do not have any transactions yet.', 'wp_fce'); ?></p>');
+                return;
+            }
+
+            let tableHTML = `
+            <table class="fce-table">
+                <thead>
+                    <tr>
+                        <th><?php esc_html_e('Transaction Date', 'wp_fce'); ?></th>
+                        <th><?php esc_html_e('Type', 'wp_fce'); ?></th>
+                        <th><?php esc_html_e('Credits', 'wp_fce'); ?></th>
+                        <th><?php esc_html_e('Invoice and Details', 'wp_fce'); ?></th>
+                        <th><?php esc_html_e('Description', 'wp_fce'); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+            transactions.forEach(function(tx) {
+                const date = new Date(tx.created_at);
+                const formattedDate = date.toLocaleDateString('de-DE', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                const detailsLink = tx.detail_url ?
+                    `<a href="${tx.detail_url}" target="_blank" rel="noopener"><?php esc_html_e('View Details', 'wp_fce'); ?></a>` :
+                    '<?php esc_html_e('No details available', 'wp_fce'); ?>';
+
+                tableHTML += `
+                <tr>
+                    <td>${formattedDate}</td>
+                    <td>${tx.transaction_type ? tx.transaction_type.charAt(0).toUpperCase() + tx.transaction_type.slice(1) : 'N/A'}</td>
+                    <td>${tx.amount_credits || '0'}</td>
+                    <td>${detailsLink}</td>
+                    <td>${tx.description || ''}</td>
+                </tr>
+            `;
+            });
+
+            tableHTML += '</tbody></table>';
+            $tableWrapper.html(tableHTML);
+        }
+
+        /**
+         * Aktualisiert die Pagination Navigation
+         */
+        function updatePaginationNav() {
+            const $paginationNav = $('#pagination-nav');
+            if (!$paginationNav.length) return;
+
+            let navHTML = '';
+
+            // << Erste Seite
+            if (currentPage > 1) {
+                navHTML += '<button class="page-btn nav-btn" data-page="1" title="Erste Seite">&laquo;</button>';
+            } else {
+                navHTML += '<button class="page-btn nav-btn disabled" title="Erste Seite">&laquo;</button>';
+            }
+
+            // < Vorherige Seite
+            if (currentPage > 1) {
+                navHTML += `<button class="page-btn nav-btn" data-page="${currentPage - 1}" title="Vorherige Seite">&lt;</button>`;
+            } else {
+                navHTML += '<button class="page-btn nav-btn disabled" title="Vorherige Seite">&lt;</button>';
+            }
+
+            // Seitenzahlen berechnen
+            const startPage = Math.max(1, currentPage - 3);
+            const endPage = Math.min(totalPages, currentPage + 3);
+
+            // Vorherige Seiten anzeigen
+            for (let i = startPage; i < currentPage; i++) {
+                navHTML += `<button class="page-btn" data-page="${i}">${i}</button>`;
+            }
+
+            // Aktuelle Seite
+            navHTML += `<button class="page-btn current">${currentPage}</button>`;
+
+            // Nächste Seiten anzeigen
+            for (let i = currentPage + 1; i <= endPage; i++) {
+                navHTML += `<button class="page-btn" data-page="${i}">${i}</button>`;
+            }
+
+            // > Nächste Seite
+            if (currentPage < totalPages) {
+                navHTML += `<button class="page-btn nav-btn" data-page="${currentPage + 1}" title="Nächste Seite">&gt;</button>`;
+            } else {
+                navHTML += '<button class="page-btn nav-btn disabled" title="Nächste Seite">&gt;</button>';
+            }
+
+            // >> Letzte Seite
+            if (currentPage < totalPages) {
+                navHTML += `<button class="page-btn nav-btn" data-page="${totalPages}" title="Letzte Seite">&raquo;</button>`;
+            } else {
+                navHTML += '<button class="page-btn nav-btn disabled" title="Letzte Seite">&raquo;</button>';
+            }
+
+            $paginationNav.html(navHTML);
+
+            // Event Handler für Pagination-Buttons
+            $paginationNav.find('.page-btn:not(.disabled):not(.current)').on('click', function() {
+                const page = parseInt($(this).data('page'));
+                loadTransactionsPage(page);
+            });
+        }
+
+        // Pagination initialisieren
         $(document).ready(function() {
-            wpfce_handle_load_community_api_transactions_page_for_user();
+            if (totalPages > 1) {
+                updatePaginationNav();
+            }
         });
 
     })(jQuery);

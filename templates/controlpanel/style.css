@@ -141,6 +141,101 @@ p.error {
     font-weight: 600;
     padding: 5px;
 }
+
+/*************** Pagination Styling ******************/
+.pagination-container {
+    margin-top: 20px;
+    text-align: center;
+    padding: 15px 0;
+}
+
+.pagination-container .pagination-navbar {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #ffffff10;
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pagination-container .pagination-navbar .page-btn {
+    /* Wichtig! Buttons haben oft "outset" oder "inset" */
+    appearance: none;
+    /* Entfernt alle Browser-Button-Stile */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: transparent;
+
+    background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.27) 1%, rgba(255, 255, 255, 0.15) 10%, rgba(255, 255, 255, 0.05) 19%, rgba(255, 255, 255, 0) 32%, rgba(255, 255, 255, 0.09) 100%);
+    border-radius: 5px;
+    border-width: 1px 1px 3px 2px;
+    border-color: rgba(255, 255, 255, 0.15) rgba(255, 255, 255, 0.15) rgba(255, 255, 255, 0.15) rgba(255, 255, 255, 0.27);
+    backdrop-filter: blur(8.5px);
+
+    color: #ffffffdd;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    font-size: 14px;
+    min-width: 35px;
+    text-align: center;
+    user-select: none;
+}
+
+.pagination-container .pagination-navbar .page-btn.disabled {
+    background-image: linear-gradient(90deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.15) 1%, rgba(0, 0, 0, 0.08) 10%, rgba(0, 0, 0, 0.1) 19%, rgba(0, 0, 0, 0.1) 32%, rgba(0, 0, 0, 0.1) 100%);
+    border: none;
+    color: #ffffff11;
+    cursor: not-allowed;
+}
+
+.pagination-container .pagination-navbar .page-btn.current {
+    background-image: linear-gradient(90deg, rgba(69, 212, 255, 0.18) 0%, rgba(69, 212, 255, 0.46) 1%, rgba(69, 212, 255, 0.4) 10%, rgba(69, 212, 255, 0.4) 19%, rgba(69, 212, 255, 0.4) 32%, rgba(69, 212, 255, 0.3) 100%);
+    border-color: rgba(69, 212, 255, 0.30) rgba(69, 212, 255, 0.30) rgba(69, 212, 255, 0.30) rgba(69, 212, 255, 0.54);
+    color: #ffffffFF;
+    font-weight: bold;
+}
+
+.pagination-container .pagination-navbar .page-btn.nav-btn {
+    font-weight: bold;
+    min-width: 40px;
+}
+
+.pagination-container .pagination-navbar .page-btn:hover:not(.disabled):not(.current) {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.transactions-loading {
+    text-align: center;
+    padding: 40px;
+    color: #6c757d;
+    font-style: italic;
+}
+
+.transactions-loading::after {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-left: 10px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 /*************** Button Styling ******************/
 
 .back-link,
