@@ -55,6 +55,9 @@ Access is automatically revoked unless another active product grants access to t
 
 == Changelog ==
 
+= 1.0.3 =
+* Fixed some bugs
+
 = 1.0.2 =
 * Added community api integration
 * Fixed some bugs

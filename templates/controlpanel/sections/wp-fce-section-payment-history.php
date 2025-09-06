@@ -123,18 +123,3 @@ $payment_stats = get_payment_statistics($ipns);
 <?php else: ?>
     <p><?php esc_html_e('You have not made any payments yet.', 'wp_fce'); ?></p>
 <?php endif; ?>
-
-<script>
-    $(document).ready(function() {
-        // Payment History specific JavaScript
-        console.log('Payment History section loaded');
-
-        // Event listener für Tab-Wechsel
-        $(document).on('tabSwitched', function(event, tabName) {
-            if (tabName === 'payment-history') {
-                console.log('Payment History tab activated');
-                // Hier können spezifische Aktionen für diese Sektion ausgeführt werden
-            }
-        });
-    });
-</script>

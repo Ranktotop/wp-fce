@@ -290,6 +290,249 @@ function get_transaction_details_link($management_link)
                 </div>
             <?php endif; ?>
         </div>
+        <script>
+            (function($) {
+                'use strict';
+
+                // Pagination State
+                let currentPage = <?php echo isset($current_page) ? intval($current_page) : 1; ?>;
+                let totalPages = <?php echo isset($total_pages) ? intval($total_pages) : 1; ?>;
+                const userId = <?php echo $user->get_id(); ?>;
+
+                /**
+                 * Lädt eine spezifische Seite via AJAX mit Slide-Animation
+                 */
+                function loadTransactionsPage(page) {
+                    if (page < 1 || page > totalPages || page === currentPage) {
+                        return;
+                    }
+
+                    // Bestimme Slide-Richtung
+                    const slideDirection = page > currentPage ? 'right' : 'left';
+
+                    // Loading anzeigen
+                    showTransactionsLoading();
+
+                    // AJAX Request mit Ihrem bestehenden System
+                    const dataJSON = {
+                        action: 'wp_fce_handle_public_ajax_callback',
+                        func: 'load_community_api_transactions_page_for_user',
+                        data: {
+                            user_id: userId
+                        },
+                        meta: {
+                            page: page,
+                            page_size: 10
+                        },
+                        _nonce: wp_fce._nonce
+                    };
+
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: wp_fce.ajax_url,
+                        data: dataJSON,
+                        success: function(response) {
+                            const result = typeof response === 'string' ? JSON.parse(response) : response;
+
+                            if (result.state) {
+                                // Slide-Animation mit neuen Daten
+                                slideToNewPage(result.transactions || [], slideDirection);
+
+                                // Pagination State aktualisieren
+                                currentPage = result.page || page;
+                                totalPages = result.total_pages || 1;
+
+                                // Navigation aktualisieren
+                                updatePaginationNav();
+                            } else {
+                                wpfce_show_notice(result.message || 'Fehler beim Laden der Transaktionen', 'error');
+                                hideTransactionsLoading();
+                            }
+                        },
+                        error: function(xhr) {
+                            wpfce_show_notice('Netzwerkfehler beim Laden der Transaktionen', 'error');
+                            hideTransactionsLoading();
+                        }
+                    });
+                }
+
+                /**
+                 * Zeigt Loading-Overlay
+                 */
+                function showTransactionsLoading() {
+                    $('#transactions-loading-overlay').addClass('show');
+                    $('#pagination-nav').addClass('loading');
+                }
+
+                /**
+                 * Versteckt Loading-Overlay
+                 */
+                function hideTransactionsLoading() {
+                    $('#transactions-loading-overlay').removeClass('show');
+                    $('#pagination-nav').removeClass('loading');
+                }
+
+                /**
+                 * Slide-Animation zu neuer Seite
+                 */
+                function slideToNewPage(transactions, direction) {
+                    const $wrapper = $('#transactions-table-wrapper');
+                    const $currentSlide = $('#transactions-slide-current');
+
+                    // Neue Tabelle erstellen
+                    const newTableHTML = createTableHTML(transactions);
+
+                    // Neue Slide erstellen
+                    const newSlideId = 'transactions-slide-new';
+                    const slideClass = direction === 'right' ? 'slide-in' : 'slide-in slide-in-left';
+
+                    const $newSlide = $(`<div id="${newSlideId}" class="transactions-slide ${slideClass}">${newTableHTML}</div>`);
+                    $wrapper.append($newSlide);
+
+                    // Animation starten
+                    setTimeout(() => {
+                        // Aktuelle Slide raussliden
+                        const currentSlideClass = direction === 'right' ? 'sliding-out' : 'sliding-out';
+                        $currentSlide.addClass(currentSlideClass);
+
+                        // Neue Slide reinsliden
+                        $newSlide.addClass('active');
+
+                        // Nach Animation aufräumen
+                        setTimeout(() => {
+                            $currentSlide.remove();
+                            $newSlide.attr('id', 'transactions-slide-current')
+                                .removeClass('slide-in slide-in-left active');
+                            hideTransactionsLoading();
+                        }, 300); // Match CSS transition duration
+
+                    }, 10); // Kurze Verzögerung für DOM-Update
+                }
+
+                /**
+                 * Erstellt HTML für Transaktions-Tabelle
+                 */
+                function createTableHTML(transactions) {
+                    if (!transactions || transactions.length === 0) {
+                        return '<p><?php esc_html_e('You do not have any transactions yet.', 'wp_fce'); ?></p>';
+                    }
+
+                    let tableHTML = `
+            <table class="fce-table">
+                <thead>
+                    <tr>
+                        <th><?php esc_html_e('Transaction Date', 'wp_fce'); ?></th>
+                        <th><?php esc_html_e('Type', 'wp_fce'); ?></th>
+                        <th><?php esc_html_e('Credits', 'wp_fce'); ?></th>
+                        <th><?php esc_html_e('Invoice and Details', 'wp_fce'); ?></th>
+                        <th><?php esc_html_e('Description', 'wp_fce'); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+                    transactions.forEach(function(tx) {
+                        const date = new Date(tx.created_at);
+                        const formattedDate = date.toLocaleDateString('de-DE', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+
+                        const detailsLink = tx.detail_url ?
+                            `<a href="${tx.detail_url}" target="_blank" rel="noopener"><?php esc_html_e('View Details', 'wp_fce'); ?></a>` :
+                            '<?php esc_html_e('No details available', 'wp_fce'); ?>';
+
+                        tableHTML += `
+                <tr>
+                    <td>${formattedDate}</td>
+                    <td>${tx.transaction_type ? tx.transaction_type.charAt(0).toUpperCase() + tx.transaction_type.slice(1) : 'N/A'}</td>
+                    <td>${tx.amount_credits || '0'}</td>
+                    <td>${detailsLink}</td>
+                    <td>${tx.description || ''}</td>
+                </tr>
+            `;
+                    });
+
+                    tableHTML += '</tbody></table>';
+                    return tableHTML;
+                }
+
+                /**
+                 * Aktualisiert die Pagination Navigation
+                 */
+                function updatePaginationNav() {
+                    const $paginationNav = $('#pagination-nav');
+                    if (!$paginationNav.length) return;
+
+                    let navHTML = '';
+
+                    // << Erste Seite
+                    if (currentPage > 1) {
+                        navHTML += '<button class="page-btn nav-btn" data-page="1" title="Erste Seite">&laquo;</button>';
+                    } else {
+                        navHTML += '<button class="page-btn nav-btn disabled" title="Erste Seite">&laquo;</button>';
+                    }
+
+                    // < Vorherige Seite
+                    if (currentPage > 1) {
+                        navHTML += `<button class="page-btn nav-btn" data-page="${currentPage - 1}" title="Vorherige Seite">&lt;</button>`;
+                    } else {
+                        navHTML += '<button class="page-btn nav-btn disabled" title="Vorherige Seite">&lt;</button>';
+                    }
+
+                    // Seitenzahlen berechnen
+                    const startPage = Math.max(1, currentPage - 3);
+                    const endPage = Math.min(totalPages, currentPage + 3);
+
+                    // Vorherige Seiten anzeigen
+                    for (let i = startPage; i < currentPage; i++) {
+                        navHTML += `<button class="page-btn" data-page="${i}">${i}</button>`;
+                    }
+
+                    // Aktuelle Seite
+                    navHTML += `<button class="page-btn current">${currentPage}</button>`;
+
+                    // Nächste Seiten anzeigen
+                    for (let i = currentPage + 1; i <= endPage; i++) {
+                        navHTML += `<button class="page-btn" data-page="${i}">${i}</button>`;
+                    }
+
+                    // > Nächste Seite
+                    if (currentPage < totalPages) {
+                        navHTML += `<button class="page-btn nav-btn" data-page="${currentPage + 1}" title="Nächste Seite">&gt;</button>`;
+                    } else {
+                        navHTML += '<button class="page-btn nav-btn disabled" title="Nächste Seite">&gt;</button>';
+                    }
+
+                    // >> Letzte Seite
+                    if (currentPage < totalPages) {
+                        navHTML += `<button class="page-btn nav-btn" data-page="${totalPages}" title="Letzte Seite">&raquo;</button>`;
+                    } else {
+                        navHTML += '<button class="page-btn nav-btn disabled" title="Letzte Seite">&raquo;</button>';
+                    }
+
+                    $paginationNav.html(navHTML);
+
+                    // Event Handler für Pagination-Buttons
+                    $paginationNav.find('.page-btn:not(.disabled):not(.current)').on('click', function() {
+                        const page = parseInt($(this).data('page'));
+                        loadTransactionsPage(page);
+                    });
+                }
+
+                // Pagination initialisieren
+                $(document).ready(function() {
+                    if (totalPages > 1) {
+                        updatePaginationNav();
+                    }
+                });
+
+            })(jQuery);
+        </script>
     <?php endif; ?>
 
 <?php endif; ?>
@@ -317,246 +560,3 @@ function get_transaction_details_link($management_link)
         </div>
     <?php endif; ?>
 </div>
-<script>
-    (function($) {
-        'use strict';
-
-        // Pagination State
-        let currentPage = <?php echo $current_page; ?>;
-        let totalPages = <?php echo $total_pages; ?>;
-        const userId = <?php echo $user->get_id(); ?>;
-
-        /**
-         * Lädt eine spezifische Seite via AJAX mit Slide-Animation
-         */
-        function loadTransactionsPage(page) {
-            if (page < 1 || page > totalPages || page === currentPage) {
-                return;
-            }
-
-            // Bestimme Slide-Richtung
-            const slideDirection = page > currentPage ? 'right' : 'left';
-
-            // Loading anzeigen
-            showTransactionsLoading();
-
-            // AJAX Request mit Ihrem bestehenden System
-            const dataJSON = {
-                action: 'wp_fce_handle_public_ajax_callback',
-                func: 'load_community_api_transactions_page_for_user',
-                data: {
-                    user_id: userId
-                },
-                meta: {
-                    page: page,
-                    page_size: 10
-                },
-                _nonce: wp_fce._nonce
-            };
-
-            $.ajax({
-                cache: false,
-                type: "POST",
-                url: wp_fce.ajax_url,
-                data: dataJSON,
-                success: function(response) {
-                    const result = typeof response === 'string' ? JSON.parse(response) : response;
-
-                    if (result.state) {
-                        // Slide-Animation mit neuen Daten
-                        slideToNewPage(result.transactions || [], slideDirection);
-
-                        // Pagination State aktualisieren
-                        currentPage = result.page || page;
-                        totalPages = result.total_pages || 1;
-
-                        // Navigation aktualisieren
-                        updatePaginationNav();
-                    } else {
-                        wpfce_show_notice(result.message || 'Fehler beim Laden der Transaktionen', 'error');
-                        hideTransactionsLoading();
-                    }
-                },
-                error: function(xhr) {
-                    wpfce_show_notice('Netzwerkfehler beim Laden der Transaktionen', 'error');
-                    hideTransactionsLoading();
-                }
-            });
-        }
-
-        /**
-         * Zeigt Loading-Overlay
-         */
-        function showTransactionsLoading() {
-            $('#transactions-loading-overlay').addClass('show');
-            $('#pagination-nav').addClass('loading');
-        }
-
-        /**
-         * Versteckt Loading-Overlay
-         */
-        function hideTransactionsLoading() {
-            $('#transactions-loading-overlay').removeClass('show');
-            $('#pagination-nav').removeClass('loading');
-        }
-
-        /**
-         * Slide-Animation zu neuer Seite
-         */
-        function slideToNewPage(transactions, direction) {
-            const $wrapper = $('#transactions-table-wrapper');
-            const $currentSlide = $('#transactions-slide-current');
-
-            // Neue Tabelle erstellen
-            const newTableHTML = createTableHTML(transactions);
-
-            // Neue Slide erstellen
-            const newSlideId = 'transactions-slide-new';
-            const slideClass = direction === 'right' ? 'slide-in' : 'slide-in slide-in-left';
-
-            const $newSlide = $(`<div id="${newSlideId}" class="transactions-slide ${slideClass}">${newTableHTML}</div>`);
-            $wrapper.append($newSlide);
-
-            // Animation starten
-            setTimeout(() => {
-                // Aktuelle Slide raussliden
-                const currentSlideClass = direction === 'right' ? 'sliding-out' : 'sliding-out';
-                $currentSlide.addClass(currentSlideClass);
-
-                // Neue Slide reinsliden
-                $newSlide.addClass('active');
-
-                // Nach Animation aufräumen
-                setTimeout(() => {
-                    $currentSlide.remove();
-                    $newSlide.attr('id', 'transactions-slide-current')
-                        .removeClass('slide-in slide-in-left active');
-                    hideTransactionsLoading();
-                }, 300); // Match CSS transition duration
-
-            }, 10); // Kurze Verzögerung für DOM-Update
-        }
-
-        /**
-         * Erstellt HTML für Transaktions-Tabelle
-         */
-        function createTableHTML(transactions) {
-            if (!transactions || transactions.length === 0) {
-                return '<p><?php esc_html_e('You do not have any transactions yet.', 'wp_fce'); ?></p>';
-            }
-
-            let tableHTML = `
-            <table class="fce-table">
-                <thead>
-                    <tr>
-                        <th><?php esc_html_e('Transaction Date', 'wp_fce'); ?></th>
-                        <th><?php esc_html_e('Type', 'wp_fce'); ?></th>
-                        <th><?php esc_html_e('Credits', 'wp_fce'); ?></th>
-                        <th><?php esc_html_e('Invoice and Details', 'wp_fce'); ?></th>
-                        <th><?php esc_html_e('Description', 'wp_fce'); ?></th>
-                    </tr>
-                </thead>
-                <tbody>
-        `;
-
-            transactions.forEach(function(tx) {
-                const date = new Date(tx.created_at);
-                const formattedDate = date.toLocaleDateString('de-DE', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-
-                const detailsLink = tx.detail_url ?
-                    `<a href="${tx.detail_url}" target="_blank" rel="noopener"><?php esc_html_e('View Details', 'wp_fce'); ?></a>` :
-                    '<?php esc_html_e('No details available', 'wp_fce'); ?>';
-
-                tableHTML += `
-                <tr>
-                    <td>${formattedDate}</td>
-                    <td>${tx.transaction_type ? tx.transaction_type.charAt(0).toUpperCase() + tx.transaction_type.slice(1) : 'N/A'}</td>
-                    <td>${tx.amount_credits || '0'}</td>
-                    <td>${detailsLink}</td>
-                    <td>${tx.description || ''}</td>
-                </tr>
-            `;
-            });
-
-            tableHTML += '</tbody></table>';
-            return tableHTML;
-        }
-
-        /**
-         * Aktualisiert die Pagination Navigation
-         */
-        function updatePaginationNav() {
-            const $paginationNav = $('#pagination-nav');
-            if (!$paginationNav.length) return;
-
-            let navHTML = '';
-
-            // << Erste Seite
-            if (currentPage > 1) {
-                navHTML += '<button class="page-btn nav-btn" data-page="1" title="Erste Seite">&laquo;</button>';
-            } else {
-                navHTML += '<button class="page-btn nav-btn disabled" title="Erste Seite">&laquo;</button>';
-            }
-
-            // < Vorherige Seite
-            if (currentPage > 1) {
-                navHTML += `<button class="page-btn nav-btn" data-page="${currentPage - 1}" title="Vorherige Seite">&lt;</button>`;
-            } else {
-                navHTML += '<button class="page-btn nav-btn disabled" title="Vorherige Seite">&lt;</button>';
-            }
-
-            // Seitenzahlen berechnen
-            const startPage = Math.max(1, currentPage - 3);
-            const endPage = Math.min(totalPages, currentPage + 3);
-
-            // Vorherige Seiten anzeigen
-            for (let i = startPage; i < currentPage; i++) {
-                navHTML += `<button class="page-btn" data-page="${i}">${i}</button>`;
-            }
-
-            // Aktuelle Seite
-            navHTML += `<button class="page-btn current">${currentPage}</button>`;
-
-            // Nächste Seiten anzeigen
-            for (let i = currentPage + 1; i <= endPage; i++) {
-                navHTML += `<button class="page-btn" data-page="${i}">${i}</button>`;
-            }
-
-            // > Nächste Seite
-            if (currentPage < totalPages) {
-                navHTML += `<button class="page-btn nav-btn" data-page="${currentPage + 1}" title="Nächste Seite">&gt;</button>`;
-            } else {
-                navHTML += '<button class="page-btn nav-btn disabled" title="Nächste Seite">&gt;</button>';
-            }
-
-            // >> Letzte Seite
-            if (currentPage < totalPages) {
-                navHTML += `<button class="page-btn nav-btn" data-page="${totalPages}" title="Letzte Seite">&raquo;</button>`;
-            } else {
-                navHTML += '<button class="page-btn nav-btn disabled" title="Letzte Seite">&raquo;</button>';
-            }
-
-            $paginationNav.html(navHTML);
-
-            // Event Handler für Pagination-Buttons
-            $paginationNav.find('.page-btn:not(.disabled):not(.current)').on('click', function() {
-                const page = parseInt($(this).data('page'));
-                loadTransactionsPage(page);
-            });
-        }
-
-        // Pagination initialisieren
-        $(document).ready(function() {
-            if (totalPages > 1) {
-                updatePaginationNav();
-            }
-        });
-
-    })(jQuery);
-</script>
