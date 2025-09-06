@@ -16,7 +16,7 @@
 
             // Lade Mappings via AJAX
             $.post(wp_fce.ajax_url, {
-                action: 'wp_fce_handle_ajax_callback',
+                action: 'wp_fce_handle_admin_ajax_callback',
                 func: 'get_product_mapping',
                 data: { product_id: productId },
                 meta: {},
@@ -63,7 +63,7 @@
                         method: 'POST',
                         url: wp_fce.ajax_url,
                         data: {
-                            action: 'wp_fce_handle_ajax_callback',
+                            action: 'wp_fce_handle_admin_ajax_callback',
                             func: 'delete_product_mapping',
                             data: {
                                 product_id: ctx.product_id

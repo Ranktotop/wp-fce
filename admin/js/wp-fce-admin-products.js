@@ -18,7 +18,7 @@
                 },
                 onConfirm: function (ctx) {
                     var dataJSON = {
-                        action: 'wp_fce_handle_ajax_callback',
+                        action: 'wp_fce_handle_admin_ajax_callback',
                         func: 'delete_product',
                         data: ctx.metaData,
                         meta: {},
@@ -72,7 +72,7 @@
                 metaData.description = $descField.val();
 
                 const dataJSON = {
-                    action: 'wp_fce_handle_ajax_callback',
+                    action: 'wp_fce_handle_admin_ajax_callback',
                     func: 'update_product',
                     data: metaData,
                     meta: {},

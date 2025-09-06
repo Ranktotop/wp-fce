@@ -72,6 +72,7 @@ class Wp_Fce_Public_Form_Handler
         ) {
             return;
         }
+        $test = get_current_user();
 
         //get user id from payload
         $user_id = intval(sanitize_text_field($_POST['community_api_user_id'] ?? ''));

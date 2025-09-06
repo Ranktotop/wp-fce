@@ -40,6 +40,7 @@ class Wp_Fce_Public
 	 * @var      string    $version    The current version of this plugin.
 	 */
 	private $version;
+	private Wp_Fce_Public_Ajax_Handler $public_ajax_handler;
 	private Wp_Fce_Public_Form_Handler $public_form_handler;
 
 	/**
@@ -195,5 +196,24 @@ class Wp_Fce_Public
 		}
 
 		$this->public_form_handler->handle_public_form_callback();
+	}
+
+	/**
+	 * Registers the Ajax handler for the public area.
+	 *
+	 * This function ensures that the Wp_Fce_Public_Ajax_Handler class is initialized
+	 * and calls the handle_public_ajax_callback method of that class to register the
+	 * form processing callback functions.
+	 *
+	 * @since 1.0.0
+	 */
+	public function register_ajax_handler(): void
+	{
+		//Make sure its initialized
+		if (!isset($this->public_ajax_handler)) {
+			$this->public_ajax_handler = new Wp_Fce_Public_Ajax_Handler();
+		}
+
+		$this->public_ajax_handler->handle_public_ajax_callback();
 	}
 }

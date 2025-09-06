@@ -6,7 +6,7 @@
      */
     function testCommunityAPIConnection() {
         const dataJSON = {
-            action: 'wp_fce_handle_ajax_callback',
+            action: 'wp_fce_handle_admin_ajax_callback',
             func: 'test_community_api_connection',
             data: {
                 url: $('#community_api_url').val(),

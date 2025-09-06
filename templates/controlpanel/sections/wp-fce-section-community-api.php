@@ -28,6 +28,7 @@ function get_transaction_details_link($management_link)
 ?>
 
 <style>
+    /** Credentials Table */
     .credentials-platform {
         font-weight: 600;
         text-transform: capitalize;
@@ -46,6 +47,93 @@ function get_transaction_details_link($management_link)
     .credentials-save-container {
         margin-top: 25px;
         text-align: center;
+    }
+
+    /* Pagination Styling */
+    .transaction-pagination {
+        margin-top: 20px;
+        text-align: center;
+        padding: 15px 0;
+    }
+
+    .pagination-nav {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: #f8f9fa;
+        padding: 10px 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .page-btn {
+        background: #ffffff;
+        border: 1px solid #dee2e6;
+        color: #495057;
+        padding: 8px 12px;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        font-size: 14px;
+        min-width: 35px;
+        text-align: center;
+        user-select: none;
+    }
+
+    .page-btn:hover:not(.disabled):not(.current) {
+        background: #e9ecef;
+        border-color: #adb5bd;
+        color: #212529;
+    }
+
+    .page-btn.current {
+        background: #007bff;
+        border-color: #007bff;
+        color: white;
+        font-weight: bold;
+    }
+
+    .page-btn.disabled {
+        background: #f8f9fa;
+        border-color: #e9ecef;
+        color: #6c757d;
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
+    .page-btn.nav-btn {
+        font-weight: bold;
+        min-width: 40px;
+    }
+
+    .transactions-loading {
+        text-align: center;
+        padding: 40px;
+        color: #6c757d;
+        font-style: italic;
+    }
+
+    .transactions-loading::after {
+        content: '';
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #007bff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-left: 10px;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
     }
 </style>
 
@@ -148,43 +236,113 @@ function get_transaction_details_link($management_link)
             </form>
         </div>
         <h3><?php esc_html_e('Transactions', 'wp_fce'); ?></h3>
-        <?php
+        <!-- Transactions Container (wird per AJAX aktualisiert) -->
+        <div id="transactions-container">
+            <?php
+            // Initial laden der ersten Seite
+            $transaction_response = $community_api_helper->fetch_transactions(page: 1, page_size: 10);
+            $transactions = $transaction_response["transactions"] ?? [];
+            $has_next = $transaction_response["has_next"] ?? false;
+            $has_prev = $transaction_response["has_prev"] ?? false;
+            $total_pages = $transaction_response["total_pages"] ?? 1;
+            $current_page = $transaction_response["page"] ?? 1;
+            ?>
 
-        $transaction_response = $community_api_helper->fetch_transactions();
-        $transactions = $transaction_response["transactions"];
-        $has_next = $transaction_response["has_next"];
-        $has_prev = $transaction_response["has_prev"];
-        $total_pages = $transaction_response["total_pages"];
+            <div id="transactions-table-wrapper">
+                <?php if (!empty($transactions)): ?>
+                    <table class="fce-table">
+                        <thead>
+                            <tr>
+                                <th><?php esc_html_e('Transaction Date', 'wp_fce'); ?></th>
+                                <th><?php esc_html_e('Type', 'wp_fce'); ?></th>
+                                <th><?php esc_html_e('Credits', 'wp_fce'); ?></th>
+                                <th><?php esc_html_e('Invoice and Details', 'wp_fce'); ?></th>
+                                <th><?php esc_html_e('Description', 'wp_fce'); ?></th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactions-tbody">
+                            <?php foreach ($transactions as $tx): ?>
+                                <tr>
+                                    <td><?php echo esc_html(date('d.m.Y H:i', strtotime($tx['created_at'] ?? ''))); ?></td>
+                                    <td><?php echo esc_html(ucfirst($tx['transaction_type'] ?? 'N/A')); ?></td>
+                                    <td><?php echo esc_html($tx['amount_credits'] ?? '0'); ?></td>
+                                    <td><?php echo get_transaction_details_link($tx['detail_url'] ?? ''); ?></td>
+                                    <td><?php echo esc_html($tx['description'] ?? ''); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php else: ?>
+                    <p><?php esc_html_e('You do not have any transactions yet.', 'wp_fce'); ?></p>
+                <?php endif; ?>
+            </div>
 
-        ?>
-
-        <?php if (!empty($transactions)): ?>
-            <table class="fce-table">
-                <thead>
-                    <tr>
-                        <th><?php esc_html_e('Transaction Date', 'wp_fce'); ?></th>
-                        <th><?php esc_html_e('Type', 'wp_fce'); ?></th>
-                        <th><?php esc_html_e('Credits', 'wp_fce'); ?></th>
-                        <th><?php esc_html_e('Invoice and Details', 'wp_fce'); ?></th>
-                        <th><?php esc_html_e('Description', 'wp_fce'); ?></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($transactions as $tx): ?>
-                        <tr>
-                            <td><?php echo esc_html(date('d.m.Y H:i', strtotime($tx['created_at'] ?? ''))); ?></td>
-                            <td><?php echo esc_html(ucfirst($tx['transaction_type'] ?? 'N/A')); ?></td>
-                            <td><?php echo esc_html($tx['amount_credits'] ?? '0'); ?></td>
-                            <td><?php get_transaction_details_link($tx['detail_url'] ?? ''); ?></td>
-                            <td><?php echo esc_html($tx['description'] ?? ''); ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-
-        <?php else: ?>
-            <p><?php esc_html_e('You do not have any transactions yet.', 'wp_fce'); ?></p>
-        <?php endif; ?>
+            <!-- Pagination Navigation -->
+            <?php if ($total_pages > 1): ?>
+                <div class="transaction-pagination">
+                    <div class="pagination-nav" id="pagination-nav">
+                        <!-- Wird durch JavaScript generiert -->
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
     <?php endif; ?>
 
 <?php endif; ?>
+<script>
+    (function($) {
+        'use strict';
+
+        function wpfce_handle_load_community_api_transactions_page_for_user() {
+            $(".pagination-nav").click(function() {
+                const $btn = $(this);
+                const $row = $btn.closest('tr');
+
+                var dataItem = {
+                    "user_id": 1
+                };
+                var metaData = {
+                    "page": 1,
+                    "page_size": 10
+                };
+
+                const dataJSON = {
+                    action: 'wp_fce_handle_public_ajax_callback',
+                    func: 'load_community_api_transactions_page_for_user',
+                    data: dataItem,
+                    meta: metaData,
+                    _nonce: wp_fce._nonce
+                };
+
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: wp_fce.ajax_url,
+                    data: dataJSON,
+                    success: function(response) {
+                        const result = typeof response === 'string' ? JSON.parse(response) : response;
+                        if (result.state) {
+                            wpfce_show_notice("", 'success');
+                            $nameField.prop('disabled', true);
+                            $descField.prop('disabled', true);
+                            $btn.removeClass("active").text(wp_fce.label_edit);
+                        } else {
+                            wpfce_show_notice(result.message, 'error');
+                        }
+                    },
+                    error: function(xhr) {
+                        wpfce_show_notice(xhr.status, 'error');
+                    },
+                    complete: function() {
+                        $btn.prop('disabled', false);
+                    }
+                });
+            });
+        }
+        // Document ready - nur Products
+        $(document).ready(function() {
+            wpfce_handle_load_community_api_transactions_page_for_user();
+        });
+
+    })(jQuery);
+</script>
