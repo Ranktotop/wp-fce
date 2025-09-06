@@ -48,6 +48,89 @@ function get_transaction_details_link($management_link)
         margin-top: 25px;
         text-align: center;
     }
+
+    /* Slide Animation Styles */
+    #transactions-table-wrapper {
+        position: relative;
+        overflow: hidden;
+        min-height: 300px;
+    }
+
+    .transactions-slide {
+        width: 100%;
+        transition: transform 0.3s ease-in-out;
+        position: relative;
+    }
+
+    .transactions-slide.sliding-out {
+        transform: translateX(-100%);
+    }
+
+    .transactions-slide.slide-in {
+        transform: translateX(100%);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
+
+    .transactions-slide.slide-in.active {
+        transform: translateX(0);
+    }
+
+    .transactions-slide.slide-in-left {
+        transform: translateX(-100%);
+    }
+
+    /* Loading Overlay */
+    .transactions-loading-overlay {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 8px 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: #007bff;
+        border: 1px solid #e3f2fd;
+        z-index: 10;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .transactions-loading-overlay.show {
+        opacity: 1;
+    }
+
+    .loading-spinner {
+        width: 16px;
+        height: 16px;
+        border: 2px solid #f3f3f3;
+        border-top: 2px solid #007bff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* Disable buttons during loading */
+    .pagination-navbar.loading .page-btn:not(.disabled) {
+        pointer-events: none;
+        opacity: 0.7;
+        transition: opacity 0.2s ease;
+    }
 </style>
 
 <h2><?php esc_html_e('Community API', 'wp_fce'); ?></h2>
@@ -162,32 +245,40 @@ function get_transaction_details_link($management_link)
             ?>
 
             <div id="transactions-table-wrapper">
-                <?php if (!empty($transactions)): ?>
-                    <table class="fce-table">
-                        <thead>
-                            <tr>
-                                <th><?php esc_html_e('Transaction Date', 'wp_fce'); ?></th>
-                                <th><?php esc_html_e('Type', 'wp_fce'); ?></th>
-                                <th><?php esc_html_e('Credits', 'wp_fce'); ?></th>
-                                <th><?php esc_html_e('Invoice and Details', 'wp_fce'); ?></th>
-                                <th><?php esc_html_e('Description', 'wp_fce'); ?></th>
-                            </tr>
-                        </thead>
-                        <tbody id="transactions-tbody">
-                            <?php foreach ($transactions as $tx): ?>
+                <!-- Loading Overlay -->
+                <div id="transactions-loading-overlay" class="transactions-loading-overlay">
+                    <div class="loading-spinner"></div>
+                    <span>Lade...</span>
+                </div>
+
+                <div id="transactions-slide-current" class="transactions-slide">
+                    <?php if (!empty($transactions)): ?>
+                        <table class="fce-table">
+                            <thead>
                                 <tr>
-                                    <td><?php echo esc_html(date('d.m.Y H:i', strtotime($tx['created_at'] ?? ''))); ?></td>
-                                    <td><?php echo esc_html(ucfirst($tx['transaction_type'] ?? 'N/A')); ?></td>
-                                    <td><?php echo esc_html($tx['amount_credits'] ?? '0'); ?></td>
-                                    <td><?php echo get_transaction_details_link($tx['detail_url'] ?? ''); ?></td>
-                                    <td><?php echo esc_html($tx['description'] ?? ''); ?></td>
+                                    <th><?php esc_html_e('Transaction Date', 'wp_fce'); ?></th>
+                                    <th><?php esc_html_e('Type', 'wp_fce'); ?></th>
+                                    <th><?php esc_html_e('Credits', 'wp_fce'); ?></th>
+                                    <th><?php esc_html_e('Invoice and Details', 'wp_fce'); ?></th>
+                                    <th><?php esc_html_e('Description', 'wp_fce'); ?></th>
                                 </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                <?php else: ?>
-                    <p><?php esc_html_e('You do not have any transactions yet.', 'wp_fce'); ?></p>
-                <?php endif; ?>
+                            </thead>
+                            <tbody id="transactions-tbody">
+                                <?php foreach ($transactions as $tx): ?>
+                                    <tr>
+                                        <td><?php echo esc_html(date('d.m.Y H:i', strtotime($tx['created_at'] ?? ''))); ?></td>
+                                        <td><?php echo esc_html(ucfirst($tx['transaction_type'] ?? 'N/A')); ?></td>
+                                        <td><?php echo esc_html($tx['amount_credits'] ?? '0'); ?></td>
+                                        <td><?php echo get_transaction_details_link($tx['detail_url'] ?? ''); ?></td>
+                                        <td><?php echo esc_html($tx['description'] ?? ''); ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php else: ?>
+                        <p><?php esc_html_e('You do not have any transactions yet.', 'wp_fce'); ?></p>
+                    <?php endif; ?>
+                </div>
             </div>
 
             <!-- Pagination Navigation -->
@@ -202,6 +293,30 @@ function get_transaction_details_link($management_link)
     <?php endif; ?>
 
 <?php endif; ?>
+
+<?php if ($community_api_helper->get_make_plugin_url() || $community_api_helper->get_n8n_plugin_url() || $community_api_helper->get_documentation_url()): ?>
+    <h3><?php esc_html_e('Links/Resources', 'wp_fce'); ?></h3>
+<?php endif; ?>
+<div class="widgets-stats-container">
+    <?php if ($community_api_helper->get_make_plugin_url()): ?>
+        <div class="widgets-stat-item-info">
+            <span class="widgets-stat-item-number" style="font-size: 1.2em;"><?= esc_html_e('Make.com Plugin', 'wp_fce'); ?></span>
+            <span class="widgets-stat-item-label"><?= get_transaction_details_link($community_api_helper->get_make_plugin_url()); ?></span>
+        </div>
+    <?php endif; ?>
+    <?php if ($community_api_helper->get_n8n_plugin_url()): ?>
+        <div class="widgets-stat-item-info">
+            <span class="widgets-stat-item-number" style="font-size: 1.2em;"><?= esc_html_e('n8n Plugin', 'wp_fce'); ?></span>
+            <span class="widgets-stat-item-label"><?= get_transaction_details_link($community_api_helper->get_n8n_plugin_url()); ?></span>
+        </div>
+    <?php endif; ?>
+    <?php if ($community_api_helper->get_documentation_url()): ?>
+        <div class="widgets-stat-item-info">
+            <span class="widgets-stat-item-number" style="font-size: 1.2em;"><?= esc_html_e('Documentation/Help', 'wp_fce'); ?></span>
+            <span class="widgets-stat-item-label"><?= get_transaction_details_link($community_api_helper->get_documentation_url()); ?></span>
+        </div>
+    <?php endif; ?>
+</div>
 <script>
     (function($) {
         'use strict';
@@ -212,12 +327,15 @@ function get_transaction_details_link($management_link)
         const userId = <?php echo $user->get_id(); ?>;
 
         /**
-         * Lädt eine spezifische Seite via AJAX
+         * Lädt eine spezifische Seite via AJAX mit Slide-Animation
          */
         function loadTransactionsPage(page) {
             if (page < 1 || page > totalPages || page === currentPage) {
                 return;
             }
+
+            // Bestimme Slide-Richtung
+            const slideDirection = page > currentPage ? 'right' : 'left';
 
             // Loading anzeigen
             showTransactionsLoading();
@@ -245,8 +363,8 @@ function get_transaction_details_link($management_link)
                     const result = typeof response === 'string' ? JSON.parse(response) : response;
 
                     if (result.state) {
-                        // Tabelle aktualisieren
-                        updateTransactionsTable(result.transactions || []);
+                        // Slide-Animation mit neuen Daten
+                        slideToNewPage(result.transactions || [], slideDirection);
 
                         // Pagination State aktualisieren
                         currentPage = result.page || page;
@@ -256,40 +374,75 @@ function get_transaction_details_link($management_link)
                         updatePaginationNav();
                     } else {
                         wpfce_show_notice(result.message || 'Fehler beim Laden der Transaktionen', 'error');
+                        hideTransactionsLoading();
                     }
                 },
                 error: function(xhr) {
                     wpfce_show_notice('Netzwerkfehler beim Laden der Transaktionen', 'error');
-                },
-                complete: function() {
                     hideTransactionsLoading();
                 }
             });
         }
 
         /**
-         * Zeigt Loading-Indikator
+         * Zeigt Loading-Overlay
          */
         function showTransactionsLoading() {
-            $('#transactions-table-wrapper').html('<div class="transactions-loading">Lade Transaktionen...</div>');
+            $('#transactions-loading-overlay').addClass('show');
+            $('#pagination-nav').addClass('loading');
         }
 
         /**
-         * Versteckt Loading-Indikator
+         * Versteckt Loading-Overlay
          */
         function hideTransactionsLoading() {
-            // Loading wird durch updateTransactionsTable ersetzt
+            $('#transactions-loading-overlay').removeClass('show');
+            $('#pagination-nav').removeClass('loading');
         }
 
         /**
-         * Aktualisiert die Transaktions-Tabelle
+         * Slide-Animation zu neuer Seite
          */
-        function updateTransactionsTable(transactions) {
-            const $tableWrapper = $('#transactions-table-wrapper');
+        function slideToNewPage(transactions, direction) {
+            const $wrapper = $('#transactions-table-wrapper');
+            const $currentSlide = $('#transactions-slide-current');
 
+            // Neue Tabelle erstellen
+            const newTableHTML = createTableHTML(transactions);
+
+            // Neue Slide erstellen
+            const newSlideId = 'transactions-slide-new';
+            const slideClass = direction === 'right' ? 'slide-in' : 'slide-in slide-in-left';
+
+            const $newSlide = $(`<div id="${newSlideId}" class="transactions-slide ${slideClass}">${newTableHTML}</div>`);
+            $wrapper.append($newSlide);
+
+            // Animation starten
+            setTimeout(() => {
+                // Aktuelle Slide raussliden
+                const currentSlideClass = direction === 'right' ? 'sliding-out' : 'sliding-out';
+                $currentSlide.addClass(currentSlideClass);
+
+                // Neue Slide reinsliden
+                $newSlide.addClass('active');
+
+                // Nach Animation aufräumen
+                setTimeout(() => {
+                    $currentSlide.remove();
+                    $newSlide.attr('id', 'transactions-slide-current')
+                        .removeClass('slide-in slide-in-left active');
+                    hideTransactionsLoading();
+                }, 300); // Match CSS transition duration
+
+            }, 10); // Kurze Verzögerung für DOM-Update
+        }
+
+        /**
+         * Erstellt HTML für Transaktions-Tabelle
+         */
+        function createTableHTML(transactions) {
             if (!transactions || transactions.length === 0) {
-                $tableWrapper.html('<p><?php esc_html_e('You do not have any transactions yet.', 'wp_fce'); ?></p>');
-                return;
+                return '<p><?php esc_html_e('You do not have any transactions yet.', 'wp_fce'); ?></p>';
             }
 
             let tableHTML = `
@@ -332,7 +485,7 @@ function get_transaction_details_link($management_link)
             });
 
             tableHTML += '</tbody></table>';
-            $tableWrapper.html(tableHTML);
+            return tableHTML;
         }
 
         /**

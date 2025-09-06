@@ -12,6 +12,11 @@ class WP_FCE_Helper_Community_API
     private ?array $cached_user_data = null;
     private ?string $cached_user_api_key = null;
     private ?string $cached_master_key = null;
+    private ?string $cached_make_plugin_url = null;
+    private ?string $cached_n8n_plugin_url = null;
+    private ?string $cached_documentation_url = null;
+
+
 
     /**
      * Constructor.
@@ -105,6 +110,42 @@ class WP_FCE_Helper_Community_API
         }
         $this->cached_master_key = $this->admin_options['community_api_master_token'] ?? null;
         return $this->cached_master_key;
+    }
+
+    /**
+     * Gets the make.com plugin URL from admin options, or null if none is set.
+     */
+    public function get_make_plugin_url(): ?string
+    {
+        if ($this->cached_make_plugin_url !== null) {
+            return $this->cached_make_plugin_url;
+        }
+        $this->cached_make_plugin_url = $this->admin_options['community_api_plugin_url_make'] ?? null;
+        return $this->cached_make_plugin_url;
+    }
+
+    /**
+     * Gets the n8n plugin URL from admin options, or null if none is set.
+     */
+    public function get_n8n_plugin_url(): ?string
+    {
+        if ($this->cached_n8n_plugin_url !== null) {
+            return $this->cached_n8n_plugin_url;
+        }
+        $this->cached_n8n_plugin_url = $this->admin_options['community_api_plugin_url_n8n'] ?? null;
+        return $this->cached_n8n_plugin_url;
+    }
+
+    /**
+     * Gets the documentation URL from admin options, or null if none is set.
+     */
+    public function get_documentation_url(): ?string
+    {
+        if ($this->cached_documentation_url !== null) {
+            return $this->cached_documentation_url;
+        }
+        $this->cached_documentation_url = $this->admin_options['community_api_help_url'] ?? null;
+        return $this->cached_documentation_url;
     }
 
     /**

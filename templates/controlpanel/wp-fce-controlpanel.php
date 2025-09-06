@@ -24,12 +24,16 @@ $bg_image_url = is_array($bg_image) && !empty($bg_image['url'])
     : plugins_url('public/assets/membership_bg.png', dirname(__DIR__));
 
 // Zurück-Button
-$back_url = home_url();
-if (!empty($_SERVER['HTTP_REFERER'])) {
-    $referer_host = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST);
+$referer = $_SERVER['HTTP_REFERER'] ?? '';
+$fcom_settings = get_option('fluent_community_settings', []);
+$slug = $fcom_settings['slug'] ?? '';
+$back_url = $slug ? home_url($slug) : home_url();
+$is_valid_referer = !empty($referer) && !empty($slug) && str_contains($referer, "/$slug/");
+if ($is_valid_referer) {
+    $referer_host = parse_url($referer, PHP_URL_HOST);
     $site_host = parse_url(home_url(), PHP_URL_HOST);
     if ($referer_host === $site_host) {
-        $back_url = $_SERVER['HTTP_REFERER'];
+        $back_url = $referer;
     }
 }
 

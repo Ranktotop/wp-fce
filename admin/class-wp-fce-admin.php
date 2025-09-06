@@ -339,7 +339,25 @@ class Wp_Fce_Admin
 					'title'   => __('Connection Test', 'wp-fce'),
 					'content' => '<button type="button" class="button button-secondary" onclick="testCommunityAPIConnection()">' . __('Test Connection', 'wp-fce') . '</button>
               <div id="community-api-test-result" style="margin-top: 10px;"></div>',
-				]
+				],
+				[
+					'id'    => 'community_api_plugin_url_make',
+					'type'  => 'text',
+					'title' => __('make.com plugin-url', 'wp-fce'),
+					'desc'  => __('URL of the make.com plugin', 'wp-fce')
+				],
+				[
+					'id'    => 'community_api_plugin_url_n8n',
+					'type'  => 'text',
+					'title' => __('n8n plugin-url', 'wp-fce'),
+					'desc'  => __('URL of the n8n plugin', 'wp-fce')
+				],
+				[
+					'id'    => 'community_api_help_url',
+					'type'  => 'text',
+					'title' => __('Community API help page URL', 'wp-fce'),
+					'desc'  => __('URL of the Community API help page', 'wp-fce')
+				],
 			],
 		]);
 	}

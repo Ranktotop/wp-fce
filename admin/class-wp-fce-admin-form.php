@@ -16,6 +16,10 @@ class Wp_Fce_Admin_Form_Handler
      */
     public function handle_admin_form_callback(): void
     {
+        // Nonce check
+        // We don't check nonce here, because each handler uses its own nonce field
+
+        // Admin check
         if (!is_admin() || $_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }

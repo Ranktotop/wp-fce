@@ -11,9 +11,17 @@ class Wp_Fce_Admin_Ajax_Handler
          *
          * @link https://codex.wordpress.org/Function_Reference/wp_verify_nonce
          */
+
+        // Nonce check
         if (! wp_verify_nonce($_POST['_nonce'], 'security_wp-fce')) {
             wp_send_json_error();
             die();
+        }
+
+        // Admin check
+        if (!is_admin()) {
+            wp_send_json_error('User is not admin');
+            return ['state' => false, 'message' => __('User is not admin', 'wp-fce')];
         }
 
         // Check if given function exists

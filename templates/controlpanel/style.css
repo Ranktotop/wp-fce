@@ -113,6 +113,14 @@ body {
     margin-top: 5px;
 }
 
+.widgets-stat-item-info a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    transition: transform 0.1s ease;
+}
+
 .widgets-stat-item-error {
     background: #ffadad30;
     padding: 15px;
@@ -132,6 +140,14 @@ body {
     color: #fff;
     font-size: 0.9em;
     margin-top: 5px;
+}
+
+.widgets-stat-item-error a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    transition: transform 0.1s ease;
 }
 
 p.error {
@@ -205,35 +221,6 @@ p.error {
 
 .pagination-container .pagination-navbar .page-btn:hover:not(.disabled):not(.current) {
     background-color: rgba(255, 255, 255, 0.1);
-}
-
-.transactions-loading {
-    text-align: center;
-    padding: 40px;
-    color: #6c757d;
-    font-style: italic;
-}
-
-.transactions-loading::after {
-    content: '';
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid #007bff;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-left: 10px;
-}
-
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
 }
 
 /*************** Button Styling ******************/

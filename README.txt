@@ -55,6 +55,10 @@ Access is automatically revoked unless another active product grants access to t
 
 == Changelog ==
 
+= 1.0.2 =
+* Added community api integration
+* Fixed some bugs
+
 = 1.0.1 =
 * Product-space mapping system fully integrated
 * Fluent access sync via cronjob and real-time events

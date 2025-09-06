@@ -16,9 +16,15 @@ class Wp_Fce_Public_Form_Handler
      */
     public function handle_public_form_callback(): void
     {
+        // Nonce check
+        // We don't check nonce here, because each handler uses its own nonce field
+
+        // User check
+        // We don't check if user is logged in here, because some functions might be public to all
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
+
         if (isset($_POST['wp_fce_form_action']) && $_POST['wp_fce_form_action'] === 'set_community_api_key') {
             $this->handle_set_community_api_key();
         }
@@ -31,62 +37,25 @@ class Wp_Fce_Public_Form_Handler
 
     private function handle_set_community_api_key(): void
     {
-        if (
-            !isset($_POST['wp_fce_nonce']) ||
-            !wp_verify_nonce($_POST['wp_fce_nonce'], 'wp_fce_set_community_api_key')
-        ) {
-            return;
-        }
+        $user = $this->get_verified_user($_POST, 'community_api_user_id', 'wp_fce_set_community_api_key');
 
-        $user_id = intval(sanitize_text_field($_POST['community_api_user_id'] ?? ''));
+        // check api key
         $api_key = sanitize_text_field($_POST['community_api_key'] ?? '');
-
-        if (empty($api_key) || empty($user_id)) {
-            wp_safe_redirect(add_query_arg('fce_error', urlencode(__('Invalid API key or user ID', 'wp-fce')), $_SERVER['REQUEST_URI']));
+        if (empty($api_key)) {
+            wp_safe_redirect(add_query_arg('fce_error', urlencode(__('Invalid API key', 'wp-fce')), $_SERVER['REQUEST_URI']));
             exit;
         }
 
-        //make sure user exists
-        $user = get_user_by('id', $user_id);
-        if (!$user) {
-            wp_safe_redirect(add_query_arg('fce_error', urlencode(__('User not found', 'wp-fce')), $_SERVER['REQUEST_URI']));
-            exit;
-        }
-
-        try {
-            update_user_meta($user_id, 'wp_fce_community_api_key', $api_key);
-            wp_safe_redirect(add_query_arg('fce_success', urlencode(__('Community API key saved successfully', 'wp-fce')), $_SERVER['REQUEST_URI']));
-            exit;
-        } catch (\Exception $e) {
-            wp_safe_redirect(add_query_arg('fce_error', urlencode($e->getMessage()), $_SERVER['REQUEST_URI']));
-            exit;
-        }
+        //load helper
+        $helper = new WP_FCE_Helper_Community_Api($user);
+        $helper->set_community_api_key($api_key);
+        wp_safe_redirect(add_query_arg('fce_success', urlencode(__('Community API key saved successfully', 'wp-fce')), $_SERVER['REQUEST_URI']));
+        exit;
     }
 
     private function handle_set_community_api_credentials(): void
     {
-        //verify nonce
-        if (
-            !isset($_POST['wp_fce_nonce']) ||
-            !wp_verify_nonce($_POST['wp_fce_nonce'], 'wp_fce_set_community_api_credentials')
-        ) {
-            return;
-        }
-        $test = get_current_user();
-
-        //get user id from payload
-        $user_id = intval(sanitize_text_field($_POST['community_api_user_id'] ?? ''));
-        if (empty($user_id)) {
-            return;
-        }
-
-        //make sure user exists
-        try {
-            $user = WP_FCE_Helper_User::get_by_id($user_id);
-        } catch (\Exception $e) {
-            wp_safe_redirect(add_query_arg('fce_error', urlencode(__('User not found', 'wp-fce')), $_SERVER['REQUEST_URI']));
-            exit;
-        }
+        $user = $this->get_verified_user($_POST, 'community_api_user_id', 'wp_fce_set_community_api_credentials');
 
         //load helper
         $helper = new WP_FCE_Helper_Community_Api($user);
@@ -99,5 +68,47 @@ class Wp_Fce_Public_Form_Handler
             wp_safe_redirect(add_query_arg('fce_error', urlencode(__('Failed to save credentials', 'wp-fce')), $_SERVER['REQUEST_URI']));
             exit;
         }
+    }
+
+    /**
+     * Get a verified user from the request.
+     * This function checks the nonce, verifies that the user is logged in,
+     * and ensures that the user ID in the request matches the logged-in user.
+     */
+    private function get_verified_user(array $post, string $user_id_key, string $nonce_key): WP_FCE_Model_User
+    {
+        //Nonce check
+        if (
+            !isset($post['wp_fce_nonce']) ||
+            !wp_verify_nonce($post['wp_fce_nonce'], $nonce_key)
+        ) {
+            exit;
+        }
+        // User check
+        if (!is_user_logged_in()) {
+            wp_safe_redirect(add_query_arg('fce_error', urlencode(__('User not logged in', 'wp-fce')), $_SERVER['REQUEST_URI']));
+            exit;
+        }
+        $user_id = intval(sanitize_text_field($post[$user_id_key] ?? ''));
+        if (empty($user_id)) {
+            wp_safe_redirect(add_query_arg('fce_error', urlencode(__('Invalid user ID', 'wp-fce')), $_SERVER['REQUEST_URI']));
+            exit;
+        }
+
+        //make sure user ids match
+        $current_user_id = get_current_user_id();
+        if ($current_user_id !== $user_id) {
+            wp_safe_redirect(add_query_arg('fce_error', urlencode(__('Access denied', 'wp-fce')), $_SERVER['REQUEST_URI']));
+            exit;
+        }
+
+        //make sure user exists
+        try {
+            $user = WP_FCE_Helper_User::get_by_id($user_id);
+        } catch (\Exception $e) {
+            wp_safe_redirect(add_query_arg('fce_error', urlencode(__('User not found', 'wp-fce')), $_SERVER['REQUEST_URI']));
+            exit;
+        }
+        return $user;
     }
 }
