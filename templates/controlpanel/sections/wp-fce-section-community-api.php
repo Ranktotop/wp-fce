@@ -11,21 +11,19 @@
 $community_api_helper = new WP_FCE_Helper_Community_API($user);
 
 /**
- * Formatiert Credentials für die Anzeige
+ * Generiert den HTML-Link für Transaction Details
  */
-function community_api_format_credentials($credentials)
+function get_transaction_details_link($management_link)
 {
-    if (empty($credentials) || !is_array($credentials)) {
-        return [];
+    if ($management_link) {
+        return sprintf(
+            '<a href="%s" target="_blank" rel="noopener">%s</a>',
+            esc_url($management_link),
+            esc_html__('View Details', 'wp_fce')
+        );
     }
 
-    return array_map(function ($cred) {
-        return [
-            'platform' => ucfirst($cred['platform'] ?? 'Unknown'),
-            'api_key_display' => substr($cred['api_key'] ?? '', 0, 20) . '...',
-            'full_key' => $cred['api_key'] ?? ''
-        ];
-    }, $credentials);
+    return esc_html__('No details available', 'wp_fce');
 }
 ?>
 
@@ -150,228 +148,43 @@ function community_api_format_credentials($credentials)
             </form>
         </div>
         <h3><?php esc_html_e('Transactions', 'wp_fce'); ?></h3>
+        <?php
+
+        $transaction_response = $community_api_helper->fetch_transactions();
+        $transactions = $transaction_response["transactions"];
+        $has_next = $transaction_response["has_next"];
+        $has_prev = $transaction_response["has_prev"];
+        $total_pages = $transaction_response["total_pages"];
+
+        ?>
+
+        <?php if (!empty($transactions)): ?>
+            <table class="fce-table">
+                <thead>
+                    <tr>
+                        <th><?php esc_html_e('Transaction Date', 'wp_fce'); ?></th>
+                        <th><?php esc_html_e('Type', 'wp_fce'); ?></th>
+                        <th><?php esc_html_e('Credits', 'wp_fce'); ?></th>
+                        <th><?php esc_html_e('Invoice and Details', 'wp_fce'); ?></th>
+                        <th><?php esc_html_e('Description', 'wp_fce'); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($transactions as $tx): ?>
+                        <tr>
+                            <td><?php echo esc_html(date('d.m.Y H:i', strtotime($tx['created_at'] ?? ''))); ?></td>
+                            <td><?php echo esc_html(ucfirst($tx['transaction_type'] ?? 'N/A')); ?></td>
+                            <td><?php echo esc_html($tx['amount_credits'] ?? '0'); ?></td>
+                            <td><?php get_transaction_details_link($tx['detail_url'] ?? ''); ?></td>
+                            <td><?php echo esc_html($tx['description'] ?? ''); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+
+        <?php else: ?>
+            <p><?php esc_html_e('You do not have any transactions yet.', 'wp_fce'); ?></p>
+        <?php endif; ?>
     <?php endif; ?>
 
 <?php endif; ?>
-
-<script>
-    $(document).ready(function() {
-        // Community API specific JavaScript
-        console.log('Community API section loaded');
-
-        class CommunityAPIManager {
-            constructor() {
-                this.bindEvents();
-            }
-
-            bindEvents() {
-                // Auto-setup button
-                $('#auto-setup-api-key').on('click', () => {
-                    this.autoSetupApiKey();
-                });
-
-                // Remove API Key button
-                $('#remove-api-key').on('click', () => {
-                    this.removeApiKey();
-                });
-
-                // Refresh data button
-                $('#refresh-community-data').on('click', () => {
-                    this.refreshCommunityData();
-                });
-            }
-
-            saveManualApiKey() {
-                const apiKey = $('#manual-api-key').val().trim();
-
-                if (!apiKey) {
-                    this.showMessage('Please enter an API key', 'error');
-                    return;
-                }
-
-                this.showLoading('Validating API key...');
-
-                this.makeAjaxCall('save_community_api_key', {
-                        api_key: apiKey
-                    })
-                    .then((response) => {
-                        if (response.state) {
-                            this.showMessage(response.message, 'success');
-                            setTimeout(() => location.reload(), 1000);
-                        } else {
-                            this.showMessage(response.message, 'error');
-                        }
-                    })
-                    .catch(() => {
-                        this.showMessage('Connection error. Please try again.', 'error');
-                    })
-                    .finally(() => {
-                        this.hideLoading();
-                    });
-            }
-
-            autoSetupApiKey() {
-                this.showLoading('Searching for your account...');
-
-                this.makeAjaxCall('auto_set_community_api_key', {})
-                    .then((response) => {
-                        if (response.state) {
-                            this.showMessage(response.message, 'success');
-                            setTimeout(() => location.reload(), 1000);
-                        } else {
-                            this.showMessage(response.message, 'info');
-                            $('#community-api-manual-input').show();
-                            $('#community-api-auto-setup').hide();
-                        }
-                    })
-                    .catch(() => {
-                        this.showMessage('Connection error. Please try again.', 'error');
-                        $('#community-api-manual-input').show();
-                        $('#community-api-auto-setup').hide();
-                    })
-                    .finally(() => {
-                        this.hideLoading();
-                    });
-            }
-
-            removeApiKey() {
-                if (!confirm('Are you sure you want to remove your API key?')) {
-                    return;
-                }
-
-                this.showLoading('Removing API key...');
-
-                this.makeAjaxCall('remove_community_api_key', {})
-                    .then((response) => {
-                        if (response.state) {
-                            this.showMessage(response.message, 'success');
-                            setTimeout(() => location.reload(), 1000);
-                        } else {
-                            this.showMessage(response.message, 'error');
-                        }
-                    })
-                    .catch(() => {
-                        this.showMessage('Connection error. Please try again.', 'error');
-                    })
-                    .finally(() => {
-                        this.hideLoading();
-                    });
-            }
-
-            refreshCommunityData() {
-                this.showLoading('Refreshing data...');
-
-                this.makeAjaxCall('get_community_user_data', {})
-                    .then((response) => {
-                        if (response.state) {
-                            this.updateUserDataDisplay(response.data);
-                            this.showMessage(response.message, 'success');
-                        } else {
-                            this.showMessage(response.message, 'error');
-                            if (response.message.includes('removed')) {
-                                setTimeout(() => location.reload(), 2000);
-                            }
-                        }
-                    })
-                    .catch(() => {
-                        this.showMessage('Connection error. Please try again.', 'error');
-                    })
-                    .finally(() => {
-                        this.hideLoading();
-                    });
-            }
-
-            makeAjaxCall(func, data) {
-                return $.ajax({
-                    url: wp_fce.ajax_url,
-                    type: 'POST',
-                    data: {
-                        action: 'wp_fce_handle_ajax_callback',
-                        func: func,
-                        data: data,
-                        meta: {},
-                        _nonce: wp_fce._nonce
-                    }
-                }).then((response) => {
-                    return typeof response === 'string' ? JSON.parse(response) : response;
-                });
-            }
-
-            updateUserDataDisplay(userData) {
-                if (userData.user_name) {
-                    $('#community-user-name').text(userData.user_name);
-                }
-                if (userData.current_balance !== undefined) {
-                    $('#community-user-balance').html('<strong>' + userData.current_balance + '</strong> Credits');
-                }
-                if (userData.credentials) {
-                    this.updateCredentialsDisplay(userData.credentials);
-                }
-            }
-
-            updateCredentialsDisplay(credentials) {
-                const container = $('#community-credentials');
-                if (container.length === 0) return;
-
-                container.empty();
-                credentials.forEach((cred) => {
-                    const truncatedKey = cred.api_key ?
-                        cred.api_key.substring(0, 20) + '...' :
-                        'N/A';
-
-                    container.append(`
-                    <div class="credential-item">
-                        <span class="credential-platform">${this.capitalize(cred.platform || 'Unknown')}</span>
-                        <span class="credential-key">${truncatedKey}</span>
-                    </div>
-                `);
-                });
-            }
-
-            showMessage(message, type = 'info') {
-                const messageClass = 'api-' + type;
-                const messageHtml = `<div class="api-message ${messageClass}">${message}</div>`;
-
-                // Remove existing messages
-                $('.api-message').remove();
-
-                // Add new message
-                $('#community-api-messages').html(messageHtml);
-
-                // Auto-hide success messages
-                if (type === 'success') {
-                    setTimeout(() => {
-                        $('.api-success').fadeOut();
-                    }, 3000);
-                }
-            }
-
-            showLoading(message = 'Loading...') {
-                $('#community-api-loading').html(`
-                <div class="api-message api-loading">
-                    <span class="spinner"></span> ${message}
-                </div>
-            `).show();
-            }
-
-            hideLoading() {
-                $('#community-api-loading').hide();
-            }
-
-            capitalize(str) {
-                return str.charAt(0).toUpperCase() + str.slice(1);
-            }
-        }
-
-        // Initialize Community API Manager
-        const communityAPI = new CommunityAPIManager();
-
-        // Event listener für Tab-Wechsel
-        $(document).on('tabSwitched', function(event, tabName) {
-            if (tabName === 'community-api') {
-                console.log('Community API tab activated');
-                // Hier können spezifische Aktionen für diese Sektion ausgeführt werden
-            }
-        });
-    });
-</script>

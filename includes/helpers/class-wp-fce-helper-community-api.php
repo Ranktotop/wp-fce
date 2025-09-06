@@ -235,6 +235,57 @@ class WP_FCE_Helper_Community_API
      ********** REQUESTS *********
      *****************************/
 
+    /**
+     * Fetches transactions from the Community API.
+     * Returns paginated result:
+     * [
+     * "transactions" => [
+     *   [
+     *     "transaction_id" => string,
+     *     "user_id" => string,
+     *     "amount_credits" => float,
+     *     "transaction_type" => string,
+     *     "description" => string,
+     *     "detail_url" => string,
+     *     "created_at" => string
+     *   ],
+     *   ...
+     * ],
+     * "total_count" => int,
+     * "page" => int,
+     * "page_size" => int,
+     * "has_next" => bool,
+     * "has_previous" => bool
+     * "total_pages" => int
+     * ]
+     */
+    public function fetch_transactions($page = 1, $page_size = 10, $order_by = "created_at", $sort_order = "DESC"): ?array
+    {
+        $sort_order = strtoupper($sort_order) === "ASC" ? "ASC" : "DESC";
+        if (!$this->is_valid() || !$this->has_api_key()) {
+            return null;
+        }
+
+        $api_key = $this->get_api_key();
+        if ($api_key === null) {
+            return null;
+        }
+
+        $response = $this->do_request(
+            'GET',
+            $api_key,
+            '/user/account/transactions',
+            null,
+            ['page' => $page, 'page_size' => $page_size, 'order_by' => $order_by, 'sort_order' => $sort_order],
+            null
+        );
+
+        if ($response === null) {
+            return null;
+        }
+        return $response;
+    }
+
     private function fetch_user_data_by_api_key(string $api_key): ?array
     {
         if (!$this->is_valid()) {
