@@ -70,6 +70,32 @@ class WP_FCE_Helper_Community_API
     }
 
     /**
+     * Gets user data from the Community API, or null if not available.
+     * Caches the result for subsequent calls.
+     *
+     * @return array|null
+     */
+    public function get_user_data(): ?array
+    {
+        if (!$this->is_valid() || !$this->has_api_key()) {
+            return null;
+        }
+
+        if ($this->cached_user_data !== null) {
+            return $this->cached_user_data;
+        }
+
+        $api_key = $this->get_api_key();
+        if ($api_key === null) {
+            return null;
+        }
+
+        $user_data = $this->fetch_user_data_by_api_key($api_key);
+        $this->cached_user_data = $user_data;
+        return $this->cached_user_data;
+    }
+
+    /**
      * Gets the master key from admin options, or null if none is set.
      */
     private function get_master_key(): ?string
@@ -100,6 +126,39 @@ class WP_FCE_Helper_Community_API
         return $protocol . '://' . $url . $port_str;
     }
 
+    public function get_credentials(): array
+    {
+        $credentials = [];
+        if ($this->get_user_data() === null) {
+            foreach ($this->get_possible_credential_fields() as $field) {
+                // user has not yet set this, return empty string
+                $credentials[$field] = "";
+            }
+            return $credentials;
+        }
+
+        foreach ($this->get_possible_credential_fields() as $field) {
+            // check if user has set this value
+            foreach ($this->get_user_data()['credentials'] ?? [] as $cred) {
+                if ((strtolower($cred['platform'] ?? '') === $field)) {
+                    $credentials[$field] = $cred['api_key'] ?? "";
+                    continue 2; // next field
+                }
+            }
+            // if user has not yet set this, return empty string
+            $credentials[$field] = "";
+        }
+        return $credentials;
+    }
+
+    private function get_possible_credential_fields(): array
+    {
+        return [
+            'openai',
+            'elevenlabs'
+        ];
+    }
+
     /*****************************
      ********** SETTER ***********
      *****************************/
@@ -122,6 +181,54 @@ class WP_FCE_Helper_Community_API
         } else {
             delete_user_meta($this->user->get_id(), 'wp_fce_community_api_key');
         }
+    }
+
+    /**
+     * Sets the user's credentials (like OpenAI key) via the Community API.
+     * Filters out empty or placeholder or invalid platform values.
+     *
+     * @param  array $credentials Associative array of platform => api_key
+     * @return bool True on success, false on failure
+     */
+    public function set_credentials(array $credentials): bool
+    {
+        if (!$this->is_valid() || !$this->has_api_key()) {
+            return false;
+        }
+        $api_key = $this->get_api_key();
+
+        //filter out placeholder or invalid values and reformat creds to list of arrays
+        $clean_credentials = [];
+        foreach ($credentials as $platform => $platform_api_key) {
+            $platform_api_key = trim($platform_api_key);
+            $platform = trim(strtolower($platform));
+            //skip if null or empty or placeholder or not in possible fields
+            if (!in_array($platform, $this->get_possible_credential_fields(), true)) {
+                continue;
+            }
+            if ($platform_api_key === null || empty($platform_api_key) || $platform_api_key === '***') {
+                continue;
+            }
+            $clean_credentials[] = ["platform" => $platform, "api_key" => $platform_api_key];
+        }
+        //if nothing to do, return true
+        if (empty($clean_credentials)) {
+            return true;
+        }
+
+        //send to api
+        $response = $this->do_request(
+            'PATCH',
+            $api_key,
+            '/user/account/update',
+            null,
+            null,
+            ['credentials' => $clean_credentials]
+        );
+
+        //clear cache
+        $this->cached_user_data = null;
+        return $response !== null;
     }
 
     /*****************************

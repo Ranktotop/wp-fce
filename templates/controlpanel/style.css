@@ -113,9 +113,47 @@ body {
     margin-top: 5px;
 }
 
+.widgets-stat-item-error {
+    background: #ffadad30;
+    padding: 15px;
+    border-radius: 6px;
+    text-align: center;
+    border-left: 4px solid #ff4545dd;
+}
+
+.widgets-stat-item-error .widgets-stat-item-number {
+    font-size: 2em;
+    font-weight: bold;
+    color: #ff4545dd;
+    display: block;
+}
+
+.widgets-stat-item-error .widgets-stat-item-label {
+    color: #fff;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+p.error {
+    color: #fff;
+    background: #FF2020;
+    background: linear-gradient(90deg, rgba(255, 32, 32, 0) 0%, rgba(255, 32, 32, .87) 7%, rgba(255, 32, 32, .87) 93%, rgba(255, 32, 32, 0) 100%);
+    font-weight: 600;
+    padding: 5px;
+}
 /*************** Button Styling ******************/
 
-.back-link {
+.back-link,
+.default_button {
+    border-style: solid;
+    /* Wichtig! Buttons haben oft "outset" oder "inset" */
+    appearance: none;
+    /* Entfernt alle Browser-Button-Stile */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: transparent;
+    /* Falls noch eine background-color gesetzt ist */
+
     display: inline-block;
     margin-top: 40px;
     text-align: center;
@@ -132,11 +170,55 @@ body {
     transition: background-color 0.3s ease, transform 0.2s ease;
     text-transform: uppercase;
     font-weight: 600;
+    cursor: pointer;
 }
 
-.back-link:hover {
+.back-link:hover,
+.default_button:hover {
     background-color: rgba(255, 255, 255, 0.1);
     transform: scale(1.02);
+}
+
+
+/*************** Form Styling ******************/
+
+input[type="text"] {
+    padding: 10px;
+    margin-right: 10px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: #fff;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+
+    /* Browser-Defaults überschreiben */
+    background-color: transparent;
+    background: transparent;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    /* Glaseffekt wie bei den Buttons */
+    background-image: linear-gradient(90deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.15) 1%, rgba(0, 0, 0, 0.08) 10%, rgba(0, 0, 0, 0.1) 19%, rgba(0, 0, 0, 0.1) 32%, rgba(0, 0, 0, 0.1) 100%);
+    backdrop-filter: blur(8.5px);
+
+    /* "Hineingestanzt" Effekt */
+    border-width: 2px 1px 1px 2px;
+    border-color: rgba(0, 0, 0, 0.3) rgba(255, 255, 255, 0.1) rgba(255, 255, 255, 0.1) rgba(0, 0, 0, 0.3);
+    border-style: solid;
+
+    /* Inset shadow für eingepressten Look */
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3), inset -1px -1px 2px rgba(255, 255, 255, 0.1);
+}
+
+input[type="text"]::placeholder {
+    color: #ffffff80;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: rgba(0, 0, 0, 0.4) rgba(255, 255, 255, 0.4) rgba(255, 255, 255, 0.4) rgba(0, 0, 0, 0.4);
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.4), inset -1px -1px 2px rgba(255, 255, 255, 0.2), 0 0 8px #ffffffbb;
 }
 
 /*************** Table Styling ******************/

@@ -30,164 +30,24 @@ function community_api_format_credentials($credentials)
 ?>
 
 <style>
-    .community-api-content {
-        max-width: 800px;
-    }
-
-    .api-setup-section {
-        background: #f8f9fa;
-        padding: 20px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        border-left: 4px solid #0073aa;
-    }
-
-    .api-key-input {
-        width: 100%;
-        padding: 12px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        margin: 10px 0;
-        font-family: monospace;
-        font-size: 14px;
-    }
-
-    .api-button {
-        background: #0073aa;
-        color: white;
-        padding: 12px 24px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        text-decoration: none;
-        display: inline-block;
-        margin-right: 10px;
-        margin-bottom: 5px;
-        transition: background 0.3s ease;
-    }
-
-    .api-button:hover {
-        background: #005a87;
-        color: white;
-        text-decoration: none;
-    }
-
-    .api-button.secondary {
-        background: #6c757d;
-    }
-
-    .api-button.secondary:hover {
-        background: #5a6268;
-    }
-
-    .api-button.danger {
-        background: #dc3545;
-    }
-
-    .api-button.danger:hover {
-        background: #c82333;
-    }
-
-    .api-message {
-        padding: 12px;
-        border-radius: 4px;
-        margin: 10px 0;
-    }
-
-    .api-error {
-        color: #d63384;
-        background: #f8d7da;
-        border-left: 4px solid #dc3545;
-    }
-
-    .api-success {
-        color: #2e7d32;
-        background: #e8f5e8;
-        border-left: 4px solid #4caf50;
-    }
-
-    .api-info {
-        color: #1976d2;
-        background: #e3f2fd;
-        border-left: 4px solid #2196f3;
-    }
-
-    .api-loading {
-        background: #e3f2fd;
-        color: #1976d2;
-        text-align: center;
-    }
-
-    .spinner {
-        display: inline-block;
-        width: 16px;
-        height: 16px;
-        border: 2px solid #1976d2;
-        border-radius: 50%;
-        border-top-color: transparent;
-        animation: spin 1s ease-in-out infinite;
-    }
-
-    @keyframes spin {
-        to {
-            transform: rotate(360deg);
-        }
-    }
-
-    .community-user-info {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 15px;
-        margin: 20px 0;
-    }
-
-    .info-item {
-        background: #f8f9fa;
-        padding: 15px;
-        border-radius: 6px;
-        border-left: 4px solid #0073aa;
-    }
-
-    .info-label {
-        font-weight: bold;
-        color: #555;
-        font-size: 0.9em;
-        margin-bottom: 5px;
-    }
-
-    .info-value {
-        font-size: 1.1em;
-        color: #333;
-    }
-
-    .credentials-list {
-        background: white;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        overflow: hidden;
-    }
-
-    .credential-item {
-        padding: 12px 15px;
-        border-bottom: 1px solid #eee;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .credential-item:last-child {
-        border-bottom: none;
-    }
-
-    .credential-platform {
+    .credentials-platform {
         font-weight: 600;
-        color: #0073aa;
+        text-transform: capitalize;
     }
 
-    .credential-key {
-        font-family: monospace;
-        color: #666;
-        font-size: 0.9em;
+    .credentials-input-cell {
+        padding: 10px 15px !important;
+    }
+
+    .credentials-table-input {
+        width: 100%;
+        margin-right: 0;
+        padding: 8px;
+    }
+
+    .credentials-save-container {
+        margin-top: 25px;
+        text-align: center;
     }
 </style>
 
@@ -197,22 +57,26 @@ function community_api_format_credentials($credentials)
 <div id="community-api-messages"></div>
 <div id="community-api-loading" style="display: none;"></div>
 
-<?php if (!$community_api_helper->has_api_key()): ?>
-
+<?php if (!$community_api_helper->has_api_key() || !$community_api_helper->get_user_data()): ?>
     <!-- Setup Section -->
     <div class="widgets-stats-container">
-        <div class="widgets-stat-item-info">
+        <div class="widgets-stat-item-<?php echo $community_api_helper->has_api_key() ? 'error' : 'info'; ?>">
             <h3><?php esc_html_e('Connect Your Community Account', 'wp_fce'); ?></h3>
             <!-- Manual Input Section -->
             <div id="community-api-manual-input">
-                <p><?php esc_html_e('Please enter your Community API key:', 'wp_fce'); ?></p>
+                <?php if ($community_api_helper->has_api_key()): ?>
+                    <p class="error"><?php esc_html_e('API Key seems to be invalid! Please enter a valid one!', 'wp_fce'); ?></p>
+                <?php else: ?>
+                    <p><?php esc_html_e('Please enter your Community API key:', 'wp_fce'); ?></p>
+                <?php endif; ?>
 
                 <form id="community-api-form" method="post" action="">
                     <input type="hidden" name="wp_fce_form_action" value="set_community_api_key">
                     <?php wp_nonce_field('wp_fce_set_community_api_key', 'wp_fce_nonce'); ?>
                     <input type="hidden" name="community_api_user_id" value="<?= esc_attr($user->get_id()); ?>">
-                    <input type="text" name="community_api_key" placeholder="<?php esc_attr_e('Enter your API key...', 'wp-fce'); ?>" required>
-                    <button type="submit" class="api-button">
+                    <input type="text" name="community_api_key" style="width:50%; text-align:center;" placeholder="<?php esc_attr_e('Enter your API key...', 'wp-fce'); ?>" required>
+                    <br>
+                    <button type="submit" class="default_button">
                         <?php esc_html_e('Save API Key', 'wp_fce'); ?>
                     </button>
                 </form>
@@ -223,61 +87,69 @@ function community_api_format_credentials($credentials)
 <?php else: ?>
 
     <!-- User Data Display -->
-    <?php if ($api_status['user_data']): ?>
-        <div class="api-setup-section">
-            <h3><?php esc_html_e('Community Account Information', 'wp_fce'); ?></h3>
+    <?php if ($community_api_helper->get_user_data()): ?>
 
-            <div class="community-user-info">
-                <div class="info-item">
-                    <div class="info-label"><?php esc_html_e('User ID', 'wp_fce'); ?></div>
-                    <div class="info-value"><?= esc_html($api_status['user_data']['user_id'] ?? 'N/A'); ?></div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label"><?php esc_html_e('Name', 'wp_fce'); ?></div>
-                    <div class="info-value" id="community-user-name"><?= esc_html($api_status['user_data']['user_name'] ?? 'N/A'); ?></div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label"><?php esc_html_e('Email', 'wp_fce'); ?></div>
-                    <div class="info-value"><?= esc_html($api_status['user_data']['user_email'] ?? 'N/A'); ?></div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label"><?php esc_html_e('Current Balance', 'wp_fce'); ?></div>
-                    <div class="info-value" id="community-user-balance">
-                        <strong><?= esc_html($api_status['user_data']['current_balance'] ?? '0'); ?></strong> Credits
-                    </div>
-                </div>
+        <h3><?php esc_html_e('User Infos', 'wp_fce'); ?></h3>
+        <div class="widgets-stats-container">
+
+            <div class="widgets-stat-item-info">
+                <div class="widgets-stat-item-number"><?php esc_html_e('User ID', 'wp_fce'); ?></div>
+                <div class="widgets-stat-item-label"><?= esc_html($community_api_helper->get_user_data()['user_id'] ?? 'N/A'); ?></div>
             </div>
 
-            <?php
-            $formatted_credentials = community_api_format_credentials($api_status['user_data']['credentials'] ?? []);
-            if (!empty($formatted_credentials)):
-            ?>
-                <h4><?php esc_html_e('API Credentials', 'wp_fce'); ?></h4>
-                <div class="credentials-list" id="community-credentials">
-                    <?php foreach ($formatted_credentials as $credential): ?>
-                        <div class="credential-item">
-                            <span class="credential-platform"><?= esc_html($credential['platform']); ?></span>
-                            <span class="credential-key"><?= esc_html($credential['api_key_display']); ?></span>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
+            <div class="widgets-stat-item-info">
+                <div class="widgets-stat-item-number"><?php esc_html_e('Name', 'wp_fce'); ?></div>
+                <div class="widgets-stat-item-label"><?= esc_html($community_api_helper->get_user_data()['user_name'] ?? 'N/A'); ?></div>
+            </div>
 
-            <!-- Action Buttons -->
-            <div style="margin-top: 20px;">
-                <button type="button" class="api-button" id="refresh-community-data">
-                    <?php esc_html_e('Refresh Data', 'wp_fce'); ?>
-                </button>
-                <button type="button" class="api-button danger" id="remove-api-key">
-                    <?php esc_html_e('Remove API Key', 'wp_fce'); ?>
-                </button>
+            <div class="widgets-stat-item-info">
+                <div class="widgets-stat-item-number"><?php esc_html_e('Email', 'wp_fce'); ?></div>
+                <div class="widgets-stat-item-label"><?= esc_html($community_api_helper->get_user_data()['user_email'] ?? 'N/A'); ?></div>
+            </div>
+
+            <?php $current_balance = $community_api_helper->get_user_data()['current_balance'] ?? 0; ?>
+            <div class="widgets-stat-item-<?php echo $current_balance > 0 ? 'info' : 'error'; ?>">
+                <div class="widgets-stat-item-number"><?php esc_html_e('Balance', 'wp_fce'); ?></div>
+                <div class="widgets-stat-item-label"><?= esc_html($current_balance); ?> Credits</div>
             </div>
         </div>
+        <h3><?php esc_html_e('Credentials', 'wp_fce'); ?></h3>
+        <div class="credentials-container">
+            <form method="post" action="">
+                <input type="hidden" name="wp_fce_form_action" value="set_community_api_credentials">
+                <?php wp_nonce_field('wp_fce_set_community_api_credentials', 'wp_fce_nonce'); ?>
+                <input type="hidden" name="community_api_user_id" value="<?= esc_attr($user->get_id()); ?>">
+                <table class="fce-table">
+                    <thead>
+                        <tr>
+                            <th><?php esc_html_e('Platform', 'wp_fce'); ?></th>
+                            <th><?php esc_html_e('API Key', 'wp_fce'); ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($community_api_helper->get_credentials() as $platform => $api_key): ?>
+                            <tr>
+                                <td class="credentials-platform"><?php echo esc_html($platform); ?></td>
+                                <td class="credentials-input-cell">
+                                    <input type="text"
+                                        name="credentials[<?php echo esc_attr($platform); ?>]"
+                                        value="<?php echo esc_attr($api_key); ?>"
+                                        placeholder="Enter <?php echo esc_attr($platform); ?> API Key"
+                                        class="credentials-table-input">
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
 
-    <?php else: ?>
-        <div class="api-message api-error">
-            <?php esc_html_e('Unable to load community data. Your API key might be invalid.', 'wp_fce'); ?>
+                <div class="credentials-save-container">
+                    <button type="submit" name="save_credentials" class="default_button">
+                        Save Credentials
+                    </button>
+                </div>
+            </form>
         </div>
+        <h3><?php esc_html_e('Transactions', 'wp_fce'); ?></h3>
     <?php endif; ?>
 
 <?php endif; ?>
@@ -293,12 +165,6 @@ function community_api_format_credentials($credentials)
             }
 
             bindEvents() {
-                // Manual API Key Form
-                $('#community-api-form').on('submit', (e) => {
-                    e.preventDefault();
-                    this.saveManualApiKey();
-                });
-
                 // Auto-setup button
                 $('#auto-setup-api-key').on('click', () => {
                     this.autoSetupApiKey();

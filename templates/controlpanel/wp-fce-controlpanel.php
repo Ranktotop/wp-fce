@@ -44,7 +44,7 @@ $template_dir = plugin_dir_path(__FILE__);
     <title><?php esc_html_e('My Orders', 'wp_fce'); ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="<?= esc_url(plugins_url('templates/controlpanel/style.css', dirname(__DIR__))) ?>" media="all">
-    <link rel="stylesheet" href="<?= esc_url(plugins_url('templates/partials/style.css', dirname(__DIR__))) ?>" media="all">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         .back-button {
             margin-top: 30px;
@@ -101,7 +101,7 @@ $template_dir = plugin_dir_path(__FILE__);
     </div>
 
     <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
     <!-- Tab System JavaScript -->
     <script>

@@ -1,7 +1,7 @@
 <style>
     #wpfce-notice-area {
         position: fixed;
-        top: 32px;
+        top: 0px;
         left: 0;
         width: 100%;
         z-index: 9999;
@@ -18,6 +18,12 @@
         pointer-events: auto;
         padding: 5px 10px 5px 10px;
         text-align: center;
+
+        background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.27) 1%, rgba(255, 255, 255, 0.15) 10%, rgba(255, 255, 255, 0.05) 19%, rgba(255, 255, 255, 0) 32%, rgba(255, 255, 255, 0.09) 100%);
+        border-width: 1px 1px 3px 2px;
+        border-color: rgba(255, 255, 255, 0.15) rgba(255, 255, 255, 0.15) rgba(255, 255, 255, 0.15) rgba(255, 255, 255, 0.27);
+        backdrop-filter: blur(8.5px);
+        box-shadow: 6px 6px 18px 0px rgba(0, 0, 0, 0.3);
     }
 
     #wpfce-notice-area .wpfce-notice p {
@@ -27,49 +33,57 @@
     }
 
     #wpfce-notice-area .wpfce-notice-success {
-        background-color: #81d381;
+        background-color: #20ff2080;
+    }
+
+    #wpfce-notice-area .wpfce-notice-error {
+        background-color: #ff202080;
     }
 </style>
 <div id="wpfce-notice-area"></div>
 <script>
-    // UTILITY FUNKTIONEN GLOBAL (nach der Closure):
     function wpfce_show_notice(message, type = 'success') {
-        const $area = jQuery('#wpfce-notice-area'); // ← jQuery statt $
+        const area = document.getElementById('wpfce-notice-area');
         const className = type === 'success' ? 'wpfce-notice wpfce-notice-success' : 'wpfce-notice wpfce-notice-error';
 
-        const $notice = jQuery(`
-        <div class="${className}">
-            <p>${message}</p>
-        </div>
-    `);
+        const notice = document.createElement('div');
+        notice.className = className;
+        notice.innerHTML = `<p>${message}</p>`;
 
-        $area.html($notice);
+        area.innerHTML = '';
+        area.appendChild(notice);
 
         setTimeout(() => {
-            $notice.fadeOut(500, function() {
-                jQuery(this).remove(); // ← jQuery statt $(this)
-            });
+            notice.style.opacity = '0';
+            notice.style.transition = 'opacity 0.5s';
+            setTimeout(() => {
+                if (notice.parentNode) {
+                    notice.parentNode.removeChild(notice);
+                }
+            }, 500);
         }, 1500);
     }
-    // if the url contains fce_success or fce_error, show the notice
-    jQuery(document).ready(function() {
+
+    document.addEventListener('DOMContentLoaded', function() {
         const urlParams = new URLSearchParams(window.location.search);
         const successMessage = urlParams.get('fce_success');
         const errorMessage = urlParams.get('fce_error');
 
         if (successMessage) {
             wpfce_show_notice(decodeURIComponent(successMessage), 'success');
-            // Remove the parameter from the URL without reloading the page
+
+            // Parameter aus URL entfernen
             urlParams.delete('fce_success');
-            const newUrl = window.location.pathname + '?' + urlParams.toString();
+            const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
             window.history.replaceState({}, document.title, newUrl);
         }
 
         if (errorMessage) {
             wpfce_show_notice(decodeURIComponent(errorMessage), 'error');
-            // Remove the parameter from the URL without reloading the page
+
+            // Parameter aus URL entfernen  
             urlParams.delete('fce_error');
-            const newUrl = window.location.pathname + '?' + urlParams.toString();
+            const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
             window.history.replaceState({}, document.title, newUrl);
         }
     });
