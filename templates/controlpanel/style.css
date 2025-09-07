@@ -176,19 +176,15 @@ p.error {
 }
 
 .pagination-container .pagination-navbar .page-btn {
-    /* Wichtig! Buttons haben oft "outset" oder "inset" */
     appearance: none;
-    /* Entfernt alle Browser-Button-Stile */
     -webkit-appearance: none;
     -moz-appearance: none;
     background-color: transparent;
-
     background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.27) 1%, rgba(255, 255, 255, 0.15) 10%, rgba(255, 255, 255, 0.05) 19%, rgba(255, 255, 255, 0) 32%, rgba(255, 255, 255, 0.09) 100%);
     border-radius: 5px;
     border-width: 1px 1px 3px 2px;
     border-color: rgba(255, 255, 255, 0.15) rgba(255, 255, 255, 0.15) rgba(255, 255, 255, 0.15) rgba(255, 255, 255, 0.27);
     backdrop-filter: blur(8.5px);
-
     color: #ffffffdd;
     padding: 8px 12px;
     cursor: pointer;
@@ -223,19 +219,22 @@ p.error {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
+/* Disable buttons during loading */
+.pagination-navbar.loading .page-btn:not(.disabled) {
+    pointer-events: none;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
 /*************** Button Styling ******************/
 
 .back-link,
 .default_button {
     border-style: solid;
-    /* Wichtig! Buttons haben oft "outset" oder "inset" */
     appearance: none;
-    /* Entfernt alle Browser-Button-Stile */
     -webkit-appearance: none;
     -moz-appearance: none;
     background-color: transparent;
-    /* Falls noch eine background-color gesetzt ist */
-
     display: inline-block;
     margin-top: 40px;
     text-align: center;
@@ -261,6 +260,10 @@ p.error {
     transform: scale(1.02);
 }
 
+.credentials-save-container {
+    margin-top: 25px;
+    text-align: center;
+}
 
 /*************** Form Styling ******************/
 
@@ -272,24 +275,16 @@ input[type="text"] {
     font-size: 14px;
     color: #fff;
     transition: box-shadow 0.2s ease, border-color 0.2s ease;
-
-    /* Browser-Defaults überschreiben */
     background-color: transparent;
     background: transparent;
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-
-    /* Glaseffekt wie bei den Buttons */
     background-image: linear-gradient(90deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.15) 1%, rgba(0, 0, 0, 0.08) 10%, rgba(0, 0, 0, 0.1) 19%, rgba(0, 0, 0, 0.1) 32%, rgba(0, 0, 0, 0.1) 100%);
     backdrop-filter: blur(8.5px);
-
-    /* "Hineingestanzt" Effekt */
     border-width: 2px 1px 1px 2px;
     border-color: rgba(0, 0, 0, 0.3) rgba(255, 255, 255, 0.1) rgba(255, 255, 255, 0.1) rgba(0, 0, 0, 0.3);
     border-style: solid;
-
-    /* Inset shadow für eingepressten Look */
     box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3), inset -1px -1px 2px rgba(255, 255, 255, 0.1);
 }
 
@@ -303,17 +298,24 @@ input[type="text"]:focus {
     box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.4), inset -1px -1px 2px rgba(255, 255, 255, 0.2), 0 0 8px #ffffffbb;
 }
 
-/*************** Table Styling ******************/
+/*************** Unified Table System ******************/
 
+/* Base Table Wrapper - für alle Tabellen */
 .fce-table-wrapper {
     width: 100%;
-    border-collapse: collapse;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    margin-top: 20px;
+    position: relative;
 }
 
+/* Base Table - Grundstil für alle Tabellen */
 .fce-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 30px;
+    min-width: 600px;
 }
 
 .fce-table th,
@@ -322,12 +324,19 @@ input[type="text"]:focus {
     text-align: left;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     color: #e0e0e0;
+    white-space: nowrap;
+    vertical-align: middle;
 }
 
 .fce-table th {
     color: #ffffff;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(8px);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    font-weight: bold;
+    font-size: 14px;
 }
 
 .fce-table a {
@@ -340,4 +349,360 @@ input[type="text"]:focus {
 
 .fce-table a:hover {
     transform: scale(1.1);
+}
+
+/* Table Modifiers */
+.fce-table--compact {
+    min-width: 100%;
+}
+
+.fce-table--compact th,
+.fce-table--compact td {
+    padding: 10px 8px;
+    font-size: 13px;
+}
+
+/* Tabelle mit Input-Feldern (für Credentials) */
+.fce-table--form th,
+.fce-table--form td {
+    padding: 10px 15px;
+    white-space: normal;
+}
+
+.fce-table--form input[type="text"] {
+    width: 100%;
+    margin: 0;
+    background-image: linear-gradient(90deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.15) 1%, rgba(0, 0, 0, 0.08) 10%, rgba(0, 0, 0, 0.1) 19%, rgba(0, 0, 0, 0.1) 32%, rgba(0, 0, 0, 0.1) 100%);
+    backdrop-filter: blur(8.5px);
+    border-width: 2px 1px 1px 2px;
+    border-color: rgba(0, 0, 0, 0.3) rgba(255, 255, 255, 0.1) rgba(255, 255, 255, 0.1) rgba(0, 0, 0, 0.3);
+    border-style: solid;
+    border-radius: 4px;
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3), inset -1px -1px 2px rgba(255, 255, 255, 0.1);
+    color: #fff;
+    padding: 8px;
+    font-size: 14px;
+}
+
+.fce-table--form input[type="text"]:focus {
+    outline: none;
+    border-color: rgba(0, 0, 0, 0.4) rgba(255, 255, 255, 0.4) rgba(255, 255, 255, 0.4) rgba(0, 0, 0, 0.4);
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.4), inset -1px -1px 2px rgba(255, 255, 255, 0.2), 0 0 8px #ffffffbb;
+}
+
+.fce-table--form input[type="text"]::placeholder {
+    color: #ffffff80;
+}
+
+.fce-table__highlight-cell {
+    font-weight: 600;
+    text-transform: capitalize;
+    color: #45d4ffdd;
+}
+
+/* Animation Support für AJAX Tables */
+.fce-table-wrapper--animated {
+    min-height: 300px;
+    overflow: hidden;
+}
+
+.fce-table-slide {
+    width: 100%;
+    transition: transform 0.3s ease-in-out;
+    position: relative;
+}
+
+.fce-table-slide--sliding-out {
+    transform: translateX(-100%);
+}
+
+.fce-table-slide--slide-in {
+    transform: translateX(100%);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.fce-table-slide--slide-in.fce-table-slide--active {
+    transform: translateX(0);
+}
+
+.fce-table-slide--slide-in-left {
+    transform: translateX(-100%);
+}
+
+/* Loading Overlay für AJAX Tables */
+.fce-table-loading {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 8px 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #007bff;
+    border: 1px solid #e3f2fd;
+    z-index: 20;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.fce-table-loading--show {
+    opacity: 1;
+}
+
+.fce-table-loading__spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #007bff;
+    border-radius: 50%;
+    animation: fce-spin 1s linear infinite;
+}
+
+@keyframes fce-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Scrollbar Styling */
+.fce-table-wrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+.fce-table-wrapper::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.fce-table-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(69, 212, 255, 0.3);
+    border-radius: 4px;
+}
+
+.fce-table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: rgba(69, 212, 255, 0.5);
+}
+
+/*************** RESPONSIVE DESIGN ******************/
+
+/* Tablet Breakpoint */
+@media screen and (max-width: 768px) {
+    .fce-controlpanel-wrapper {
+        padding: 30px 20px;
+        margin: 30px 20px;
+        border-radius: 25px;
+    }
+
+    .fce-controlpanel-wrapper h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .tab-navigation {
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .tab-button {
+        padding: 12px 20px;
+        font-size: 14px;
+        flex: 1;
+        min-width: 120px;
+    }
+
+    .widgets-stats-container {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+    }
+
+    .widgets-stat-item-info,
+    .widgets-stat-item-error {
+        padding: 12px;
+    }
+
+    .widgets-stat-item-number {
+        font-size: 1.5em !important;
+    }
+
+    /* Table Responsive */
+    .fce-table {
+        min-width: 500px;
+    }
+
+    .fce-table--compact {
+        min-width: 300px;
+    }
+
+    .fce-table th,
+    .fce-table td {
+        padding: 12px 8px;
+        font-size: 14px;
+    }
+
+    .fce-table--compact th,
+    .fce-table--compact td {
+        padding: 8px 6px;
+        font-size: 12px;
+    }
+
+    .fce-table__col--hide-tablet {
+        display: none;
+    }
+
+    /* Pagination responsive */
+    .pagination-container .pagination-navbar {
+        padding: 8px 12px;
+        gap: 3px;
+    }
+
+    .pagination-container .pagination-navbar .page-btn {
+        padding: 6px 10px;
+        font-size: 12px;
+        min-width: 30px;
+    }
+}
+
+/* Mobile Breakpoint */
+@media screen and (max-width: 480px) {
+    .fce-controlpanel-wrapper {
+        padding: 20px 15px;
+        margin: 15px 10px;
+        border-radius: 15px;
+    }
+
+    .fce-controlpanel-wrapper h1 {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+
+    .tab-navigation {
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .tab-button {
+        padding: 10px 15px;
+        font-size: 14px;
+        border-radius: 6px;
+        margin-right: 0;
+        width: 100%;
+    }
+
+    .widgets-stats-container {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .widgets-stat-item-info,
+    .widgets-stat-item-error {
+        padding: 10px;
+    }
+
+    .widgets-stat-item-number {
+        font-size: 1.3em !important;
+    }
+
+    .widgets-stat-item-label {
+        font-size: 0.8em !important;
+    }
+
+    /* Table responsive */
+    .fce-table-wrapper {
+        margin: 0px;
+        border-radius: 0;
+    }
+
+    .fce-table {
+        min-width: 100%;
+    }
+
+    .fce-table--compact {
+        min-width: 280px;
+    }
+
+    .fce-table th,
+    .fce-table td {
+        padding: 8px 6px;
+        font-size: 12px;
+    }
+
+    .fce-table--compact th,
+    .fce-table--compact td {
+        padding: 6px 4px;
+        font-size: 11px;
+    }
+
+    .fce-table__col--hide-mobile {
+        display: none;
+    }
+
+    /* Form Tables auf Mobile */
+    .fce-table--form input[type="text"] {
+        padding: 6px;
+        font-size: 12px;
+    }
+
+    /* Buttons responsive */
+    .back-link,
+    .default_button {
+        padding: 10px 20px;
+        font-size: 13px;
+        margin-top: 20px;
+    }
+
+    /* Pagination responsive */
+    .pagination-container .pagination-navbar {
+        padding: 6px 8px;
+        gap: 2px;
+        flex-wrap: wrap;
+    }
+
+    .pagination-container .pagination-navbar .page-btn {
+        padding: 4px 8px;
+        font-size: 11px;
+        min-width: 25px;
+    }
+
+    /* Loading Overlay responsive */
+    .fce-table-loading {
+        top: 10px;
+        right: 10px;
+        padding: 6px 12px;
+        font-size: 11px;
+    }
+
+    .fce-table-loading__spinner {
+        width: 14px;
+        height: 14px;
+    }
+}
+
+/* Very small screens */
+@media screen and (max-width: 360px) {
+    .fce-controlpanel-wrapper {
+        margin: 10px 5px;
+        padding: 15px 10px;
+    }
+
+    .widgets-stat-item-number {
+        font-size: 1.2em !important;
+    }
+
+    .fce-table {
+        min-width: 320px;
+    }
+
+    .fce-table--compact {
+        min-width: 250px;
+    }
 }

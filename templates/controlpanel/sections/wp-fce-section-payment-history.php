@@ -103,7 +103,7 @@ $payment_stats = get_payment_statistics($ipns);
                 <tr>
                     <th><?php esc_html_e('Order Date', 'wp-fce'); ?></th>
                     <th><?php esc_html_e('Product ID', 'wp-fce'); ?></th>
-                    <th><?php esc_html_e('Payment Processor', 'wp-fce'); ?></th>
+                    <th class="fce-table__col--hide-mobile"><?php esc_html_e('Payment Processor', 'wp-fce'); ?></th>
                     <th><?php esc_html_e('Invoice and Details', 'wp-fce'); ?></th>
                 </tr>
             </thead>
@@ -112,7 +112,7 @@ $payment_stats = get_payment_statistics($ipns);
                     <tr>
                         <td><?= esc_html(format_payment_date($ipn->get_ipn_date())); ?></td>
                         <td><strong><?= esc_html($ipn->get_external_product_id()); ?></strong></td>
-                        <td><?= esc_html($ipn->get_source()); ?></td>
+                        <td class="fce-table__col--hide-mobile"><?= esc_html($ipn->get_source()); ?></td>
                         <td><?= get_payment_details_link($ipn); ?></td>
                     </tr>
                 <?php endforeach; ?>

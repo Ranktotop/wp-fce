@@ -27,112 +27,6 @@ function get_transaction_details_link($management_link)
 }
 ?>
 
-<style>
-    /** Credentials Table */
-    .credentials-platform {
-        font-weight: 600;
-        text-transform: capitalize;
-    }
-
-    .credentials-input-cell {
-        padding: 10px 15px !important;
-    }
-
-    .credentials-table-input {
-        width: 100%;
-        margin-right: 0;
-        padding: 8px;
-    }
-
-    .credentials-save-container {
-        margin-top: 25px;
-        text-align: center;
-    }
-
-    /* Slide Animation Styles */
-    #transactions-table-wrapper {
-        position: relative;
-        overflow: hidden;
-        min-height: 300px;
-    }
-
-    .transactions-slide {
-        width: 100%;
-        transition: transform 0.3s ease-in-out;
-        position: relative;
-    }
-
-    .transactions-slide.sliding-out {
-        transform: translateX(-100%);
-    }
-
-    .transactions-slide.slide-in {
-        transform: translateX(100%);
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-    }
-
-    .transactions-slide.slide-in.active {
-        transform: translateX(0);
-    }
-
-    .transactions-slide.slide-in-left {
-        transform: translateX(-100%);
-    }
-
-    /* Loading Overlay */
-    .transactions-loading-overlay {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 20px;
-        padding: 8px 15px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 12px;
-        color: #007bff;
-        border: 1px solid #e3f2fd;
-        z-index: 10;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .transactions-loading-overlay.show {
-        opacity: 1;
-    }
-
-    .loading-spinner {
-        width: 16px;
-        height: 16px;
-        border: 2px solid #f3f3f3;
-        border-top: 2px solid #007bff;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-        0% {
-            transform: rotate(0deg);
-        }
-
-        100% {
-            transform: rotate(360deg);
-        }
-    }
-
-    /* Disable buttons during loading */
-    .pagination-navbar.loading .page-btn:not(.disabled) {
-        pointer-events: none;
-        opacity: 0.7;
-        transition: opacity 0.2s ease;
-    }
-</style>
-
 <h2><?php esc_html_e('Community API', 'wp-fce'); ?></h2>
 
 <!-- Messages Container -->
@@ -195,34 +89,37 @@ function get_transaction_details_link($management_link)
                 <div class="widgets-stat-item-label"><?= esc_html($current_balance); ?> Credits</div>
             </div>
         </div>
+
         <h3><?php esc_html_e('Credentials', 'wp-fce'); ?></h3>
         <div class="credentials-container">
             <form method="post" action="">
                 <input type="hidden" name="wp_fce_form_action" value="set_community_api_credentials">
                 <?php wp_nonce_field('wp_fce_set_community_api_credentials', 'wp_fce_nonce'); ?>
                 <input type="hidden" name="community_api_user_id" value="<?= esc_attr($user->get_id()); ?>">
-                <table class="fce-table">
-                    <thead>
-                        <tr>
-                            <th><?php esc_html_e('Platform', 'wp-fce'); ?></th>
-                            <th><?php esc_html_e('API Key', 'wp-fce'); ?></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($community_api_helper->get_credentials() as $platform => $api_key): ?>
+
+                <div class="fce-table-wrapper">
+                    <table class="fce-table fce-table--form">
+                        <thead>
                             <tr>
-                                <td class="credentials-platform"><?php echo esc_html($platform); ?></td>
-                                <td class="credentials-input-cell">
-                                    <input type="text"
-                                        name="credentials[<?php echo esc_attr($platform); ?>]"
-                                        value="<?php echo esc_attr($api_key); ?>"
-                                        placeholder="Enter <?php echo esc_attr($platform); ?> API Key"
-                                        class="credentials-table-input">
-                                </td>
+                                <th><?php esc_html_e('Platform', 'wp-fce'); ?></th>
+                                <th><?php esc_html_e('API Key', 'wp-fce'); ?></th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($community_api_helper->get_credentials() as $platform => $api_key): ?>
+                                <tr>
+                                    <td class="fce-table__highlight-cell"><?php echo esc_html($platform); ?></td>
+                                    <td>
+                                        <input type="text"
+                                            name="credentials[<?php echo esc_attr($platform); ?>]"
+                                            value="<?php echo esc_attr($api_key); ?>"
+                                            placeholder="Enter <?php echo esc_attr($platform); ?> API Key">
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
 
                 <div class="credentials-save-container">
                     <button type="submit" name="save_credentials" class="default_button">
@@ -231,6 +128,7 @@ function get_transaction_details_link($management_link)
                 </div>
             </form>
         </div>
+
         <h3><?php esc_html_e('Transactions', 'wp-fce'); ?></h3>
         <!-- Transactions Container (wird per AJAX aktualisiert) -->
         <div id="transactions-container">
@@ -244,33 +142,33 @@ function get_transaction_details_link($management_link)
             $current_page = $transaction_response["page"] ?? 1;
             ?>
 
-            <div id="transactions-table-wrapper">
+            <div class="fce-table-wrapper fce-table-wrapper--animated" id="transactions-table-wrapper">
                 <!-- Loading Overlay -->
-                <div id="transactions-loading-overlay" class="transactions-loading-overlay">
-                    <div class="loading-spinner"></div>
+                <div id="transactions-loading-overlay" class="fce-table-loading">
+                    <div class="fce-table-loading__spinner"></div>
                     <span>Loading...</span>
                 </div>
 
-                <div id="transactions-slide-current" class="transactions-slide">
+                <div id="transactions-slide-current" class="fce-table-slide">
                     <?php if (!empty($transactions)): ?>
                         <table class="fce-table">
                             <thead>
                                 <tr>
                                     <th><?php esc_html_e('Transaction Date', 'wp-fce'); ?></th>
-                                    <th><?php esc_html_e('Type', 'wp-fce'); ?></th>
+                                    <th class="fce-table__col--hide-mobile"><?php esc_html_e('Type', 'wp-fce'); ?></th>
                                     <th><?php esc_html_e('Credits', 'wp-fce'); ?></th>
-                                    <th><?php esc_html_e('Invoice and Details', 'wp-fce'); ?></th>
-                                    <th><?php esc_html_e('Description', 'wp-fce'); ?></th>
+                                    <th class="fce-table__col--hide-tablet"><?php esc_html_e('Invoice and Details', 'wp-fce'); ?></th>
+                                    <th class="fce-table__col--hide-mobile"><?php esc_html_e('Description', 'wp-fce'); ?></th>
                                 </tr>
                             </thead>
                             <tbody id="transactions-tbody">
                                 <?php foreach ($transactions as $tx): ?>
                                     <tr>
                                         <td><?php echo esc_html(date('d.m.Y H:i', strtotime($tx['created_at'] ?? ''))); ?></td>
-                                        <td><?php echo esc_html(ucfirst($tx['transaction_type'] ?? 'N/A')); ?></td>
-                                        <td><?php echo esc_html($tx['amount_credits'] ?? '0'); ?></td>
-                                        <td><?php echo get_transaction_details_link($tx['detail_url'] ?? ''); ?></td>
-                                        <td><?php echo esc_html($tx['description'] ?? ''); ?></td>
+                                        <td class="fce-table__col--hide-mobile"><?php echo esc_html(ucfirst($tx['transaction_type'] ?? 'N/A')); ?></td>
+                                        <td><strong><?php echo esc_html($tx['amount_credits'] ?? '0'); ?></strong></td>
+                                        <td class="fce-table__col--hide-tablet"><?php echo get_transaction_details_link($tx['detail_url'] ?? ''); ?></td>
+                                        <td class="fce-table__col--hide-mobile"><?php echo esc_html($tx['description'] ?? ''); ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -290,6 +188,7 @@ function get_transaction_details_link($management_link)
                 </div>
             <?php endif; ?>
         </div>
+
         <script>
             (function($) {
                 'use strict';
@@ -361,7 +260,7 @@ function get_transaction_details_link($management_link)
                  * Zeigt Loading-Overlay
                  */
                 function showTransactionsLoading() {
-                    $('#transactions-loading-overlay').addClass('show');
+                    $('#transactions-loading-overlay').addClass('fce-table-loading--show');
                     $('#pagination-nav').addClass('loading');
                 }
 
@@ -369,7 +268,7 @@ function get_transaction_details_link($management_link)
                  * Versteckt Loading-Overlay
                  */
                 function hideTransactionsLoading() {
-                    $('#transactions-loading-overlay').removeClass('show');
+                    $('#transactions-loading-overlay').removeClass('fce-table-loading--show');
                     $('#pagination-nav').removeClass('loading');
                 }
 
@@ -385,25 +284,24 @@ function get_transaction_details_link($management_link)
 
                     // Neue Slide erstellen
                     const newSlideId = 'transactions-slide-new';
-                    const slideClass = direction === 'right' ? 'slide-in' : 'slide-in slide-in-left';
+                    const slideClass = direction === 'right' ? 'fce-table-slide--slide-in' : 'fce-table-slide--slide-in fce-table-slide--slide-in-left';
 
-                    const $newSlide = $(`<div id="${newSlideId}" class="transactions-slide ${slideClass}">${newTableHTML}</div>`);
+                    const $newSlide = $(`<div id="${newSlideId}" class="fce-table-slide ${slideClass}">${newTableHTML}</div>`);
                     $wrapper.append($newSlide);
 
                     // Animation starten
                     setTimeout(() => {
                         // Aktuelle Slide raussliden
-                        const currentSlideClass = direction === 'right' ? 'sliding-out' : 'sliding-out';
-                        $currentSlide.addClass(currentSlideClass);
+                        $currentSlide.addClass('fce-table-slide--sliding-out');
 
                         // Neue Slide reinsliden
-                        $newSlide.addClass('active');
+                        $newSlide.addClass('fce-table-slide--active');
 
                         // Nach Animation aufräumen
                         setTimeout(() => {
                             $currentSlide.remove();
                             $newSlide.attr('id', 'transactions-slide-current')
-                                .removeClass('slide-in slide-in-left active');
+                                .removeClass('fce-table-slide--slide-in fce-table-slide--slide-in-left fce-table-slide--active');
                             hideTransactionsLoading();
                         }, 300); // Match CSS transition duration
 
@@ -423,10 +321,10 @@ function get_transaction_details_link($management_link)
                 <thead>
                     <tr>
                         <th><?php esc_html_e('Transaction Date', 'wp-fce'); ?></th>
-                        <th><?php esc_html_e('Type', 'wp-fce'); ?></th>
+                        <th class="fce-table__col--hide-mobile"><?php esc_html_e('Type', 'wp-fce'); ?></th>
                         <th><?php esc_html_e('Credits', 'wp-fce'); ?></th>
-                        <th><?php esc_html_e('Invoice and Details', 'wp-fce'); ?></th>
-                        <th><?php esc_html_e('Description', 'wp-fce'); ?></th>
+                        <th class="fce-table__col--hide-tablet"><?php esc_html_e('Invoice and Details', 'wp-fce'); ?></th>
+                        <th class="fce-table__col--hide-mobile"><?php esc_html_e('Description', 'wp-fce'); ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -449,10 +347,10 @@ function get_transaction_details_link($management_link)
                         tableHTML += `
                 <tr>
                     <td>${formattedDate}</td>
-                    <td>${tx.transaction_type ? tx.transaction_type.charAt(0).toUpperCase() + tx.transaction_type.slice(1) : 'N/A'}</td>
-                    <td>${tx.amount_credits || '0'}</td>
-                    <td>${detailsLink}</td>
-                    <td>${tx.description || ''}</td>
+                    <td class="fce-table__col--hide-mobile">${tx.transaction_type ? tx.transaction_type.charAt(0).toUpperCase() + tx.transaction_type.slice(1) : 'N/A'}</td>
+                    <td><strong>${tx.amount_credits || '0'}</strong></td>
+                    <td class="fce-table__col--hide-tablet">${detailsLink}</td>
+                    <td class="fce-table__col--hide-mobile">${tx.description || ''}</td>
                 </tr>
             `;
                     });
