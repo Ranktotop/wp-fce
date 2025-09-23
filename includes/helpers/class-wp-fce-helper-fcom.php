@@ -47,6 +47,32 @@ class WP_FCE_Helper_Fcom extends WP_FCE_Helper_Base
     }
 
     /**
+     * Fetch all FluentCommunity entities of type "community" (spaces), which are public, ordered by title.
+     *
+     * @return WP_FCE_Model_Fcom[]
+     */
+    public static function get_all_public_spaces(): array
+    {
+        return static::find(
+            ['privacy' => "public", 'type' => 'community'],
+            ['title' => 'ASC']
+        );
+    }
+
+    /**
+     * Fetch all FluentCommunity entities of type "course", which are public, ordered by title.
+     *
+     * @return WP_FCE_Model_Fcom[]
+     */
+    public static function get_all_public_courses(): array
+    {
+        return static::find(
+            ['privacy' => "public", 'type' => 'course'],
+            ['title' => 'ASC']
+        );
+    }
+
+    /**
      * Fetch all FluentCommunity Models which are mapped to the given product exclusively.
      *
      * @param  int  $product_id

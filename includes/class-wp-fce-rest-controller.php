@@ -104,6 +104,25 @@ class WP_FCE_REST_Controller
                 'product_id' => ['required' => true, 'validate_callback' => 'is_numeric'],
             ],
         ]);
+
+        // 8) Neuer Benutzer erstellen
+        register_rest_route($ns, '/register-user', [
+            'methods'             => WP_REST_Server::CREATABLE,
+            'callback'            => [$this, 'handle_user_registration'],
+            'permission_callback' => [$this, 'permission_check_admin'],
+            'args'                => [
+                'user_email'      => ['required' => true, 'validate_callback' => 'is_email'],
+                'user_first_name' => ['required' => false, 'validate_callback' => function ($value) {
+                    return is_string($value) || empty($value);
+                }],
+                'user_last_name'  => ['required' => false, 'validate_callback' => function ($value) {
+                    return is_string($value) || empty($value);
+                }],
+                'send_welcome_email' => ['required' => false, 'validate_callback' => function ($value) {
+                    return is_bool($value) || is_null($value);
+                }],
+            ],
+        ]);
     }
 
     /**
@@ -321,6 +340,85 @@ class WP_FCE_REST_Controller
                 $e->getMessage(),
                 ['status' => 500]
             );
+        }
+    }
+
+    public function handle_user_registration(WP_REST_Request $request)
+    {
+        $json_data = $request->get_json_params();
+
+        // JSON-Daten extrahieren
+        $email = sanitize_email($json_data['user_email'] ?? '');
+        $first_name = sanitize_text_field($json_data['user_first_name'] ?? '');
+        $last_name = sanitize_text_field($json_data['user_last_name'] ?? '');
+        $send_welcome_email = $json_data['send_welcome_email'] ?? true; // Default: true
+
+        //make sure email is given and valid        
+        if (empty($email) || !is_email($email)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'message' => __('A valid email address is required.', 'wp-fce')
+            ], 400);
+        }
+
+        try {
+            // get or create the user and send welcome email
+            $user = WP_FCE_Helper_User::get_or_create($email, '', '', $first_name, $last_name, $send_welcome_email);
+            $was_created = !email_exists($email) ? 'created' : 'existing';
+
+            // get all public entities (spaces/courses)
+            /** @var WP_FCE_Model_Fcom[] $public_entities */
+            $public_entities = array_merge(
+                WP_FCE_Helper_Fcom::get_all_public_spaces(),
+                WP_FCE_Helper_Fcom::get_all_public_courses()
+            );
+
+            // grant access to all public entities
+            $granted_access = [];
+            $failed_access = [];
+
+            foreach ($public_entities as $entity) {
+                try {
+                    $entity->grant_user_access($user->get_id(), 'member', 'by_api_registration');
+                    $granted_access[] = [
+                        'id' => $entity->get_id(),
+                        'title' => $entity->get_title(),
+                        'type' => $entity->get_type()
+                    ];
+                } catch (Exception $e) {
+                    $failed_access[] = [
+                        'id' => $entity->get_id(),
+                        'title' => $entity->get_title(),
+                        'type' => $entity->get_type(),
+                        'error' => $e->getMessage()
+                    ];
+                    error_log("FCE: Failed to grant access to {$entity->get_type()} {$entity->get_id()} for user {$user->get_id()}: " . $e->getMessage());
+                }
+            }
+
+            // return success with detailed info
+            $response_data = [
+                'success' => true,
+                'user_status' => $was_created, // 'created' or 'existing'
+                'user_id' => $user->get_id(),
+                'username' => $user->get_login(),
+                'email' => $user->get_email(),
+                'granted_access_count' => count($granted_access),
+                'granted_access' => $granted_access
+            ];
+
+            // Include failed access info if any (for debugging)
+            if (!empty($failed_access)) {
+                $response_data['failed_access'] = $failed_access;
+            }
+
+            $status_code = $was_created === 'created' ? 201 : 200;
+            return new WP_REST_Response($response_data, $status_code);
+        } catch (Exception $e) {
+            return new WP_REST_Response([
+                'success' => false,
+                'message' => __('Registration failed: ', 'wp-fce') . $e->getMessage()
+            ], 500);
         }
     }
 

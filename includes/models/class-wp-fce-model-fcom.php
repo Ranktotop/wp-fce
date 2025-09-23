@@ -25,6 +25,7 @@ class WP_FCE_Model_Fcom extends WP_FCE_Model_Base
         'title' => '%s',
         'slug'  => '%s',
         'type'  => '%s',
+        'privacy' => '%s',
     ];
 
     /**
@@ -45,6 +46,9 @@ class WP_FCE_Model_Fcom extends WP_FCE_Model_Base
 
     /** @var string */
     public string $type = '';
+
+    /** @var string */
+    public string $privacy = '';
 
     /**
      * Override save to disable CRUD for this model.
@@ -114,6 +118,16 @@ class WP_FCE_Model_Fcom extends WP_FCE_Model_Base
     public function get_type(): string
     {
         return $this->type;
+    }
+
+    /**
+     * Get the privacy setting.
+     *
+     * @return string
+     */
+    public function get_privacy(): string
+    {
+        return $this->privacy;
     }
 
     /**

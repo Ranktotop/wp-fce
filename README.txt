@@ -55,6 +55,9 @@ Access is automatically revoked unless another active product grants access to t
 
 == Changelog ==
 
+= 1.0.7 =
+* Added json webhook for adding users to public courses or spaces. Also added overwrite for login landing page
+
 = 1.0.6 =
 * Added responsive style for control panel
 

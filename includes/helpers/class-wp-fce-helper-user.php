@@ -114,42 +114,38 @@ class WP_FCE_Helper_User extends WP_FCE_Helper_Base
      * @return WP_FCE_Model_User
      * @throws RuntimeException      On error.
      */
-    public static function create(string $email, string $login = '', string $password = ''): WP_FCE_Model_User
+    public static function create(string $email, string $login = '', string $password = '', string $first_name = '',  string $last_name = '', bool $send_welcome_email = true): WP_FCE_Model_User
     {
         if (! is_email($email)) {
             throw new RuntimeException('Invalid email address.');
         }
 
         // Determine login
-        if (empty($login)) {
-            $base  = sanitize_user(strstr($email, '@', true), true);
-            $login = $base;
-            $i     = 1;
-            while (username_exists($login)) {
-                $login = $base . $i++;
-            }
-        } else {
-            $login = sanitize_user($login, true);
-            if (username_exists($login)) {
-                throw new RuntimeException('Username already exists.');
-            }
-        }
+        $generated_login = self::generate_valid_username($email, $login, $first_name, $last_name);
 
         if (empty($password)) {
             $password = wp_generate_password(12, false);
         }
 
         $userdata = [
-            'user_login'   => $login,
+            'user_login'   => $generated_login,
             'user_email'   => sanitize_email($email),
             'user_pass'    => $password,
         ];
+
         $user_id = wp_insert_user($userdata);
         if (is_wp_error($user_id)) {
             throw new RuntimeException('wp_insert_user error: ' . $user_id->get_error_message());
         }
 
-        return static::get_by_id((int)$user_id);
+        $created_user = static::get_by_id((int)$user_id);
+
+        if ($send_welcome_email) {
+            wp_new_user_notification($created_user->get_id(), null, 'user');
+            wp_new_user_notification($created_user->get_id(), null, 'admin');
+        }
+
+        return $created_user;
     }
 
     /**
@@ -160,17 +156,142 @@ class WP_FCE_Helper_User extends WP_FCE_Helper_Base
      * @param  string                $password
      * @return WP_FCE_Model_User|null
      */
-    public static function get_or_create(string $email, string $login = '', string $password = ''): ?WP_FCE_Model_User
+    public static function get_or_create(string $email, string $login = '', string $password = '', string $first_name = '',  string $last_name = '', bool $send_welcome_email = true): ?WP_FCE_Model_User
     {
         $user = static::get_by_email($email);
         if ($user) {
             return $user;
         }
         try {
-            return static::create($email, $login, $password);
+            return static::create($email, $login, $password, $first_name, $last_name, $send_welcome_email);
         } catch (\Exception $e) {
             error_log("FCE get_or_create user failed: " . $e->getMessage());
             return null;
         }
+    }
+
+
+    /**
+     * Generates a unique, valid username based on provided information
+     *
+     * @param string $email Required - used as fallback and validation
+     * @param string $login Optional - if provided, will be used directly
+     * @param string $first_name Optional - used in combination strategies
+     * @param string $last_name Optional - used in combination strategies
+     * @return string Valid, unique username (max 60 chars)
+     * @throws RuntimeException If unable to generate valid username
+     */
+    private static function generate_valid_username(string $email, string $login = '', string $first_name = '', string $last_name = ''): string
+    {
+        if (!is_email($email)) {
+            throw new RuntimeException('Valid email required for username generation.');
+        }
+
+        // Fall 2: Username ist explizit gegeben
+        if (!empty($login)) {
+            $login = sanitize_user(trim($login), true);
+
+            if (strlen($login) > 60 || empty($login) || username_exists($login)) {
+                //fallback 
+                return self::generate_valid_username($email, '', $first_name, $last_name);
+            }
+            return $login;
+        }
+
+        // Fall 3: Email + Firstname und/oder Lastname
+        if (!empty($first_name) || !empty($last_name)) {
+            return self::generate_username_from_names($email, $first_name, $last_name);
+        }
+
+        // Fall 1: Nur Email - verwende Teil vor @
+        return self::generate_username_from_email($email);
+    }
+
+    /**
+     * Generate username from first/last name combination
+     */
+    private static function generate_username_from_names(string $email, string $first_name, string $last_name): string
+    {
+        $first_name = sanitize_user(trim($first_name), true);
+        $last_name = sanitize_user(trim($last_name), true);
+
+        if (empty($first_name) && empty($last_name)) {
+            // Fallback to email if names are empty after sanitization
+            return self::generate_username_from_email($email);
+        }
+
+        if (empty($first_name)) {
+            // Kein Firstname -> Email-Teil + Lastname
+            $email_part = sanitize_user(strstr($email, '@', true), true);
+            if (empty($email_part) || strlen($email_part) < 2) {
+                $email_part = 'user';
+            }
+            $base = $email_part . "_" . $last_name;
+        } elseif (empty($last_name)) {
+            // Kein Lastname -> Firstname + Random 4-stellig
+            $random_suffix = wp_rand(1000, 9999);
+            $base = $first_name . '_' . $random_suffix;
+        } else {
+            // Beide Namen vorhanden -> Firstname + Lastname
+            $base = $first_name . "_" . $last_name;
+        }
+
+        return self::ensure_unique_username($base);
+    }
+
+    /**
+     * Generate username from email (part before @)
+     */
+    private static function generate_username_from_email(string $email): string
+    {
+        $base = sanitize_user(strstr($email, '@', true), true);
+
+        // Fallback wenn Email-Teil leer oder zu kurz
+        if (empty($base) || strlen($base) < 3) {
+            $base = 'user';
+        }
+
+        return self::ensure_unique_username($base);
+    }
+
+    /**
+     * Ensures username is unique and within 60 character limit
+     */
+    private static function ensure_unique_username(string $base): string
+    {
+        // Try base name first if it fits and is available
+        if (strlen($base) <= 60 && !username_exists($base)) {
+            return $base;
+        }
+
+        // Generate with numbers, ensuring we never exceed 60 chars
+        $counter = 1;
+        $max_attempts = 1000; // Prevent infinite loop
+
+        while ($counter <= $max_attempts) {
+            $suffix = (string) $counter;
+            $suffix_length = strlen($suffix);
+
+            // Calculate how much space we have for the base
+            $max_base_length = 60 - $suffix_length;
+
+            // Truncate base from the right if necessary
+            $truncated_base = substr($base, 0, $max_base_length);
+            $potential_username = $truncated_base . $suffix;
+
+            // Double check length and availability
+            if (strlen($potential_username) <= 60 && !username_exists($potential_username)) {
+                return $potential_username;
+            }
+
+            $counter++;
+        }
+
+        // Ultimate fallback if all attempts failed
+        do {
+            $fallback_username = 'user' . wp_rand(10000, 99999);
+        } while (username_exists($fallback_username));
+
+        return $fallback_username;
     }
 }

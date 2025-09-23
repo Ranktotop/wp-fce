@@ -16,7 +16,7 @@
  * Plugin Name:       FluentCommunity Extreme Add-On
  * Plugin URI:        http://example.com/wp-fce-uri/
  * Description:       Adds an API to FluentCommunity for supporting external payment processors
- * Version:           1.0.6
+ * Version:           1.0.7
  * Author:            Marc Meese
  * Author URI:        https://marcmeese.com
  * License:           GPL-2.0+

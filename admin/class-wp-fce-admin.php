@@ -156,6 +156,76 @@ class Wp_Fce_Admin
 	}
 
 	/**
+	 * Creates HTML for a single API endpoint description with detailed parameter info
+	 *
+	 * @param string $endpoint_path The endpoint URL path
+	 * @param string $method HTTP method (GET, POST, DELETE)
+	 * @param string $description Description of what the endpoint does
+	 * @param array $parameters Optional array of parameters with details
+	 * @return string HTML content
+	 */
+	private function create_endpoint_desc(string $endpoint_path, string $method, string $description, array $parameters = []): string
+	{
+		$base_url = untrailingslashit(rest_url('wp-fce/v1'));
+		$url = $base_url . '/' . ltrim($endpoint_path, '/');
+
+		$parameters_html = '';
+		if (!empty($parameters)) {
+			$parameters_html = '<div class="fce-endpoint-parameters">';
+			$parameters_html .= '<h4>' . __('Parameters:', 'wp-fce') . '</h4>';
+			$parameters_html .= '<table class="fce-params-table">';
+			$parameters_html .= '<thead><tr>';
+			$parameters_html .= '<th>' . __('Name', 'wp-fce') . '</th>';
+			$parameters_html .= '<th>' . __('Type', 'wp-fce') . '</th>';
+			$parameters_html .= '<th>' . __('Location', 'wp-fce') . '</th>';
+			$parameters_html .= '<th>' . __('Required', 'wp-fce') . '</th>';
+			$parameters_html .= '<th>' . __('Description', 'wp-fce') . '</th>';
+			$parameters_html .= '</tr></thead><tbody>';
+
+			foreach ($parameters as $param) {
+				$required_badge = $param['required']
+					? '<span class="fce-required-badge">' . __('Required', 'wp-fce') . '</span>'
+					: '<span class="fce-optional-badge">' . __('Optional', 'wp-fce') . '</span>';
+
+				$parameters_html .= sprintf(
+					'<tr>
+                    <td><code>%s</code></td>
+                    <td><span class="fce-type-badge fce-type-%s">%s</span></td>
+                    <td><span class="fce-location-badge fce-location-%s">%s</span></td>
+                    <td>%s</td>
+                    <td>%s</td>
+                </tr>',
+					esc_html($param['name']),
+					esc_attr(strtolower($param['type'])),
+					esc_html($param['type']),
+					esc_attr(strtolower($param['location'])),
+					esc_html($param['location']),
+					$required_badge,
+					esc_html($param['description'] ?? '')
+				);
+			}
+
+			$parameters_html .= '</tbody></table></div>';
+		}
+
+		return sprintf(
+			'<div class="fce-endpoint-item">
+            <div class="fce-endpoint-url">
+                <code>%s</code>
+                <span class="fce-endpoint-method fce-method-%s">%s</span>
+            </div>
+            <div class="fce-endpoint-description">%s</div>
+            %s
+        </div>',
+			esc_html($url),
+			strtolower($method),
+			esc_html($method),
+			esc_html($description),
+			$parameters_html
+		);
+	}
+
+	/**
 	 * Register options for Redux Admin Page
 	 *
 	 * @since 1.0.0
@@ -188,8 +258,6 @@ class Wp_Fce_Admin
 		$ipn_param   = $api_key_ipn   ?: '{ipn_api_key}';
 		$admin_param = $api_key_admin ?: '{admin_api_key}';
 
-		// Basis-URL der REST-API
-		$base_url = untrailingslashit(rest_url('wp-fce/v1'));
 		Redux::set_section('wp_fce_options', [
 			'title'  => __('API', 'wp-fce'),
 			'id'     => 'general_section',
@@ -217,34 +285,278 @@ class Wp_Fce_Admin
 				// ────────────────────────────────────────────
 				[
 					'id'      => 'api_endpoints_info',
-					'type'    => 'raw',            // alternativ 'info'
+					'type'    => 'raw',
 					'title'   => __('Endpoint-Overview', 'wp-fce'),
 					'content' => sprintf(
-						'<style>
-                    .redux-endpoint-list code{
-                        display:inline-block;
-                        padding:2px 6px;
-                        border-radius:3px;
-                        background:#f1f1f1;
-                        margin:2px 0;
-                        font-family:monospace;
-                    }
-                </style>
-                <div class="redux-endpoint-list">
-                    <p><strong>%1$s</strong></p>
-                    <ul style="margin-left:1.25rem">
-                        <li><code>%1$s/ipn?apikey=%2$s</code> <em>(POST)</em></li>
-                        <li><code>%1$s/access/status?user_id={user_id}&amp;entity_id={entity_id}&amp;apikey=%3$s</code> <em>(GET)</em></li>
-                        <li><code>%1$s/access/sources?user_id={user_id}&amp;entity_id={entity_id}&amp;apikey=%3$s</code> <em>(GET)</em></li>
-                        <li><code>%1$s/mapping?apikey=%3$s</code> <em>(POST)</em></li>
-                        <li><code>%1$s/mapping/{product_id}?apikey=%3$s</code> <em>(DELETE)</em></li>
-                        <li><code>%1$s/override?apikey=%3$s</code> <em>(POST)</em></li>
-                        <li><code>%1$s/override?user_id={user_id}&amp;product_id={product_id}&amp;apikey=%3$s</code> <em>(DELETE)</em></li>
-                    </ul>
-                </div>',
-						esc_url($base_url),
-						esc_html($ipn_param),
-						esc_html($admin_param)
+						'<div class="fce-endpoint-list">%s</div>',
+						implode('', [
+							$this->create_endpoint_desc(
+								"ipn?apikey={$ipn_param}",
+								'POST',
+								__('Receives instant payment notifications from external payment providers (CopeCart, Digistore24) to automatically create users and grant access to products.', 'wp-fce'),
+								[
+									[
+										'name' => 'apikey',
+										'type' => 'string',
+										'location' => 'URL',
+										'required' => true,
+										'description' => __('IPN API key for authentication', 'wp-fce')
+									],
+									[
+										'name' => 'user_email',
+										'type' => 'string',
+										'location' => 'JSON',
+										'required' => true,
+										'description' => __('Email address of the customer', 'wp-fce')
+									],
+									[
+										'name' => 'product_id',
+										'type' => 'string',
+										'location' => 'JSON',
+										'required' => true,
+										'description' => __('External product identifier', 'wp-fce')
+									],
+									[
+										'name' => 'transaction_id',
+										'type' => 'string',
+										'location' => 'JSON',
+										'required' => true,
+										'description' => __('Unique transaction identifier', 'wp-fce')
+									],
+									[
+										'name' => 'source',
+										'type' => 'string',
+										'location' => 'JSON',
+										'required' => true,
+										'description' => __('Payment provider name (e.g. copecart, digistore24)', 'wp-fce')
+									],
+								]
+							),
+							$this->create_endpoint_desc(
+								"register-user?apikey={$admin_param}",
+								'POST',
+								__('Creates or updates a WordPress user and automatically grants access to all public FluentCommunity spaces and courses.', 'wp-fce'),
+								[
+									[
+										'name' => 'apikey',
+										'type' => 'string',
+										'location' => 'URL',
+										'required' => true,
+										'description' => __('Admin API key for authentication', 'wp-fce')
+									],
+									[
+										'name' => 'user_email',
+										'type' => 'string',
+										'location' => 'JSON',
+										'required' => true,
+										'description' => __('Valid email address of the user', 'wp-fce')
+									],
+									[
+										'name' => 'user_first_name',
+										'type' => 'string',
+										'location' => 'JSON',
+										'required' => false,
+										'description' => __('First name of the user', 'wp-fce')
+									],
+									[
+										'name' => 'user_last_name',
+										'type' => 'string',
+										'location' => 'JSON',
+										'required' => false,
+										'description' => __('Last name of the user', 'wp-fce')
+									],
+									[
+										'name' => 'send_welcome_email',
+										'type' => 'boolean',
+										'location' => 'JSON',
+										'required' => false,
+										'description' => __('Whether to send welcome email to new user (default: true)', 'wp-fce')
+									],
+								]
+							),
+							$this->create_endpoint_desc(
+								"access/status?user_id={user_id}&entity_id={entity_id}&apikey={$admin_param}",
+								'GET',
+								__('Checks if a specific user has access to a specific space/course. Returns boolean status.', 'wp-fce'),
+								[
+									[
+										'name' => 'user_id',
+										'type' => 'integer',
+										'location' => 'URL',
+										'required' => true,
+										'description' => __('WordPress user ID', 'wp-fce')
+									],
+									[
+										'name' => 'entity_id',
+										'type' => 'integer',
+										'location' => 'URL',
+										'required' => true,
+										'description' => __('FluentCommunity space or course ID', 'wp-fce')
+									],
+									[
+										'name' => 'apikey',
+										'type' => 'string',
+										'location' => 'URL',
+										'required' => true,
+										'description' => __('Admin API key for authentication', 'wp-fce')
+									],
+								]
+							),
+							$this->create_endpoint_desc(
+								"access/sources?user_id={user_id}&entity_id={entity_id}&apikey={$admin_param}",
+								'GET',
+								__('Returns detailed information about why access was granted or denied, including all active sources and overrides.', 'wp-fce'),
+								[
+									[
+										'name' => 'user_id',
+										'type' => 'integer',
+										'location' => 'URL',
+										'required' => true,
+										'description' => __('WordPress user ID', 'wp-fce')
+									],
+									[
+										'name' => 'entity_id',
+										'type' => 'integer',
+										'location' => 'URL',
+										'required' => true,
+										'description' => __('FluentCommunity space or course ID', 'wp-fce')
+									],
+									[
+										'name' => 'apikey',
+										'type' => 'string',
+										'location' => 'URL',
+										'required' => true,
+										'description' => __('Admin API key for authentication', 'wp-fce')
+									],
+								]
+							),
+							$this->create_endpoint_desc(
+								"mapping?apikey={$admin_param}",
+								'POST',
+								__('Creates a new mapping between a product ID and a space ID. Requires product_id and space_id in POST body.', 'wp-fce'),
+								[
+									[
+										'name' => 'apikey',
+										'type' => 'string',
+										'location' => 'URL',
+										'required' => true,
+										'description' => __('Admin API key for authentication', 'wp-fce')
+									],
+									[
+										'name' => 'product_id',
+										'type' => 'integer',
+										'location' => 'JSON',
+										'required' => true,
+										'description' => __('Internal product ID to map', 'wp-fce')
+									],
+									[
+										'name' => 'space_id',
+										'type' => 'integer',
+										'location' => 'JSON',
+										'required' => true,
+										'description' => __('FluentCommunity space or course ID', 'wp-fce')
+									],
+								]
+							),
+							$this->create_endpoint_desc(
+								"mapping/{product_id}?apikey={$admin_param}",
+								'DELETE',
+								__('Removes all mappings for a specific product ID. Also removes access for users who only had access through this product.', 'wp-fce'),
+								[
+									[
+										'name' => 'product_id',
+										'type' => 'integer',
+										'location' => 'URL',
+										'required' => true,
+										'description' => __('Internal product ID to remove mappings for', 'wp-fce')
+									],
+									[
+										'name' => 'apikey',
+										'type' => 'string',
+										'location' => 'URL',
+										'required' => true,
+										'description' => __('Admin API key for authentication', 'wp-fce')
+									],
+								]
+							),
+							$this->create_endpoint_desc(
+								"override?apikey={$admin_param}",
+								'POST',
+								__('Creates an admin override to manually grant or deny access. Requires user_id, product_id, override_type (allow/deny), and optional valid_until timestamp.', 'wp-fce'),
+								[
+									[
+										'name' => 'apikey',
+										'type' => 'string',
+										'location' => 'URL',
+										'required' => true,
+										'description' => __('Admin API key for authentication', 'wp-fce')
+									],
+									[
+										'name' => 'user_id',
+										'type' => 'integer',
+										'location' => 'JSON',
+										'required' => true,
+										'description' => __('WordPress user ID', 'wp-fce')
+									],
+									[
+										'name' => 'product_id',
+										'type' => 'integer',
+										'location' => 'JSON',
+										'required' => true,
+										'description' => __('Internal product ID', 'wp-fce')
+									],
+									[
+										'name' => 'override_type',
+										'type' => 'string',
+										'location' => 'JSON',
+										'required' => true,
+										'description' => __('Type of override: "allow" or "deny"', 'wp-fce')
+									],
+									[
+										'name' => 'valid_until',
+										'type' => 'string',
+										'location' => 'JSON',
+										'required' => false,
+										'description' => __('Expiration date/time (ISO format, optional)', 'wp-fce')
+									],
+									[
+										'name' => 'comment',
+										'type' => 'string',
+										'location' => 'JSON',
+										'required' => false,
+										'description' => __('Optional comment for the override', 'wp-fce')
+									],
+								]
+							),
+							$this->create_endpoint_desc(
+								"override?user_id={user_id}&product_id={product_id}&apikey={$admin_param}",
+								'DELETE',
+								__('Removes all admin overrides for a specific user-product combination. Restores normal access evaluation.', 'wp-fce'),
+								[
+									[
+										'name' => 'user_id',
+										'type' => 'integer',
+										'location' => 'URL',
+										'required' => true,
+										'description' => __('WordPress user ID', 'wp-fce')
+									],
+									[
+										'name' => 'product_id',
+										'type' => 'integer',
+										'location' => 'URL',
+										'required' => true,
+										'description' => __('Internal product ID', 'wp-fce')
+									],
+									[
+										'name' => 'apikey',
+										'type' => 'string',
+										'location' => 'URL',
+										'required' => true,
+										'description' => __('Admin API key for authentication', 'wp-fce')
+									],
+								]
+							),
+						])
 					),
 				],
 			],
@@ -262,6 +574,13 @@ class Wp_Fce_Admin
 					'title'    => __('Background Image', 'wp-fce'),
 					'subtitle' => __('Is shown on the payments-overview page', 'wp-fce'),
 					'desc'     => __('Optional. Supports PNG and JPEG', 'wp-fce'),
+				],
+				[
+					'id'    => 'login_landingpage_url',
+					'type'  => 'text',
+					'title' => __('Login Landing Page URL', 'wp-fce'),
+					'desc'  => __('URL of the page the user lands on after logging into wordpress', 'wp-fce'),
+					'default' => home_url('/wp-admin/'),
 				],
 			],
 		]);
@@ -430,6 +749,39 @@ class Wp_Fce_Admin
 			'',                             // Icon
 			null                            // Position
 		);
+	}
+
+	// In admin/class-wp-fce-admin.php
+	/**
+	 * Handle login redirect based on admin settings - only for non-admins
+	 *
+	 * @param string $redirect_to URL to redirect to
+	 * @param string $requested_redirect_to The requested redirect destination URL passed as a parameter
+	 * @param WP_User|WP_Error $user WP_User object if login was successful, WP_Error object otherwise
+	 * @return string
+	 */
+	public function handle_login_redirect($redirect_to, $requested_redirect_to, $user)
+	{
+		// Nur für erfolgreiche Logins
+		if (is_wp_error($user)) {
+			return $redirect_to;
+		}
+
+		// Prüfe ob der Nutzer Admin-Rechte hat
+		if (user_can($user, 'manage_options')) {
+			// Für Admins: Standard-Verhalten beibehalten
+			return $redirect_to;
+		}
+
+		// Nur für Nicht-Admins: Prüfe ob eine custom URL konfiguriert ist
+		$custom_url = Redux::get_option('wp_fce_options', 'login_landingpage_url');
+
+		if (!empty($custom_url) && $custom_url !== home_url('/wp-admin/')) {
+			return $custom_url;
+		}
+
+		// Fallback auf Standard-Verhalten
+		return $redirect_to;
 	}
 
 	/**

@@ -239,6 +239,9 @@ class Wp_Fce
 		$this->loader->add_action('admin_menu', $plugin_admin, 'register_page_map_products');
 		$this->loader->add_action('admin_menu', $plugin_admin, 'register_page_manage_access');
 		$this->loader->add_action('admin_init', $plugin_admin, 'register_form_handler');
+
+		// Login-Redirect Hook registrieren
+		$this->loader->add_filter('login_redirect', $plugin_admin, 'handle_login_redirect', 10, 3);
 	}
 
 	/**
