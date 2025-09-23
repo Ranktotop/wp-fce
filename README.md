@@ -52,6 +52,11 @@ Zum Paketieren für die Produktion:
 composer install --no-dev --optimize-autoloader
 ```
 
+Zum pushen neuer Releases:
+git tag -a vx.x.x -m "Version x.x.x - Some infos"
+git push origin vx.x.x
+
+
 ---
 
 ## 📄 Lizenz
