@@ -200,7 +200,8 @@ class WP_FCE_Helper_Community_API
     {
         return [
             'openai',
-            'elevenlabs'
+            'elevenlabs',
+            'googlecloudservice',
         ];
     }
 
@@ -254,6 +255,17 @@ class WP_FCE_Helper_Community_API
             if ($platform_api_key === null || empty($platform_api_key) || $platform_api_key === '***') {
                 continue;
             }
+
+            try {
+                //try to decode base64 encoded keys
+                //since the string was encoded through the POST form, we need to decode it here
+                $decoded = $this->parse_valid_json($platform_api_key);
+                if ($decoded !== null) {
+                    $platform_api_key = $decoded;
+                }
+            } catch (Exception $e) {
+                //ignore
+            }
             $clean_credentials[] = ["platform" => $platform, "api_key" => $platform_api_key];
         }
         //if nothing to do, return true
@@ -274,6 +286,43 @@ class WP_FCE_Helper_Community_API
         //clear cache
         $this->cached_user_data = null;
         return $response !== null;
+    }
+
+    /**
+     * Prüft, ob ein String valides JSON enthält und gibt das decodierte Array zurück.
+     * Gibt null zurück, wenn das JSON ungültig ist.
+     *
+     * @param string|null $json_string Der zu prüfende JSON-String.
+     * @param bool $require_object_or_array Nur Arrays/Objekte als gültig werten.
+     * @return array|null
+     */
+    private function parse_valid_json(?string $json_string, bool $require_object_or_array = true): ?array
+    {
+        if ($json_string === null || $json_string === '') {
+            return null;
+        }
+
+        // 1) WordPress-spezifische Kodierungen rückgängig machen
+        $json_string = wp_unslash($json_string);
+        $json_string = wp_specialchars_decode($json_string, ENT_QUOTES);
+
+        // 2) BOM und Whitespace entfernen
+        $json_string = preg_replace('/^\xEF\xBB\xBF/', '', $json_string);
+        $json_string = trim($json_string);
+
+        // 3) JSON dekodieren
+        $decoded = json_decode($json_string, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return null;
+        }
+
+        // 4) Optional: nur Objekt/Array zulassen
+        if ($require_object_or_array && !is_array($decoded)) {
+            return null;
+        }
+
+        return $decoded;
     }
 
     /*****************************

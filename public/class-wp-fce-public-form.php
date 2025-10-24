@@ -28,10 +28,12 @@ class Wp_Fce_Public_Form_Handler
         if (isset($_POST['wp_fce_form_action']) && $_POST['wp_fce_form_action'] === 'set_community_api_key') {
             $this->handle_set_community_api_key();
         }
+        if (isset($_POST['wp_fce_form_action']) && $_POST['wp_fce_form_action'] === 'reset_community_api_key') {
+            $this->handle_reset_community_api_key();
+        }
         if (isset($_POST['wp_fce_form_action']) && $_POST['wp_fce_form_action'] === 'set_community_api_credentials') {
             $this->handle_set_community_api_credentials();
         }
-
         // weitere: elseif ($_POST['wp_fce_form_action'] === '...') ...
     }
 
@@ -50,6 +52,16 @@ class Wp_Fce_Public_Form_Handler
         $helper = new WP_FCE_Helper_Community_Api($user);
         $helper->set_community_api_key($api_key);
         wp_safe_redirect(add_query_arg('fce_success', urlencode(__('Community API key saved successfully', 'wp-fce')), $_SERVER['REQUEST_URI']));
+        exit;
+    }
+
+    private function handle_reset_community_api_key(): void
+    {
+        $user = $this->get_verified_user($_POST, 'community_api_user_id', 'wp_fce_reset_community_api_key');
+
+        // delete existing user meta key
+        delete_user_meta($user->get_id(), "wp_fce_community_api_key");
+        wp_safe_redirect(add_query_arg('fce_success', urlencode(__('Community API key has been reset', 'wp-fce')), $_SERVER['REQUEST_URI']));
         exit;
     }
 

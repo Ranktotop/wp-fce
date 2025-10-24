@@ -128,74 +128,60 @@ class WP_FCE_REST_Controller
     /**
      * IPN-Request verarbeiten.
      */
-    public function handle_ipn(WP_REST_Request $request)
+    public function handle_ipn(\WP_REST_Request $request)
     {
-        $data = $request->get_json_params();
-
-        // 1) JSON sanitisieren & validieren
-        $required = [
-            'customer.email',
-            'product.id',
-            'transaction.transaction_date',
-            'transaction.transaction_id',
-            'source',
-        ];
-        $ipn = $this->sanitize_and_validate_ipn($data, $required);
-
-        // 2) Pflichtfelder prüfen
-        if (empty($ipn['customer']['email']) || empty($ipn['product']['id'])) {
-            return new \WP_REST_Response(
-                ['error' => 'Missing parameters: customer.email and product.id are required'],
-                400
-            );
+        try {
+            $model = ProxyIPNModelCreateRequest::fromArray($request->get_json_params());
+            $ipn   = new ProxyIPNClass($model);
+        } catch (\Exception $e) {
+            return new \WP_REST_Response(['error' => $e->getMessage()], 400);
         }
 
-        // 3) Unix-Timestamps in DateTime umwandeln
+        // 1) Fehlenden Pflichtwert korrekt beenden: RETURN (nicht throw)
+        $txDate = $ipn->get_transaction_date(); // nur EINMAL aufrufen
+        if ($txDate === null) {
+            return new \WP_REST_Response([
+                'error'          => 'Missing required fields',
+                'missing_fields' => ['transaction.transaction_date'],
+            ], 400);
+        }
+
+        // 2) Zeitumrechnung – Analyzer weiß jetzt: $txDate ist DateTimeImmutable
         try {
-            // transaction_date
-            $txTs    = (int) $ipn['transaction']['transaction_date'];
-            $ipnDate = new \DateTime();
-            $ipnDate->setTimestamp($txTs);
-            $ipnDate->setTimezone(new \DateTimeZone(wp_timezone_string()));
+            /** @var \DateTimeImmutable $txDate */
+            $ipnDate = $txDate->setTimezone(new \DateTimeZone(\wp_timezone_string()));
 
-            // paid_until (oder +100 Jahre, falls leer/0)
-            $paidTs = isset($ipn['transaction']['paid_until'])
-                ? (int) $ipn['transaction']['paid_until']
-                : 0;
-
-            if ($paidTs > 0) {
-                $expiryDate = new \DateTime();
-                $expiryDate->setTimestamp($paidTs);
-                $expiryDate->setTimezone(new \DateTimeZone(wp_timezone_string()));
+            $paidUntil = $ipn->get_transaction_paid_until();
+            if ($paidUntil !== null) {
+                $expiryDate = $paidUntil->setTimezone(new \DateTimeZone(\wp_timezone_string()));
             } else {
-                $expiryDate = new \DateTime('now', new \DateTimeZone(wp_timezone_string()));
-                $expiryDate->modify('+100 years');
+                $expiryDate = new \DateTimeImmutable('now', new \DateTimeZone(\wp_timezone_string()));
+                $expiryDate = $expiryDate->modify('+100 years');
             }
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return new \WP_REST_Response(
-                ['error' => 'Invalid timestamp in transaction_date or paid_until'],
+                ['error' => 'Invalid timestamp in transaction.paid_until'],
                 422
             );
         }
 
-        // 4) IPN verarbeiten
+        // 3) Verarbeitung
         try {
+            $ipnDate   = \DateTime::createFromImmutable($ipnDate);
+            $expiryDate = \DateTime::createFromImmutable($expiryDate);
             $this->helper_ipn_log->record_ipn(
-                sanitize_email($ipn['customer']['email']),
-                sanitize_text_field($ipn['product']['id']),
-                sanitize_text_field($ipn['transaction']['transaction_id']),
-                $ipn,
-                $ipnDate,
-                $expiryDate,
-                sanitize_text_field($ipn['source'])
+                \sanitize_email($ipn->get_customer_email()),
+                \sanitize_text_field($ipn->get_product_id()),
+                \sanitize_text_field($ipn->get_transaction_id()),
+                $model->toArray(),
+                $ipnDate,     // jetzt nicht mehr nullable
+                $expiryDate,  // ebenfalls nicht nullable
+                \sanitize_text_field($ipn->get_source())
             );
 
-            return rest_ensure_response(['success' => true]);
-        } catch (\Exception $e) {
-            return new \WP_REST_Response(
-                ['error' => $e->getMessage()],
-                500
-            );
+            return \rest_ensure_response(['success' => true]);
+        } catch (\Throwable $e) {
+            return new \WP_REST_Response(['error' => $e->getMessage()], 500);
         }
     }
 

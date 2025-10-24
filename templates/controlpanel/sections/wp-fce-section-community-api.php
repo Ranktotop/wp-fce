@@ -56,6 +56,16 @@ function get_transaction_details_link($management_link)
                         <?php esc_html_e('Save API Key', 'wp-fce'); ?>
                     </button>
                 </form>
+                <hr>
+                <h4><?php esc_html_e('If you do not know your API key, you can try to search for it automatically:', 'wp-fce'); ?></h4>
+                <form id="community-api-form" method="post" action="">
+                    <input type="hidden" name="wp_fce_form_action" value="reset_community_api_key">
+                    <?php wp_nonce_field('wp_fce_reset_community_api_key', 'wp_fce_nonce'); ?>
+                    <input type="hidden" name="community_api_user_id" value="<?= esc_attr($user->get_id()); ?>">
+                    <button type="submit" class="default_button" style="margin-top: 10px;">
+                        <?php esc_html_e('Try automatic search', 'wp-fce'); ?>
+                    </button>
+                </form>
             </div>
         </div>
     </div>

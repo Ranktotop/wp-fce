@@ -184,6 +184,7 @@ class Wp_Fce
 		 * The REST API controller for handling IPN callbacks
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-fce-rest-controller.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/ipn_entity_template/ProxyIPN.php';
 
 		/**
 		 * Cronjob classes
