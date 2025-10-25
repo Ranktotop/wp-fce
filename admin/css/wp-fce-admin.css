@@ -284,7 +284,7 @@
     display: inline-block;
     padding: 2px 6px;
     border-radius: 3px;
-    background: #f1f1f1;
+    background: #ffffff0a;
     margin: 2px 0;
     font-family: monospace;
     word-break: break-all;
@@ -293,8 +293,8 @@
 .fce-endpoint-item {
     margin-bottom: 20px;
     padding: 15px;
-    background: #f9f9f9;
-    border-left: 4px solid #0073aa;
+    background: #ffffff0a;
+    border-left: 4px solid #57b957;
     border-radius: 4px;
 }
 
@@ -335,7 +335,6 @@
 }
 
 .fce-endpoint-description {
-    color: #666;
     font-style: italic;
     line-height: 1.4;
     margin-bottom: 15px;
@@ -364,20 +363,20 @@
 .fce-params-table td {
     padding: 8px 6px;
     text-align: left;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #ffffff0a;
     vertical-align: top;
 }
 
 .fce-params-table th {
     background: #f5f5f5;
     font-weight: 600;
-    color: #555;
+    color: #ededed !important;
     font-size: 11px;
     text-transform: uppercase;
 }
 
 .fce-params-table code {
-    background: #e8e8e8;
+    background: #ffffff0a;
     padding: 2px 4px;
     font-size: 11px;
 }
