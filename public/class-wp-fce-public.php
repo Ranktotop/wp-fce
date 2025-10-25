@@ -166,6 +166,45 @@ class Wp_Fce_Public
 		return $template;
 	}
 
+	public function redirect_to_portal()
+	{
+		// Prüfen ob wir wirklich auf der Root-URL sind
+		$request_uri = $_SERVER['REQUEST_URI'] ?? '';
+		$parsed_home = parse_url(home_url());
+		$home_path = $parsed_home['path'] ?? '/';
+
+		// Normalisiere die Pfade
+		$home_path = rtrim($home_path, '/') . '/';
+		$request_path = parse_url($request_uri, PHP_URL_PATH);
+		$request_path = rtrim($request_path, '/') . '/';
+
+		// Nur weiterleiten wenn wir exakt auf der Home-URL sind
+		if ($request_path !== $home_path) {
+			return;
+		}
+
+		$activated = WP_FCE_Helper_Options::get_bool_option('redirect_home_to_portal', false);
+		if (!$activated) {
+			return;
+		}
+
+		// Portal URL von Fluent Community ermitteln
+		$portal_url = WP_FCE_Helper_Options::get_fluent_portal_url(include_query: true);
+
+		if (!$portal_url) {
+			return;
+		}
+
+		// GET-Parameter übernehmen
+		if (!empty($_GET)) {
+			$portal_url = add_query_arg($_GET, $portal_url);
+		}
+
+		// Weiterleitung durchführen
+		wp_safe_redirect($portal_url, 302);
+		exit;
+	}
+
 	/**
 	 * IPN-Request verarbeiten.
 	 *

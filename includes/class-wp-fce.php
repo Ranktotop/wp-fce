@@ -174,6 +174,7 @@ class Wp_Fce
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-user.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-fcom.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-community-api.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-options.php';
 
 		/**
 		 * Controller classes
@@ -277,6 +278,9 @@ class Wp_Fce
 		$this->loader->add_action('fluent_community/portal_head', $plugin_public, 'enqueue_profile_link_css');
 		$this->loader->add_filter('fluent_community/profile_view_data', $plugin_public, 'add_profile_management_link', 10, 2);
 		$this->loader->add_action('init', $plugin_public, 'register_form_handler');
+
+		//Redirect home if enabled
+		$this->loader->add_action('template_redirect', $plugin_public, 'redirect_to_portal');
 	}
 
 	/**

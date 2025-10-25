@@ -79,6 +79,17 @@ class Wp_Fce_Admin
 		 */
 
 		wp_enqueue_style($this->wp_fce, plugin_dir_url(__FILE__) . 'css/wp-fce-admin.css', array(), $this->version, 'all');
+		wp_enqueue_style($this->wp_fce . '-redux-customize', plugin_dir_url(__FILE__) . 'css/wp-fce-redux.css', array(), $this->version, 'all');
+	}
+
+	private function enqueue_custom_page_css(): void
+	{
+		wp_enqueue_style(
+			$this->wp_fce . '-custom-pages',
+			plugin_dir_url(__FILE__) . 'css/wp-fce-custom-pages.css',
+			array(),
+			$this->version
+		);
 	}
 
 	/**
@@ -259,8 +270,24 @@ class Wp_Fce_Admin
 		$admin_param = $api_key_admin ?: '{admin_api_key}';
 
 		Redux::set_section('wp_fce_options', [
-			'title'  => __('API', 'wp-fce'),
+			'title'  => __('General', 'wp-fce'),
 			'id'     => 'general_section',
+			'subtitle'   => __('Basic Settings', 'wp-fce'),
+			'icon'   => 'el el-cog',
+			'fields' => [
+				[
+					'id'       => 'redirect_home_to_portal',
+					'type'     => 'switch',
+					'title'    => __('Redirect Home to Portal', 'wp-fce'),
+					'subtitle'     => __('Check to activate redirecting users from the home page to the portal', 'wp-fce'),
+					'default'  => 0
+				],
+			],
+		]);
+
+		Redux::set_section('wp_fce_options', [
+			'title'  => __('API', 'wp-fce'),
+			'id'     => 'api_section',
 			'desc'   => __('API-Settings', 'wp-fce'),
 
 			// ───────────────────────────────────────────────
@@ -581,7 +608,7 @@ class Wp_Fce_Admin
 					'title' => __('Login Landing Page URL', 'wp-fce'),
 					'desc'  => __('URL of the page the user lands on after logging into wordpress', 'wp-fce'),
 					'default' => home_url('/wp-admin/'),
-				],
+				]
 			],
 		]);
 		Redux::set_section('wp_fce_options', [
@@ -837,6 +864,7 @@ class Wp_Fce_Admin
 	 */
 	public function render_page_manage_products(): void
 	{
+		$this->enqueue_custom_page_css();
 		$view = plugin_dir_path(dirname(__FILE__)) . 'templates/wp-fce-admin-manage-products.php';
 		if (file_exists($view)) {
 			include $view;
@@ -855,6 +883,7 @@ class Wp_Fce_Admin
 
 	public function render_page_map_products(): void
 	{
+		$this->enqueue_custom_page_css();
 		$view = plugin_dir_path(dirname(__FILE__)) . 'templates/wp-fce-admin-map-products.php';
 		if (file_exists($view)) {
 			include $view;
@@ -863,6 +892,7 @@ class Wp_Fce_Admin
 
 	public function render_page_manage_access(): void
 	{
+		$this->enqueue_custom_page_css();
 		$view = plugin_dir_path(dirname(__FILE__)) . 'templates/wp-fce-admin-manage-access.php';
 		if (file_exists($view)) {
 			include $view;

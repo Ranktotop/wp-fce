@@ -25,10 +25,9 @@ $bg_image_url = is_array($bg_image) && !empty($bg_image['url'])
 
 // Zurück-Button
 $referer = $_SERVER['HTTP_REFERER'] ?? '';
-$fcom_settings = get_option('fluent_community_settings', []);
-$slug = $fcom_settings['slug'] ?? '';
-$back_url = $slug ? home_url($slug) : home_url();
-$is_valid_referer = !empty($referer) && !empty($slug) && str_contains($referer, "/$slug/");
+$portal_url = WP_FCE_Helper_Options::get_fluent_portal_url();
+$back_url = $portal_url ? $portal_url : home_url();
+$is_valid_referer = !empty($referer) && $portal_url && str_contains($referer, $portal_url);
 if ($is_valid_referer) {
     $referer_host = parse_url($referer, PHP_URL_HOST);
     $site_host = parse_url(home_url(), PHP_URL_HOST);
