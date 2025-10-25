@@ -293,9 +293,11 @@
 .fce-endpoint-item {
     margin-bottom: 20px;
     padding: 15px;
-    background: #ffffff0a;
-    border-left: 4px solid #57b957;
+    background: #ffffff08;
+    border-left: 2px solid #57b957;
     border-radius: 4px;
+    box-shadow: 0px 3px 5px 2px rgb(0 0 0 / 67%);
+    margin-bottom: 30px;
 }
 
 .fce-endpoint-url {
