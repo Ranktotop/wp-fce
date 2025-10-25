@@ -55,7 +55,7 @@ Access is automatically revoked unless another active product grants access to t
 
 == Changelog ==
 
-= 1.1.1 =
+= 1.1.2 =
 * Added json support
 
 = 1.0.7 =
