@@ -1,7 +1,6 @@
-/**
- * All of the CSS for your admin-specific functionality should be
- * included in this file.
- */
+/********************
+ * MODAL STYLING
+ *******************/
 .wpfce-modal {
     position: fixed;
     top: 0;
@@ -19,14 +18,26 @@
     background: rgba(0, 0, 0, 0.5);
 }
 .wpfce-modal-content {
-    background: #fff;
+    background-color: #2c2c2cf7 !important;
+    border: 1px solid #ededed !important;
+    box-shadow: 0px 3px 9px 3px rgba(236, 236, 236, 0.19);
     padding: 20px;
     border-radius: 6px;
     z-index: 10;
     width: 100%;
     max-width: 400px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    color: #fff;
 }
+
+.wpfce-modal-content h1,
+.wpfce-modal-content h2,
+.wpfce-modal-content h3,
+.wpfce-modal-content h4,
+.wpfce-modal-content h5,
+.wpfce-modal-content h6 {
+    color: #ededed;
+}
+
 .wpfce-modal-actions {
     display: flex;
     justify-content: flex-end;
@@ -37,22 +48,196 @@
     display: none;
 }
 
-.delete.wpfce_delete_product_btn,
-.delete.wpfce_delete_product_mapping_btn,
-.delete.wpfce_delete_access_rule_btn {
+/*======================
+  Modal Input Styling
+======================*/
+
+.wpfce-modal-content .button,
+.wpfce-modal-content .button-secondary,
+.wpfce-modal-content .button:focus,
+.wpfce-modal-content .button-secondary:focus {
     color: #fff;
-    background-color: #dc3232;
-    border-color: #dc3232;
-    transition: all 0.2s ease-in-out;
+    font-size: 14px;
+    background-color: #ffffff1c;
+    border-width: 0px;
+    border-radius: 0px;
+    letter-spacing: 1px;
+    transition: 0.3s;
+    box-shadow: none;
 }
 
-.delete.wpfce_delete_product_btn:hover,
-.delete.wpfce_delete_product_mapping_btn:hover,
-.delete.wpfce_delete_access_rule_btn:hover {
-    color: #fff;
-    background-color: #f36060;
-    border-color: #f36060;
+.wpfce-modal-content .button:disabled,
+.wpfce-modal-content .button-secondary:disabled {
+    color: #747474 !important;
+    background-color: #ffffff1c !important;
 }
+
+.wpfce-modal-content .button:hover,
+.wpfce-modal-content .button-secondary:hover {
+    background-color: #ffffff4d;
+    color: #fff;
+}
+
+.wpfce-modal-content button.button-primary,
+.wpfce-modal-content input.button-primary,
+.wpfce-modal-content a.button-primary,
+.wpfce-modal-content button.button-primary:focus,
+.wpfce-modal-content input.button-primary:focus,
+.wpfce-modal-content a.button-primary:focus {
+    font-size: 14px;
+    background-color: #57b957;
+    border-width: 0px;
+    border-color: #57b957;
+    border-radius: 0px;
+    letter-spacing: 1px;
+    transition: 0.3s;
+    box-shadow: none;
+}
+
+.wpfce-modal-content button.button-primary:hover,
+.wpfce-modal-content input.button-primary:hover,
+.wpfce-modal-content a.button-primary:hover {
+    background-color: #66c766;
+    border-color: #66c766;
+    color: #fff;
+}
+
+.wpfce-modal-content input[type=email],
+.wpfce-modal-content input[type=password],
+.wpfce-modal-content input[type=text],
+.wpfce-modal-content input[type=number],
+.wpfce-modal-content input[type=datetime-local],
+.wpfce-modal-content textarea {
+    font-size: 14px !important;
+    text-align: left !important;
+    color: #fff !important;
+    margin-top: 0px !important;
+    margin-bottom: 5px !important;
+    background: rgb(255 255 255 / 2%) !important;
+    border: 1px solid rgb(255 255 255 / 15%) !important;
+    padding: 6px 10px 6px !important;
+}
+
+.wpfce-modal-content input[type=email]:disabled,
+.wpfce-modal-content input[type=password]:disabled,
+.wpfce-modal-content input[type=text]:disabled,
+.wpfce-modal-content input[type=number]:disabled,
+.wpfce-modal-content input[type=datetime-local]:disabled,
+.wpfce-modal-content textarea:disabled {
+    background: rgb(255 255 255 / 5%) !important;
+    border: 1px solid rgb(255 255 255 / 10%) !important;
+    color: #666 !important;
+}
+
+.wpfce-modal-content input[type=email]:focus,
+.wpfce-modal-content input[type=password]:focus,
+.wpfce-modal-content input[type=text]:focus,
+.wpfce-modal-content input[type=number]:focus,
+.wpfce-modal-content input[type=datetime-local]:focus,
+.wpfce-modal-content textarea:focus {
+    border-color: #57b957;
+    box-shadow: 0 0 0 1px #57b957;
+    outline: 1px solid transparent;
+}
+.wpfce-modal-content select:focus {
+    border-color: #57b957;
+    box-shadow: 0 0 0 1px #57b957;
+    outline: 1px solid transparent;
+}
+
+.wpfce-modal-content select {
+    font-size: 14px !important;
+    text-align: left !important;
+    color: #fff !important;
+    margin-top: 0px !important;
+    margin-bottom: 5px !important;
+    background: rgb(255 255 255 / 2%) url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E') no-repeat right 5px top 55%;
+    border: 1px solid rgb(255 255 255 / 15%) !important;
+    padding: 6px 10px 6px !important;
+}
+
+.wpfce-modal-content select option {
+    background-color: rgb(30 30 34) !important;
+    color: #999 !important;
+}
+
+.wpfce-modal-content select option:checked {
+    color: #fff !important;
+}
+
+
+
+/*======================
+  MODAL Switcher
+======================*/
+/* Checkbox Container */
+.wpfce-modal-content label:has(input[type="checkbox"]) {
+    position: relative;
+    align-items: center;
+    padding-left: 55px;
+    min-height: 26px;
+    cursor: pointer;
+    margin-bottom: 12px !important;
+}
+
+/* Verstecke die originale Checkbox */
+.wpfce-modal-content label input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Switch Container (erstellt über ::before) */
+.wpfce-modal-content label:has(input[type="checkbox"])::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 46px;
+    height: 26px;
+    border-radius: 50px;
+    border: 2px solid #b95757;
+    background: #b957574a;
+    transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Switch Ball (erstellt über ::after) */
+.wpfce-modal-content label:has(input[type="checkbox"])::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    border-radius: 50px;
+    background-image: linear-gradient(234deg, #a5a5a5 0%, #ededed 16%, #a5a5a5 42%, #ededed 62%, #f2f2f2 71%, #a5a5a5 82%, #a5a5a5 91%);
+    box-shadow: 0px 8px 12px -4px rgb(0 0 0 / 30%);
+    transition: left 0.3s ease;
+}
+
+/* ON State - Container */
+.wpfce-modal-content label:has(input[type="checkbox"]:checked)::before {
+    border: 2px solid #57b957;
+    background: #00ff0096;
+    box-shadow: 0px 0px 8px 0px #00ff00;
+}
+
+/* ON State - Ball Position */
+.wpfce-modal-content label:has(input[type="checkbox"]:checked)::after {
+    left: 28px;
+}
+
+/* Hover Effekt */
+.wpfce-modal-content label:has(input[type="checkbox"]):hover::before {
+    opacity: 0.9;
+}
+
+/********************
+ * NOTICE STYLING
+ *******************/
 
 #wpfce-notice-area {
     position: fixed;
@@ -82,249 +267,11 @@
 }
 
 #wpfce-notice-area .wpfce-notice-success {
-    background-color: #81d381;
+    background-color: #053401f7 !important;
+    border-bottom: 1px solid #6eff6e !important;
+    box-shadow: 0px 3px 9px 3px rgba(2, 255, 2, 0.19);
 }
 
-.wpfce-checkbox-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
-.wpfce-checkbox-grid label {
-    min-width: 200px;
-    display: block;
-}
-/* API Endpoint Styles - Am Ende von admin/css/wp-fce-admin.css hinzufügen */
-
-.fce-endpoint-list code {
-    display: inline-block;
-    padding: 2px 6px;
-    border-radius: 3px;
-    background: #f1f1f1;
-    margin: 2px 0;
-    font-family: monospace;
-    word-break: break-all;
-}
-
-.fce-endpoint-item {
-    margin-bottom: 20px;
-    padding: 15px;
-    background: #f9f9f9;
-    border-left: 4px solid #0073aa;
-    border-radius: 4px;
-}
-
-.fce-endpoint-url {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.fce-endpoint-method {
-    color: white;
-    padding: 3px 8px;
-    border-radius: 3px;
-    font-size: 11px;
-    font-weight: bold;
-    text-transform: uppercase;
-    min-width: 50px;
-    text-align: center;
-}
-
-.fce-method-get {
-    background: #28a745;
-}
-.fce-method-post {
-    background: #007bff;
-}
-.fce-method-delete {
-    background: #dc3545;
-}
-.fce-method-put {
-    background: #ffc107;
-    color: #212529;
-}
-.fce-method-patch {
-    background: #6f42c1;
-}
-
-.fce-endpoint-description {
-    color: #666;
-    font-style: italic;
-    line-height: 1.4;
-    margin-bottom: 15px;
-}
-
-/* Parameter-Tabelle */
-.fce-endpoint-parameters {
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid #ddd;
-}
-
-.fce-endpoint-parameters h4 {
-    margin: 0 0 10px 0;
-    color: #333;
-    font-size: 14px;
-}
-
-.fce-params-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-}
-
-.fce-params-table th,
-.fce-params-table td {
-    padding: 8px 6px;
-    text-align: left;
-    border-bottom: 1px solid #eee;
-    vertical-align: top;
-}
-
-.fce-params-table th {
-    background: #f5f5f5;
-    font-weight: 600;
-    color: #555;
-    font-size: 11px;
-    text-transform: uppercase;
-}
-
-.fce-params-table code {
-    background: #e8e8e8;
-    padding: 2px 4px;
-    font-size: 11px;
-}
-
-/* Badge-Styles */
-.fce-required-badge,
-.fce-optional-badge,
-.fce-type-badge,
-.fce-location-badge {
-    display: inline-block;
-    padding: 2px 6px;
-    border-radius: 2px;
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-}
-
-/* Required/Optional Badges */
-.fce-required-badge {
-    background: #dc3545;
-    color: white;
-}
-
-.fce-optional-badge {
-    background: #6c757d;
-    color: white;
-}
-
-/* Type Badges */
-.fce-type-string {
-    background: #17a2b8;
-    color: white;
-}
-
-.fce-type-integer,
-.fce-type-number {
-    background: #28a745;
-    color: white;
-}
-
-.fce-type-boolean {
-    background: #ffc107;
-    color: #212529;
-}
-
-.fce-type-array,
-.fce-type-object {
-    background: #6f42c1;
-    color: white;
-}
-
-/* Location Badges */
-.fce-location-url {
-    background: #fd7e14;
-    color: white;
-}
-
-.fce-location-json {
-    background: #20c997;
-    color: white;
-}
-
-.fce-location-header {
-    background: #e83e8c;
-    color: white;
-}
-
-.fce-location-form {
-    background: #6610f2;
-    color: white;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .fce-endpoint-url {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .fce-endpoint-item {
-        padding: 10px;
-    }
-
-    .fce-params-table {
-        font-size: 11px;
-    }
-
-    .fce-params-table th,
-    .fce-params-table td {
-        padding: 6px 4px;
-    }
-
-    /* Stack table on mobile */
-    .fce-params-table,
-    .fce-params-table thead,
-    .fce-params-table tbody,
-    .fce-params-table th,
-    .fce-params-table td,
-    .fce-params-table tr {
-        display: block;
-    }
-
-    .fce-params-table thead tr {
-        position: absolute;
-        top: -9999px;
-        left: -9999px;
-    }
-
-    .fce-params-table tr {
-        border: 1px solid #ccc;
-        margin-bottom: 10px;
-        padding: 8px;
-        border-radius: 4px;
-        background: white;
-    }
-
-    .fce-params-table td {
-        border: none;
-        position: relative;
-        padding-left: 50%;
-        padding-bottom: 8px;
-    }
-
-    .fce-params-table td:before {
-        content: attr(data-label) ": ";
-        position: absolute;
-        left: 6px;
-        width: 45%;
-        text-align: left;
-        font-weight: 600;
-        color: #333;
-    }
+#wpfce-notice-area .wpfce-notice-success p {
+    color: #6eff6e !important;
 }

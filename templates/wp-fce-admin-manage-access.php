@@ -28,11 +28,11 @@ usort($rules, function ($a, $b) {
                 <?php esc_html_e('Manage access rules for existing users and products', 'wp-fce'); ?>
             </p>
 
-            <div id="fce-rules-list">
+            <div id="fce-rules-list" class="wpfce-table-glass">
                 <?php if (empty($rules)) : ?>
                     <p><?php esc_html_e('No rules found', 'wp-fce'); ?></p>
                 <?php else : ?>
-                    <table class="wp-list-table widefat fixed striped">
+                    <table>
                         <thead>
                             <tr>
                                 <th><?php esc_html_e('User', 'wp-fce'); ?></th>

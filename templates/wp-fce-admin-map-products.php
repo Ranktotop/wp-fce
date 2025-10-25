@@ -15,63 +15,64 @@ $courses = WP_FCE_Helper_Fcom::get_all_courses();
     <h1><?php esc_html_e('Product Mappings', 'wp-fce'); ?></h1>
 
     <h2><?php esc_html_e('Existing Mappings', 'wp-fce'); ?></h2>
-
-    <table class="widefat striped">
-        <thead>
-            <tr>
-                <th><?php esc_html_e('Product', 'wp-fce'); ?></th>
-                <th><?php esc_html_e('Assigned Spaces', 'wp-fce'); ?></th>
-                <th><?php esc_html_e('Assigned Courses', 'wp-fce'); ?></th>
-                <th><?php esc_html_e('Action', 'wp-fce'); ?></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            if (empty($mapped_products)) :
-            ?>
+    <div class="wpfce-table-glass">
+        <table>
+            <thead>
                 <tr>
-                    <td colspan="4"><?php esc_html_e('No Mappings found', 'wp-fce'); ?></td>
+                    <th><?php esc_html_e('Product', 'wp-fce'); ?></th>
+                    <th><?php esc_html_e('Assigned Spaces', 'wp-fce'); ?></th>
+                    <th><?php esc_html_e('Assigned Courses', 'wp-fce'); ?></th>
+                    <th><?php esc_html_e('Action', 'wp-fce'); ?></th>
                 </tr>
+            </thead>
+            <tbody>
                 <?php
-            else :
-                foreach ($mapped_products as $mapped_product):
+                if (empty($mapped_products)) :
                 ?>
                     <tr>
-                        <td><?php echo esc_html($mapped_product->get_name()); ?></td>
-                        <td>
-                            <ul style="margin: 0; padding-left: 1.2em;">
-                                <?php foreach ($mapped_product->get_mapped_communities() as $community): ?>
-                                    <li><?php echo esc_html($community->get_title()); ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </td>
-                        <td>
-                            <ul style="margin: 0; padding-left: 1.2em;">
-                                <?php foreach ($mapped_product->get_mapped_courses() as $course): ?>
-                                    <li><?php echo esc_html($course->get_title()); ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </td>
-                        <td>
-                            <button
-                                type="button"
-                                class="button wpfce_edit_mapping_btn"
-                                data-product-id="<?php echo esc_attr($mapped_product->get_id()); ?>"
-                                data-product-title="<?php echo esc_attr($mapped_product->get_name()); ?>">
-                                <?php esc_html_e('Edit', 'wp-fce'); ?>
-                            </button>
-                            <button
-                                type="button"
-                                class="button button-primary delete wpfce_delete_product_mapping_btn"
-                                data-product-id="<?php echo esc_attr($mapped_product->get_id()); ?>">
-                                ✕ <?php esc_html_e('Delete', 'wp-fce'); ?>
-                            </button>
-                        </td>
+                        <td colspan="4"><?php esc_html_e('No Mappings found', 'wp-fce'); ?></td>
                     </tr>
-            <?php endforeach;
-            endif; ?>
-        </tbody>
-    </table>
+                    <?php
+                else :
+                    foreach ($mapped_products as $mapped_product):
+                    ?>
+                        <tr>
+                            <td><?php echo esc_html($mapped_product->get_name()); ?></td>
+                            <td>
+                                <ul style="margin: 0; padding-left: 1.2em;">
+                                    <?php foreach ($mapped_product->get_mapped_communities() as $community): ?>
+                                        <li><?php echo esc_html($community->get_title()); ?></li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </td>
+                            <td>
+                                <ul style="margin: 0; padding-left: 1.2em;">
+                                    <?php foreach ($mapped_product->get_mapped_courses() as $course): ?>
+                                        <li><?php echo esc_html($course->get_title()); ?></li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </td>
+                            <td>
+                                <button
+                                    type="button"
+                                    class="button wpfce_edit_mapping_btn"
+                                    data-product-id="<?php echo esc_attr($mapped_product->get_id()); ?>"
+                                    data-product-title="<?php echo esc_attr($mapped_product->get_name()); ?>">
+                                    <?php esc_html_e('Edit', 'wp-fce'); ?>
+                                </button>
+                                <button
+                                    type="button"
+                                    class="button button-primary delete wpfce_delete_product_mapping_btn"
+                                    data-product-id="<?php echo esc_attr($mapped_product->get_id()); ?>">
+                                    ✕ <?php esc_html_e('Delete', 'wp-fce'); ?>
+                                </button>
+                            </td>
+                        </tr>
+                <?php endforeach;
+                endif; ?>
+            </tbody>
+        </table>
+    </div>
 
     <hr style="margin: 40px 0;">
 

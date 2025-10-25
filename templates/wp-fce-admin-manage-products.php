@@ -21,11 +21,11 @@ $products = $helper_product->get_all();
                 <?php esc_html_e('Manage existing products and change their details.', 'wp-fce'); ?>
             </p>
 
-            <div id="fce-products-list">
+            <div id="fce-products-list" class="wpfce-table-glass">
                 <?php if (empty($products)) : ?>
                     <p><?php esc_html_e('No products found.', 'wp-fce'); ?></p>
                 <?php else : ?>
-                    <table class="wp-list-table widefat fixed striped">
+                    <table>
                         <thead>
                             <tr>
                                 <th><?php esc_html_e('Product ID', 'wp-fce'); ?></th>
