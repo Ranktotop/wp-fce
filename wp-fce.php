@@ -16,7 +16,7 @@
  * Plugin Name:       FluentCommunity Extreme Add-On
  * Plugin URI:        http://example.com/wp-fce-uri/
  * Description:       Adds an API to FluentCommunity for supporting external payment processors
- * Version:           1.1.2
+ * Version:           1.1.3
  * Author:            Marc Meese
  * Author URI:        https://marcmeese.com
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if (! defined('WPINC')) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('WP_FCE_VERSION', '1.1.2');
+define('WP_FCE_VERSION', '1.1.3');
 
 //  Composer‑Autoloader laden (für Carbon Fields)
 if (file_exists(__DIR__ . '/vendor/autoload.php')) {

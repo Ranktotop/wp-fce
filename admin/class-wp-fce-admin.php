@@ -330,33 +330,82 @@ class Wp_Fce_Admin
 										'description' => __('IPN API key for authentication', 'wp-fce')
 									],
 									[
-										'name' => 'user_email',
-										'type' => 'string',
+										'name' => 'customer',
+										'type' => 'json',
 										'location' => 'JSON',
 										'required' => true,
-										'description' => __('Email address of the customer', 'wp-fce')
+										'description' => __('IPNProxy customer data', 'wp-fce')
 									],
 									[
-										'name' => 'product_id',
-										'type' => 'string',
+										'name' => 'affiliate',
+										'type' => 'json',
 										'location' => 'JSON',
 										'required' => true,
-										'description' => __('External product identifier', 'wp-fce')
+										'description' => __('IPNProxy affiliate data', 'wp-fce')
 									],
 									[
-										'name' => 'transaction_id',
-										'type' => 'string',
+										'name' => 'joint_venture',
+										'type' => 'json',
 										'location' => 'JSON',
 										'required' => true,
-										'description' => __('Unique transaction identifier', 'wp-fce')
+										'description' => __('IPNProxy joint venture data', 'wp-fce')
+									],
+									[
+										'name' => 'earnings',
+										'type' => 'json',
+										'location' => 'JSON',
+										'required' => true,
+										'description' => __('IPNProxy earnings data', 'wp-fce')
+									],
+									[
+										'name' => 'tracking',
+										'type' => 'json',
+										'location' => 'JSON',
+										'required' => true,
+										'description' => __('IPNProxy tracking data', 'wp-fce')
+									],
+									[
+										'name' => 'product',
+										'type' => 'json',
+										'location' => 'JSON',
+										'required' => true,
+										'description' => __('IPNProxy product data', 'wp-fce')
+									],
+									[
+										'name' => 'license',
+										'type' => 'json',
+										'location' => 'JSON',
+										'required' => true,
+										'description' => __('IPNProxy license data', 'wp-fce')
+									],
+									[
+										'name' => 'vendor',
+										'type' => 'json',
+										'location' => 'JSON',
+										'required' => true,
+										'description' => __('IPNProxy vendor data', 'wp-fce')
+									],
+									[
+										'name' => 'transaction',
+										'type' => 'json',
+										'location' => 'JSON',
+										'required' => true,
+										'description' => __('IPNProxy transaction data', 'wp-fce')
+									],
+									[
+										'name' => 'voucher',
+										'type' => 'json',
+										'location' => 'JSON',
+										'required' => true,
+										'description' => __('IPNProxy voucher data', 'wp-fce')
 									],
 									[
 										'name' => 'source',
 										'type' => 'string',
 										'location' => 'JSON',
 										'required' => true,
-										'description' => __('Payment provider name (e.g. copecart, digistore24)', 'wp-fce')
-									],
+										'description' => __('IPNProxy source data', 'wp-fce')
+									]
 								]
 							),
 							$this->create_endpoint_desc(

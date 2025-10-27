@@ -280,7 +280,7 @@
   API DOCs STYLE
 ======================*/
 
-.fce-endpoint-list code {
+.fce-endpoint-list .fce-endpoint-url code {
     display: inline-block;
     padding: 2px 6px;
     border-radius: 3px;
@@ -288,6 +288,7 @@
     margin: 2px 0;
     font-family: monospace;
     word-break: break-all;
+    color: #ededed;
 }
 
 .fce-endpoint-item {
@@ -346,13 +347,10 @@
 .fce-endpoint-parameters {
     margin-top: 15px;
     padding-top: 15px;
-    border-top: 1px solid #ddd;
 }
 
 .fce-endpoint-parameters h4 {
-    margin: 0 0 10px 0;
-    color: #333;
-    font-size: 14px;
+    margin: 0 0 10px 0 !important;
 }
 
 .fce-params-table {
@@ -363,14 +361,15 @@
 
 .fce-params-table th,
 .fce-params-table td {
-    padding: 8px 6px;
+    padding: 8px 6px !important;
     text-align: left;
     border-bottom: 1px solid #ffffff0a;
     vertical-align: top;
 }
 
 .fce-params-table th {
-    background: #f5f5f5;
+    background: none;
+    border-bottom: 2px solid #57b957 !important;
     font-weight: 600;
     color: #ededed !important;
     font-size: 11px;
@@ -408,6 +407,11 @@
 }
 
 /* Type Badges */
+.fce-type-json {
+    background: #20c997;
+    color: white;
+}
+
 .fce-type-string {
     background: #17a2b8;
     color: white;
