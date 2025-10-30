@@ -71,13 +71,25 @@ class WP_FCE_Helper_Options
      * Returns false if the option is not found or is an empty string.
      *
      * @param  string $key
-     * @param  string  $default
      * @return mixed
      */
     public static function get_string_option(string $key): string|false
     {
         $value = self::get_option($key, "");
         return is_string($value) && trim($value) !== '' && $value !== "none" ? $value : false;
+    }
+
+    /**
+     * Get a plugin int option. Empty strings are treated as non-existing.
+     * Returns false if the option is not found or is an empty value.
+     *
+     * @param  string $key
+     * @return mixed
+     */
+    public static function get_int_option(string $key): int|false
+    {
+        $value = self::get_string_option($key);
+        return is_numeric($value) ? (int)$value : false;
     }
 
     /**
@@ -115,5 +127,19 @@ class WP_FCE_Helper_Options
             $portal_url = add_query_arg($_GET, $portal_url);
         }
         return $portal_url;
+    }
+
+    public static function get_buy_credits_threshold(): int
+    {
+        if (!self::get_buy_credits_url()) {
+            return -1; // -1 means do never show the buy credits link
+        }
+        $threshold = self::get_int_option('community_api_buy_url_threshold', -2);
+        return is_numeric($threshold) ? (int)$threshold : -2;
+    }
+
+    public static function get_buy_credits_url(): string|false
+    {
+        return self::get_string_option('community_api_buy_url');
     }
 }

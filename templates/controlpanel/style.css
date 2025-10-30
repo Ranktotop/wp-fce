@@ -150,6 +150,10 @@ body {
     transition: transform 0.1s ease;
 }
 
+.widgets-stat-item-cta a {
+    margin-top: 15px !important;
+}
+
 p.error {
     color: #fff;
     background: #FF2020;

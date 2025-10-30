@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: FluentCommunity Extreme Add-On\n"
-"POT-Creation-Date: 2025-09-23 12:50+0200\n"
-"PO-Revision-Date: 2025-09-23 12:55+0200\n"
+"POT-Creation-Date: 2025-10-30 14:47+0100\n"
+"PO-Revision-Date: 2025-10-30 14:52+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -116,13 +116,13 @@ msgstr "Ungültige Formulardaten für die Zugriffsregel"
 msgid "Access override saved"
 msgstr "Zugriffsregel gespeichert"
 
-#: admin/class-wp-fce-admin.php:147
+#: admin/class-wp-fce-admin.php:158
 msgid "Do you really want to delete the product? This action cannot be undone!"
 msgstr ""
 "Willst du das Produkt wirklich löschen? Diese Aktion kann nicht rückgängig "
 "gemacht werden!"
 
-#: admin/class-wp-fce-admin.php:148
+#: admin/class-wp-fce-admin.php:159
 msgid ""
 "Do you really want to delete all mappings of this product? This action "
 "cannot be undone!"
@@ -130,100 +130,116 @@ msgstr ""
 "Möchtest du wirklich alle Zuweisungen für dieses Produkt löschen? Diese "
 "Aktion kann nicht rückgängig gemacht werden!"
 
-#: admin/class-wp-fce-admin.php:149
+#: admin/class-wp-fce-admin.php:160
 msgid "Are you sure you want to delete the rule? This action cannot be undone!"
 msgstr ""
 "Bist du sicher, dass du die Zugriffsregel löschen möchtest? Diese Aktion "
 "kann nicht rückgängig gemacht werden!"
 
-#: admin/class-wp-fce-admin.php:150
+#: admin/class-wp-fce-admin.php:161
 msgid "Saved successfully!"
 msgstr "Erfolgreich gespeichert!"
 
-#: admin/class-wp-fce-admin.php:151
+#: admin/class-wp-fce-admin.php:162
 msgid "Error occurred!"
 msgstr "Fehler aufgetreten!"
 
-#: admin/class-wp-fce-admin.php:152 templates/wp-fce-admin-manage-access.php:90
+#: admin/class-wp-fce-admin.php:163 templates/wp-fce-admin-manage-access.php:90
 #: templates/wp-fce-admin-manage-products.php:60
 #: templates/wp-fce-admin-map-products.php:61
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: admin/class-wp-fce-admin.php:153 templates/wp-fce-admin-map-products.php:157
+#: admin/class-wp-fce-admin.php:164 templates/wp-fce-admin-map-products.php:158
 msgid "Save"
 msgstr "Speichern"
 
-#: admin/class-wp-fce-admin.php:154
+#: admin/class-wp-fce-admin.php:165
 msgid "Are you sure?"
 msgstr "Bist du sicher?"
 
-#: admin/class-wp-fce-admin.php:175
+#: admin/class-wp-fce-admin.php:186
 msgid "Parameters:"
 msgstr "Parameter"
 
-#: admin/class-wp-fce-admin.php:178
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:77
+#: admin/class-wp-fce-admin.php:189
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:88
 #: templates/wp-fce-admin-manage-products.php:32
 #: templates/wp-fce-admin-manage-products.php:97
 msgid "Name"
 msgstr "Name"
 
-#: admin/class-wp-fce-admin.php:179
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:158
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:324
+#: admin/class-wp-fce-admin.php:190
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:181
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:347
 msgid "Type"
 msgstr "Typ"
 
-#: admin/class-wp-fce-admin.php:180
+#: admin/class-wp-fce-admin.php:191
 msgid "Location"
 msgstr "Ort"
 
-#: admin/class-wp-fce-admin.php:181 admin/class-wp-fce-admin.php:187
+#: admin/class-wp-fce-admin.php:192 admin/class-wp-fce-admin.php:198
 msgid "Required"
 msgstr "Benötigt"
 
-#: admin/class-wp-fce-admin.php:182
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:161
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:327
+#: admin/class-wp-fce-admin.php:193
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:184
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:350
 #: templates/wp-fce-admin-manage-products.php:33
 #: templates/wp-fce-admin-manage-products.php:101
 msgid "Description"
 msgstr "Beschreibung"
 
-#: admin/class-wp-fce-admin.php:188
+#: admin/class-wp-fce-admin.php:199
 msgid "Optional"
 msgstr "Optional"
 
-#: admin/class-wp-fce-admin.php:262
+#: admin/class-wp-fce-admin.php:273
+msgid "General"
+msgstr "Allgemein"
+
+#: admin/class-wp-fce-admin.php:275
+msgid "Basic Settings"
+msgstr "Grundeinstellungen"
+
+#: admin/class-wp-fce-admin.php:281
+msgid "Redirect Home to Portal"
+msgstr "Leite Home-URL zu Community um"
+
+#: admin/class-wp-fce-admin.php:282
+msgid "Check to activate redirecting users from the home page to the portal"
+msgstr "Aktiviere die Weiterleitung von Nutzern von der Startseite zum Portal"
+
+#: admin/class-wp-fce-admin.php:289
 msgid "API"
 msgstr "API"
 
-#: admin/class-wp-fce-admin.php:264
+#: admin/class-wp-fce-admin.php:291
 msgid "API-Settings"
 msgstr "API-Einstellungen"
 
-#: admin/class-wp-fce-admin.php:273
+#: admin/class-wp-fce-admin.php:300
 msgid "API Key (IPN)"
 msgstr "API-Schlüssel (IPN)"
 
-#: admin/class-wp-fce-admin.php:274
+#: admin/class-wp-fce-admin.php:301
 msgid "Used to validate IPN requests."
 msgstr "Wird verwendet, um IPN-Anfragen zu validieren."
 
-#: admin/class-wp-fce-admin.php:279
+#: admin/class-wp-fce-admin.php:306
 msgid "API Key (Admin)"
 msgstr "API-Schlüssel (Admin)"
 
-#: admin/class-wp-fce-admin.php:280
+#: admin/class-wp-fce-admin.php:307
 msgid "Used to validate Admin requests to the REST API."
 msgstr "Wird verwendet, um Anfragen an die REST-API zu validieren."
 
-#: admin/class-wp-fce-admin.php:289
+#: admin/class-wp-fce-admin.php:316
 msgid "Endpoint-Overview"
 msgstr "Endpunkt-Übersicht"
 
-#: admin/class-wp-fce-admin.php:296
+#: admin/class-wp-fce-admin.php:323
 msgid ""
 "Receives instant payment notifications from external payment providers "
 "(CopeCart, Digistore24) to automatically create users and grant access to "
@@ -233,27 +249,55 @@ msgstr ""
 "(CopeCart, Digistore24), um automatisch Benutzer anzulegen und Zugriff auf "
 "Produkte zu gewähren."
 
-#: admin/class-wp-fce-admin.php:303
+#: admin/class-wp-fce-admin.php:330
 msgid "IPN API key for authentication"
 msgstr "IPN-API-Schlüssel für die Authentifizierung"
 
-#: admin/class-wp-fce-admin.php:310
-msgid "Email address of the customer"
-msgstr "E-Mail-Adresse des Nutzers"
+#: admin/class-wp-fce-admin.php:337
+msgid "IPNProxy customer data"
+msgstr "IPNProxy-Kundendaten"
 
-#: admin/class-wp-fce-admin.php:317
-msgid "External product identifier"
-msgstr "Externe Produktkennung"
+#: admin/class-wp-fce-admin.php:344
+msgid "IPNProxy affiliate data"
+msgstr "IPNProxy-Affiliate-Daten"
 
-#: admin/class-wp-fce-admin.php:324
-msgid "Unique transaction identifier"
-msgstr "Eindeutige Transaktionskennung"
+#: admin/class-wp-fce-admin.php:351
+msgid "IPNProxy joint venture data"
+msgstr "IPNProxy-Joint-Venture-Daten"
 
-#: admin/class-wp-fce-admin.php:331
-msgid "Payment provider name (e.g. copecart, digistore24)"
-msgstr "Name des Zahlungsanbieters (z. B. copecart, digistore24)"
+#: admin/class-wp-fce-admin.php:358
+msgid "IPNProxy earnings data"
+msgstr "IPNProxy-Einnahmen-Daten"
 
-#: admin/class-wp-fce-admin.php:338
+#: admin/class-wp-fce-admin.php:365
+msgid "IPNProxy tracking data"
+msgstr "IPNProxy-Tracking-Daten"
+
+#: admin/class-wp-fce-admin.php:372
+msgid "IPNProxy product data"
+msgstr "IPNProxy-ProduktdatenKeine Produkte gefunden."
+
+#: admin/class-wp-fce-admin.php:379
+msgid "IPNProxy license data"
+msgstr "IPNProxy-Lizenzdaten"
+
+#: admin/class-wp-fce-admin.php:386
+msgid "IPNProxy vendor data"
+msgstr "IPNProxy-Verkäuferdaten"
+
+#: admin/class-wp-fce-admin.php:393
+msgid "IPNProxy transaction data"
+msgstr "IPNProxy-Transaktionsdaten"
+
+#: admin/class-wp-fce-admin.php:400
+msgid "IPNProxy voucher data"
+msgstr "IPNProxy-Gutscheindaten"
+
+#: admin/class-wp-fce-admin.php:407
+msgid "IPNProxy source data"
+msgstr "IPNProxy-Quelle"
+
+#: admin/class-wp-fce-admin.php:414
 msgid ""
 "Creates or updates a WordPress user and automatically grants access to all "
 "public FluentCommunity spaces and courses."
@@ -261,32 +305,32 @@ msgstr ""
 "Erstellt oder aktualisiert einen WordPress-Benutzer und gewährt automatisch "
 "Zugriff auf alle öffentlichen Bereiche und Kurse von FluentCommunity."
 
-#: admin/class-wp-fce-admin.php:345 admin/class-wp-fce-admin.php:401
-#: admin/class-wp-fce-admin.php:429 admin/class-wp-fce-admin.php:443
-#: admin/class-wp-fce-admin.php:478 admin/class-wp-fce-admin.php:492
-#: admin/class-wp-fce-admin.php:555
+#: admin/class-wp-fce-admin.php:421 admin/class-wp-fce-admin.php:477
+#: admin/class-wp-fce-admin.php:505 admin/class-wp-fce-admin.php:519
+#: admin/class-wp-fce-admin.php:554 admin/class-wp-fce-admin.php:568
+#: admin/class-wp-fce-admin.php:631
 msgid "Admin API key for authentication"
 msgstr "Admin-API-Schlüssel für die Authentifizierung"
 
-#: admin/class-wp-fce-admin.php:352
+#: admin/class-wp-fce-admin.php:428
 msgid "Valid email address of the user"
 msgstr "Gültige E-Mail-Adresse des Benutzers"
 
-#: admin/class-wp-fce-admin.php:359
+#: admin/class-wp-fce-admin.php:435
 msgid "First name of the user"
 msgstr "Vorname des Benutzers"
 
-#: admin/class-wp-fce-admin.php:366
+#: admin/class-wp-fce-admin.php:442
 msgid "Last name of the user"
 msgstr "Nachname des Benutzers"
 
-#: admin/class-wp-fce-admin.php:373
+#: admin/class-wp-fce-admin.php:449
 msgid "Whether to send welcome email to new user (default: true)"
 msgstr ""
 "Ob eine Willkommens-E-Mail an neue Benutzer gesendet werden soll (Standard: "
 "true)"
 
-#: admin/class-wp-fce-admin.php:380
+#: admin/class-wp-fce-admin.php:456
 msgid ""
 "Checks if a specific user has access to a specific space/course. Returns "
 "boolean status."
@@ -294,17 +338,17 @@ msgstr ""
 "Überprüft, ob ein bestimmter Benutzer Zugriff auf einen bestimmten Bereich/"
 "Kurs hat. Gibt einen booleschen Status zurück."
 
-#: admin/class-wp-fce-admin.php:387 admin/class-wp-fce-admin.php:415
-#: admin/class-wp-fce-admin.php:499 admin/class-wp-fce-admin.php:541
+#: admin/class-wp-fce-admin.php:463 admin/class-wp-fce-admin.php:491
+#: admin/class-wp-fce-admin.php:575 admin/class-wp-fce-admin.php:617
 msgid "WordPress user ID"
 msgstr "WordPress-Benutzer-ID"
 
-#: admin/class-wp-fce-admin.php:394 admin/class-wp-fce-admin.php:422
-#: admin/class-wp-fce-admin.php:457
+#: admin/class-wp-fce-admin.php:470 admin/class-wp-fce-admin.php:498
+#: admin/class-wp-fce-admin.php:533
 msgid "FluentCommunity space or course ID"
 msgstr "FluentCommunity-Bereich oder Kurs-ID"
 
-#: admin/class-wp-fce-admin.php:408
+#: admin/class-wp-fce-admin.php:484
 msgid ""
 "Returns detailed information about why access was granted or denied, "
 "including all active sources and overrides."
@@ -313,7 +357,7 @@ msgstr ""
 "oder verweigert wurde, einschließlich aller aktiven Quellen und "
 "Überschreibungen."
 
-#: admin/class-wp-fce-admin.php:436
+#: admin/class-wp-fce-admin.php:512
 msgid ""
 "Creates a new mapping between a product ID and a space ID. Requires "
 "product_id and space_id in POST body."
@@ -321,11 +365,11 @@ msgstr ""
 "Erstellt eine neue Zuordnung zwischen einer Produkt-ID und einer Bereichs-"
 "ID. Erfordert product_id und space_id im POST-Body."
 
-#: admin/class-wp-fce-admin.php:450
+#: admin/class-wp-fce-admin.php:526
 msgid "Internal product ID to map"
 msgstr "Interne Produkt-ID zum Zuordnen"
 
-#: admin/class-wp-fce-admin.php:464
+#: admin/class-wp-fce-admin.php:540
 msgid ""
 "Removes all mappings for a specific product ID. Also removes access for "
 "users who only had access through this product."
@@ -333,11 +377,11 @@ msgstr ""
 "Entfernt alle Zuordnungen für eine bestimmte Produkt-ID. Entfernt auch den "
 "Zugriff für Benutzer, die nur über dieses Produkt Zugriff hatten."
 
-#: admin/class-wp-fce-admin.php:471
+#: admin/class-wp-fce-admin.php:547
 msgid "Internal product ID to remove mappings for"
 msgstr "Interne Produkt-ID zum Entfernen von Zuordnungen für"
 
-#: admin/class-wp-fce-admin.php:485
+#: admin/class-wp-fce-admin.php:561
 msgid ""
 "Creates an admin override to manually grant or deny access. Requires "
 "user_id, product_id, override_type (allow/deny), and optional valid_until "
@@ -347,23 +391,23 @@ msgstr ""
 "zu verweigern. Erfordert user_id, product_id, override_type (allow/deny) und "
 "optional valid_until-Zeitstempel."
 
-#: admin/class-wp-fce-admin.php:506 admin/class-wp-fce-admin.php:548
+#: admin/class-wp-fce-admin.php:582 admin/class-wp-fce-admin.php:624
 msgid "Internal product ID"
 msgstr "Interne Produkt-ID"
 
-#: admin/class-wp-fce-admin.php:513
+#: admin/class-wp-fce-admin.php:589
 msgid "Type of override: \"allow\" or \"deny\""
 msgstr "Art der Überschreibung: „allow“ oder „deny“"
 
-#: admin/class-wp-fce-admin.php:520
+#: admin/class-wp-fce-admin.php:596
 msgid "Expiration date/time (ISO format, optional)"
 msgstr "Ablaufdatum/-zeit (ISO-Format, optional)"
 
-#: admin/class-wp-fce-admin.php:527
+#: admin/class-wp-fce-admin.php:603
 msgid "Optional comment for the override"
 msgstr "Optionaler Kommentar für die Überschreibung"
 
-#: admin/class-wp-fce-admin.php:534
+#: admin/class-wp-fce-admin.php:610
 msgid ""
 "Removes all admin overrides for a specific user-product combination. "
 "Restores normal access evaluation."
@@ -371,156 +415,181 @@ msgstr ""
 "Entfernt alle Admin-Überschreibungen für eine bestimmte Benutzer-Produkt-"
 "Kombination. Stellt die normale Zugriffsbewertung wieder her."
 
-#: admin/class-wp-fce-admin.php:565
+#: admin/class-wp-fce-admin.php:641
 msgid "Appearance"
 msgstr "Darstellung"
 
-#: admin/class-wp-fce-admin.php:567
+#: admin/class-wp-fce-admin.php:643
 msgid "Defines the appearance of the payments-overview page"
 msgstr "Definiert das Erscheinungsbild der Zahlungsübersichtsseite"
 
-#: admin/class-wp-fce-admin.php:574
+#: admin/class-wp-fce-admin.php:650
 msgid "Background Image"
 msgstr "Hintergrundbild"
 
-#: admin/class-wp-fce-admin.php:575
+#: admin/class-wp-fce-admin.php:651
 msgid "Is shown on the payments-overview page"
 msgstr "Wird auf der Zahlungsübersichtsseite angezeigt"
 
-#: admin/class-wp-fce-admin.php:576
+#: admin/class-wp-fce-admin.php:652
 msgid "Optional. Supports PNG and JPEG"
 msgstr "Optional. Unterstützt PNG und JPEG"
 
-#: admin/class-wp-fce-admin.php:581
+#: admin/class-wp-fce-admin.php:657
 msgid "Login Landing Page URL"
 msgstr "Anmelde-Landingpage-URL"
 
-#: admin/class-wp-fce-admin.php:582
+#: admin/class-wp-fce-admin.php:658
 msgid "URL of the page the user lands on after logging into wordpress"
 msgstr ""
 "URL der Seite, auf der der Benutzer nach der Anmeldung bei WordPress landet"
 
-#: admin/class-wp-fce-admin.php:588
+#: admin/class-wp-fce-admin.php:664
 msgid "Manage Products"
 msgstr "Produkte verwalten"
 
-#: admin/class-wp-fce-admin.php:590
+#: admin/class-wp-fce-admin.php:666
 msgid "Manage products, mappings and access rules"
 msgstr "Verwalte Produkte, Zuweisungen und Zugriffsregeln"
 
-#: admin/class-wp-fce-admin.php:595
+#: admin/class-wp-fce-admin.php:671
 msgid "Manage products"
 msgstr "Produkte verwalten"
 
-#: admin/class-wp-fce-admin.php:600
+#: admin/class-wp-fce-admin.php:676
 msgid "Manage mappings"
 msgstr "Verwalten von Zuweisungen"
 
-#: admin/class-wp-fce-admin.php:605
+#: admin/class-wp-fce-admin.php:681
 msgid "Manage access"
 msgstr "Verwalten des Zugriffs"
 
-#: admin/class-wp-fce-admin.php:610
+#: admin/class-wp-fce-admin.php:686
 msgid "Community-API"
 msgstr "Community-API"
 
-#: admin/class-wp-fce-admin.php:613
+#: admin/class-wp-fce-admin.php:689
 msgid "Community-API Settings"
 msgstr "Community-API Einstellungen"
 
-#: admin/class-wp-fce-admin.php:618
+#: admin/class-wp-fce-admin.php:694
 msgid "Enable Community API"
 msgstr "Community API aktivieren"
 
-#: admin/class-wp-fce-admin.php:619
+#: admin/class-wp-fce-admin.php:695
 msgid "Enable the Community API for this site"
 msgstr "Aktiviere die Community-API Schnittstelle für diese Seite"
 
-#: admin/class-wp-fce-admin.php:625
+#: admin/class-wp-fce-admin.php:701
 msgid "API URL"
 msgstr "API URL"
 
-#: admin/class-wp-fce-admin.php:626
+#: admin/class-wp-fce-admin.php:702
 msgid "Base URL of the Community API server"
 msgstr "Basis-URL des Community-API Servers"
 
-#: admin/class-wp-fce-admin.php:632
+#: admin/class-wp-fce-admin.php:708
 msgid "API Port"
 msgstr "API Port"
 
-#: admin/class-wp-fce-admin.php:633
+#: admin/class-wp-fce-admin.php:709
 msgid "Port of the Community API server"
 msgstr "Ports des Community-API Servers"
 
-#: admin/class-wp-fce-admin.php:639
+#: admin/class-wp-fce-admin.php:715
 msgid "Use SSL"
 msgstr "Verschlüsselung verwenden"
 
-#: admin/class-wp-fce-admin.php:640
+#: admin/class-wp-fce-admin.php:716
 msgid "Enable SSL/HTTPS for API connections"
 msgstr "Aktiviere HTTPS Protokoll für API Verbindungen"
 
-#: admin/class-wp-fce-admin.php:646
+#: admin/class-wp-fce-admin.php:722
 msgid "Master Token"
 msgstr "Master API-Key"
 
-#: admin/class-wp-fce-admin.php:647
+#: admin/class-wp-fce-admin.php:723
 msgid "Master token for administrative operations"
 msgstr "Master API Token für administrative Operationen"
 
-#: admin/class-wp-fce-admin.php:652
+#: admin/class-wp-fce-admin.php:728
 msgid "Service Token"
 msgstr "Service API-Key"
 
-#: admin/class-wp-fce-admin.php:653
+#: admin/class-wp-fce-admin.php:729
 msgid "Service token for read-only operations"
 msgstr "Service API Token für Service-Operationen"
 
-#: admin/class-wp-fce-admin.php:658
+#: admin/class-wp-fce-admin.php:734
 msgid "Connection Test"
 msgstr "Verbindungstest"
 
-#: admin/class-wp-fce-admin.php:659
+#: admin/class-wp-fce-admin.php:735
 msgid "Test Connection"
 msgstr "Teste Verbindung"
 
-#: admin/class-wp-fce-admin.php:665
+#: admin/class-wp-fce-admin.php:741
+msgid "URLs"
+msgstr "URLs"
+
+#: admin/class-wp-fce-admin.php:747
 msgid "make.com plugin-url"
 msgstr "make.com Plugin-URL"
 
-#: admin/class-wp-fce-admin.php:666
+#: admin/class-wp-fce-admin.php:748
 msgid "URL of the make.com plugin"
 msgstr "URL des make.com Plugins"
 
-#: admin/class-wp-fce-admin.php:671
+#: admin/class-wp-fce-admin.php:753
 msgid "n8n plugin-url"
 msgstr "n8n Plugin-URL"
 
-#: admin/class-wp-fce-admin.php:672
+#: admin/class-wp-fce-admin.php:754
 msgid "URL of the n8n plugin"
 msgstr "URL des n8n Plugins"
 
-#: admin/class-wp-fce-admin.php:677
+#: admin/class-wp-fce-admin.php:759
 msgid "Community API help page URL"
 msgstr "URL der API Dokumentation"
 
-#: admin/class-wp-fce-admin.php:678
+#: admin/class-wp-fce-admin.php:760
 msgid "URL of the Community API help page"
 msgstr "URL der Community-API Dokumentation"
 
-#: admin/class-wp-fce-admin.php:901
+#: admin/class-wp-fce-admin.php:765
+msgid "Community API salespage URL"
+msgstr "Community API Verkaufsseite-URL"
+
+#: admin/class-wp-fce-admin.php:766
+msgid "URL of the Community API salespage, where the customer can buy credits"
+msgstr ""
+"URL der Community-API-Verkaufsseite, auf der Nutzer Credits kaufen können"
+
+#: admin/class-wp-fce-admin.php:771
+msgid "Show \"Buy Credits\" Button threshold"
+msgstr "Credit-Schwellenwert für „Credits kaufen“-Schaltfläche"
+
+#: admin/class-wp-fce-admin.php:772
+msgid ""
+"Show button only if the user has fewer or equal than X credits. -1 = never "
+"show, -2 = always show. Must be numeric"
+msgstr ""
+"Zeig den Button nur, wenn der Nutzer weniger oder genau X Credits hat. -1 = "
+"nie zeigen, -2 = immer zeigen. Muss ein Zahl sein."
+
+#: admin/class-wp-fce-admin.php:1005
 msgid "Testing..."
 msgstr "Test läuft..."
 
-#: admin/class-wp-fce-admin.php:902
+#: admin/class-wp-fce-admin.php:1006
 msgid "Connection failed"
 msgstr "Verbindung fehlgeschlagen"
 
-#: admin/class-wp-fce-admin.php:957 admin/class-wp-fce-admin.php:987
+#: admin/class-wp-fce-admin.php:1061 admin/class-wp-fce-admin.php:1091
 msgid "Loading..."
 msgstr "Laden..."
 
-#: admin/class-wp-fce-admin.php:958 admin/class-wp-fce-admin.php:988
+#: admin/class-wp-fce-admin.php:1062 admin/class-wp-fce-admin.php:1092
 msgid "Error occurred"
 msgstr "Fehler aufgetreten"
 
@@ -536,11 +605,11 @@ msgstr ""
 msgid "Plugin requirements not fulfilled"
 msgstr "Plugin Anforderungen nicht erfüllt"
 
-#: includes/class-wp-fce-rest-controller.php:360
+#: includes/class-wp-fce-rest-controller.php:346
 msgid "A valid email address is required."
 msgstr "Eine gültige E-Mail-Adresse ist erforderlich."
 
-#: includes/class-wp-fce-rest-controller.php:420
+#: includes/class-wp-fce-rest-controller.php:406
 msgid "Registration failed: "
 msgstr "Registrierung fehlgeschlagen: "
 
@@ -610,38 +679,42 @@ msgid "Error fetching transactions"
 msgstr "Fehler beim Abruf der Transaktionen"
 
 #: public/class-wp-fce-public-ajax.php:86
-#: public/class-wp-fce-public-form.php:89
+#: public/class-wp-fce-public-form.php:101
 msgid "User not logged in"
 msgstr "Nutzer nicht angemeldet"
 
 #: public/class-wp-fce-public-ajax.php:91
-#: public/class-wp-fce-public-form.php:94
+#: public/class-wp-fce-public-form.php:106
 msgid "Invalid user ID"
 msgstr "Ungültige Nutzer-ID"
 
 #: public/class-wp-fce-public-ajax.php:97
-#: public/class-wp-fce-public-form.php:101
+#: public/class-wp-fce-public-form.php:113
 msgid "Access denied"
 msgstr "Zugriff verweigert"
 
 #: public/class-wp-fce-public-ajax.php:104
-#: public/class-wp-fce-public-form.php:109
+#: public/class-wp-fce-public-form.php:121
 msgid "User not found"
 msgstr "Nutzer nicht gefunden"
 
-#: public/class-wp-fce-public-form.php:45
+#: public/class-wp-fce-public-form.php:47
 msgid "Invalid API key"
 msgstr "Ungültiger API-Key"
 
-#: public/class-wp-fce-public-form.php:52
+#: public/class-wp-fce-public-form.php:54
 msgid "Community API key saved successfully"
 msgstr "Community API Key erfolgreich gespeichert"
 
-#: public/class-wp-fce-public-form.php:65
+#: public/class-wp-fce-public-form.php:64
+msgid "Community API key has been reset"
+msgstr "Der Community-API-Key wurde zurückgesetzt."
+
+#: public/class-wp-fce-public-form.php:77
 msgid "Credentials saved successfully"
 msgstr "Zugangsdaten erfolgreich gespeichert"
 
-#: public/class-wp-fce-public-form.php:68
+#: public/class-wp-fce-public-form.php:80
 msgid "Failed to save credentials"
 msgstr "Fehler beim Speichern der Zugangsdaten"
 
@@ -649,114 +722,129 @@ msgstr "Fehler beim Speichern der Zugangsdaten"
 msgid "Control Panel"
 msgstr "Verwaltungskonsole"
 
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:22
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:344
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:23
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:367
 #: templates/controlpanel/sections/wp-fce-section-payment-history.php:31
 msgid "View Details"
 msgstr "Details anzeigen"
 
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:26
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:345
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:27
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:368
 #: templates/controlpanel/sections/wp-fce-section-payment-history.php:35
 msgid "No details available"
 msgstr "Keine Details verfügbar"
 
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:30
-#: templates/controlpanel/wp-fce-controlpanel.php:79
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:31
+#: templates/controlpanel/wp-fce-controlpanel.php:78
 msgid "Community API"
 msgstr "Community API"
 
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:40
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:41
 msgid "Connect Your Community Account"
 msgstr "Verbinde deinen Community-API-Account"
 
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:44
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:45
 msgid "API Key seems to be invalid! Please enter a valid one!"
 msgstr "API-Key scheint ungültig zu sein! Bitte gib einen gültigen Key ein!"
 
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:46
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:47
 msgid "Please enter your Community API key:"
 msgstr "Bitte gib deinen Community API Key ein:"
 
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:53
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:54
 msgid "Enter your API key..."
 msgstr "API Key eingeben..."
 
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:56
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:57
 msgid "Save API Key"
 msgstr "API Key speichern"
 
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:68
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:61
+msgid ""
+"If you do not know your API key, you can try to search for it automatically:"
+msgstr ""
+"Wenn du deinen API-Key nicht kennst, kannst du versuchen, ihn automatisch "
+"ermitteln zu lassen:"
+
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:67
+msgid "Try automatic search"
+msgstr "Automatische Suche versuchen"
+
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:79
 msgid "User Infos"
 msgstr "Nutzerinfos"
 
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:72
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:83
 msgid "User ID"
 msgstr "Nutzer ID"
 
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:82
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:93
 msgid "Email"
 msgstr "Email"
 
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:88
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:99
 msgid "Balance"
 msgstr "Kontostand"
 
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:93
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:109
+msgid "Buy credits"
+msgstr "Credits kaufen"
+
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:116
 msgid "Credentials"
 msgstr "Zugangsdaten"
 
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:104
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:127
 msgid "Platform"
 msgstr "Plattform"
 
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:105
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:128
 msgid "API Key"
 msgstr "API-Schlüssel"
 
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:132
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:155
 msgid "Transactions"
 msgstr "Transaktionen"
 
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:157
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:323
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:180
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:346
 msgid "Transaction Date"
 msgstr "Transaktionsdatum"
 
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:159
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:325
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:182
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:348
 msgid "Credits"
 msgstr "Credits"
 
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:160
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:326
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:183
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:349
 #: templates/controlpanel/sections/wp-fce-section-payment-history.php:107
 msgid "Invoice and Details"
 msgstr "Rechnung und Details"
 
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:177
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:316
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:200
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:339
 msgid "You do not have any transactions yet."
 msgstr "Du hast noch keine Transaktionen getätigt."
 
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:439
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:462
 msgid "Links/Resources"
 msgstr "Links/Ressourcen"
 
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:444
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:467
 msgid "Make.com Plugin"
 msgstr "Make.com Plugin"
 
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:450
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:473
 msgid "n8n Plugin"
 msgstr "n8n Plugin"
 
-#: templates/controlpanel/sections/wp-fce-section-community-api.php:456
+#: templates/controlpanel/sections/wp-fce-section-community-api.php:479
 msgid "Documentation/Help"
 msgstr "Dokumentation/Hilfe"
 
 #: templates/controlpanel/sections/wp-fce-section-payment-history.php:79
-#: templates/controlpanel/wp-fce-controlpanel.php:75
+#: templates/controlpanel/wp-fce-controlpanel.php:74
 msgid "Payment History"
 msgstr "Zahlungshistorie"
 
@@ -789,15 +877,15 @@ msgstr "Zahlungsanbieter"
 msgid "You have not made any payments yet."
 msgstr "Du hast noch keine Zahlungen getätigt."
 
-#: templates/controlpanel/wp-fce-controlpanel.php:48
+#: templates/controlpanel/wp-fce-controlpanel.php:47
 msgid "My Orders"
 msgstr "Meine Bestellungen"
 
-#: templates/controlpanel/wp-fce-controlpanel.php:70
+#: templates/controlpanel/wp-fce-controlpanel.php:69
 msgid "User Control Panel"
 msgstr "Kontrollzentrum"
 
-#: templates/controlpanel/wp-fce-controlpanel.php:102
+#: templates/controlpanel/wp-fce-controlpanel.php:101
 msgid "Back to Community"
 msgstr "Zurück zur Community"
 
@@ -806,7 +894,7 @@ msgid "Bist du sicher?"
 msgstr "Bist du sicher?"
 
 #: templates/partials/html-modal-confirm.php:13
-#: templates/wp-fce-admin-map-products.php:158
+#: templates/wp-fce-admin-map-products.php:159
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -945,14 +1033,14 @@ msgid "Existing Mappings"
 msgstr "Bestehende Zuweisungen"
 
 #: templates/wp-fce-admin-map-products.php:23
-#: templates/wp-fce-admin-map-products.php:100
-#: templates/wp-fce-admin-map-products.php:144
+#: templates/wp-fce-admin-map-products.php:101
+#: templates/wp-fce-admin-map-products.php:145
 msgid "Assigned Spaces"
 msgstr "Zugewiesene Räume"
 
 #: templates/wp-fce-admin-map-products.php:24
-#: templates/wp-fce-admin-map-products.php:110
-#: templates/wp-fce-admin-map-products.php:131
+#: templates/wp-fce-admin-map-products.php:111
+#: templates/wp-fce-admin-map-products.php:132
 msgid "Assigned Courses"
 msgstr "Zugewiesene Kurse"
 
@@ -960,19 +1048,19 @@ msgstr "Zugewiesene Kurse"
 msgid "No Mappings found"
 msgstr "Keine Zuweisungen gefunden"
 
-#: templates/wp-fce-admin-map-products.php:78
+#: templates/wp-fce-admin-map-products.php:79
 msgid "Add a new mapping"
 msgstr "Neue Zuweisung hinzufügen"
 
-#: templates/wp-fce-admin-map-products.php:86
+#: templates/wp-fce-admin-map-products.php:87
 msgid "Choose Product"
 msgstr "Produkt wählen"
 
-#: templates/wp-fce-admin-map-products.php:89
+#: templates/wp-fce-admin-map-products.php:90
 msgid "Please select"
 msgstr "Bitte wählen"
 
-#: templates/wp-fce-admin-map-products.php:120
+#: templates/wp-fce-admin-map-products.php:121
 msgid "Save Mapping"
 msgstr "Zuweisung speichern"
 
@@ -998,6 +1086,18 @@ msgstr "Marc Meese"
 #. Author URI of the plugin/theme
 msgid "https://marcmeese.com"
 msgstr "https://marcmeese.com"
+
+#~ msgid "Email address of the customer"
+#~ msgstr "E-Mail-Adresse des Nutzers"
+
+#~ msgid "External product identifier"
+#~ msgstr "Externe Produktkennung"
+
+#~ msgid "Unique transaction identifier"
+#~ msgstr "Eindeutige Transaktionskennung"
+
+#~ msgid "Payment provider name (e.g. copecart, digistore24)"
+#~ msgstr "Name des Zahlungsanbieters (z. B. copecart, digistore24)"
 
 #~ msgid "Invalid API Key. Please check your key and try again."
 #~ msgstr "Ungültiger Key. Bitte überprüfe die Eingabe und versuche es erneut."
@@ -4343,9 +4443,6 @@ msgstr "https://marcmeese.com"
 #~ msgstr ""
 #~ "Dies ermöglicht Ihnen, einen JSON-String oder ein Array anzugeben, um "
 #~ "multiple Einstellungen in Ihrem Thema zu überschreiben."
-
-#~ msgid "User Settings"
-#~ msgstr "Benutzereinstellungen"
 
 #, fuzzy
 #~ msgid "Input 3"

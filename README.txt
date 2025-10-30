@@ -55,6 +55,9 @@ Access is automatically revoked unless another active product grants access to t
 
 == Changelog ==
 
+= 1.1.4 =
+* Added buy credits button on control panel
+
 = 1.1.3 =
 * Added json support
 

@@ -9,6 +9,7 @@
 
 //Init helper
 $community_api_helper = new WP_FCE_Helper_Community_API($user);
+$options_helper = new WP_FCE_Helper_Options();
 
 /**
  * Generiert den HTML-Link für Transaction Details
@@ -97,6 +98,18 @@ function get_transaction_details_link($management_link)
             <div class="widgets-stat-item-<?php echo $current_balance > 0 ? 'info' : 'error'; ?>">
                 <div class="widgets-stat-item-number"><?php esc_html_e('Balance', 'wp-fce'); ?></div>
                 <div class="widgets-stat-item-label"><?= esc_html($current_balance); ?> Credits</div>
+
+                <?
+                $threshold = $options_helper->get_buy_credits_threshold();
+                $show_buy_credits = $threshold != -1 && ($current_balance <= $threshold || $threshold == -2);
+                if ($show_buy_credits): ?>
+
+                    <div class="widgets-stat-item-cta">
+                        <a href="<?= esc_url($options_helper->get_buy_credits_url()); ?>" target="blank" class="default_button">
+                            <?php esc_html_e('Buy credits', 'wp-fce'); ?>
+                        </a>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
 

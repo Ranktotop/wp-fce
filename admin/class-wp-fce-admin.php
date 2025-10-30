@@ -736,6 +736,12 @@ class Wp_Fce_Admin
               <div id="community-api-test-result" style="margin-top: 10px;"></div>',
 				],
 				[
+					'id'    => 'community_api_section-urls',
+					'type'  => 'section',
+					'title' => __('URLs', 'wp-fce'),
+					"indent" => false,
+				],
+				[
 					'id'    => 'community_api_plugin_url_make',
 					'type'  => 'text',
 					'title' => __('make.com plugin-url', 'wp-fce'),
@@ -752,6 +758,25 @@ class Wp_Fce_Admin
 					'type'  => 'text',
 					'title' => __('Community API help page URL', 'wp-fce'),
 					'desc'  => __('URL of the Community API help page', 'wp-fce')
+				],
+				[
+					'id'    => 'community_api_buy_url',
+					'type'  => 'text',
+					'title' => __('Community API salespage URL', 'wp-fce'),
+					'desc'  => __('URL of the Community API salespage, where the customer can buy credits', 'wp-fce')
+				],
+				[
+					'id'    => 'community_api_buy_url_threshold',
+					'type'  => 'text',
+					'title' => __('Show "Buy Credits" Button threshold', 'wp-fce'),
+					'desc'  => __('Show button only if the user has fewer or equal than X credits. -1 = never show, -2 = always show. Must be numeric', 'wp-fce'),
+					'validate' => [
+						'numeric'
+					],
+					'default' => -2,
+					'min'     => -2,
+					'step'    => 1,
+					'required' => ['community_api_buy_url', '!=', ''],
 				],
 			],
 		]);
