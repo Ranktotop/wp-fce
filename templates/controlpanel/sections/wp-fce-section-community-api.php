@@ -99,7 +99,7 @@ function get_transaction_details_link($management_link)
                 <div class="widgets-stat-item-number"><?php esc_html_e('Balance', 'wp-fce'); ?></div>
                 <div class="widgets-stat-item-label"><?= esc_html($current_balance); ?> Credits</div>
 
-                <?
+                <?php
                 $threshold = $options_helper->get_buy_credits_threshold();
                 $show_buy_credits = $threshold != -1 && ($current_balance <= $threshold || $threshold == -2);
                 if ($show_buy_credits): ?>
