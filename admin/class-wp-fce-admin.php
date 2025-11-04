@@ -657,6 +657,12 @@ class Wp_Fce_Admin
 					'title' => __('Login Landing Page URL', 'wp-fce'),
 					'desc'  => __('URL of the page the user lands on after logging into wordpress', 'wp-fce'),
 					'default' => home_url('/wp-admin/'),
+				],
+				[
+					'id'    => 'font_awesome_cdn_url',
+					'type'  => 'text',
+					'title' => __('Font Awesome CDN Javascript URL', 'wp-fce'),
+					'desc'  => __('URL of the Font Awesome CDN Free Webkit Javascript', 'wp-fce')
 				]
 			],
 		]);

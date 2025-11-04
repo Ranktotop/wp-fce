@@ -131,7 +131,12 @@ class Wp_Fce_Public
 		$css_url = plugins_url('wp-fce/public/css/fce-profile-link.css', dirname(__DIR__));
 		echo '<link rel="stylesheet" href="' . esc_url($css_url) . '" media="all">';
 		// Font Awesome 5 CDN
-		echo '<script src="https://kit.fontawesome.com/8b4c7209d4.js" crossorigin="anonymous"></script>';
+		$font_awesome_url = WP_FCE_Helper_Options::get_string_option('font_awesome_cdn_url');
+		// if url is not false or empty use default cdn url
+		if ($font_awesome_url === false || empty($font_awesome_url)) {
+			$font_awesome_url = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js";
+		}
+		echo '<script src="' . esc_url($font_awesome_url) . '" crossorigin="anonymous"></script>';
 	}
 
 	/**
