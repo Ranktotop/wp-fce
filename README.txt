@@ -55,7 +55,7 @@ Access is automatically revoked unless another active product grants access to t
 
 == Changelog ==
 
-= 1.1.6 =
+= 1.1.7 =
 * Added buy credits button on control panel
 
 = 1.1.3 =

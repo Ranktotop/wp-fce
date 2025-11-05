@@ -188,6 +188,31 @@ class Wp_Fce_Public
 			return;
 		}
 
+		// Diese Parameter verhindern eine Weiterleitung
+		$blocking_params = [
+			'page',
+			'p',
+			'post_type',
+			'preview',
+			's',
+			'author',
+			'category_name',
+			'tag',
+			'action',
+			'doing_wp_cron',
+			"page_id"
+			// weitere WordPress-spezifische Parameter nach Bedarf
+		];
+
+		// Prüfen ob einer der blockierenden Parameter vorhanden ist
+		if (!empty($_GET)) {
+			foreach ($blocking_params as $param) {
+				if (isset($_GET[$param])) {
+					return; // Nicht weiterleiten wenn blockierender Parameter gefunden
+				}
+			}
+		}
+
 		$activated = WP_FCE_Helper_Options::get_bool_option('redirect_home_to_portal', false);
 		if (!$activated) {
 			return;
@@ -200,7 +225,7 @@ class Wp_Fce_Public
 			return;
 		}
 
-		// GET-Parameter übernehmen
+		// Alle GET-Parameter übernehmen (z.B. UTM-Parameter)
 		if (!empty($_GET)) {
 			$portal_url = add_query_arg($_GET, $portal_url);
 		}
