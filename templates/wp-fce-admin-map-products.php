@@ -41,14 +41,14 @@ $courses = WP_FCE_Helper_Fcom::get_all_courses();
                             <td>
                                 <ul style="margin: 0; padding-left: 1.2em;">
                                     <?php foreach ($mapped_product->get_mapped_communities() as $community): ?>
-                                        <li><?php echo esc_html($community->get_title()); ?></li>
+                                        <li><?php echo esc_html($community->get_title(true)); ?></li>
                                     <?php endforeach; ?>
                                 </ul>
                             </td>
                             <td>
                                 <ul style="margin: 0; padding-left: 1.2em;">
                                     <?php foreach ($mapped_product->get_mapped_courses() as $course): ?>
-                                        <li><?php echo esc_html($course->get_title()); ?></li>
+                                        <li><?php echo esc_html($course->get_title(true)); ?></li>
                                     <?php endforeach; ?>
                                 </ul>
                             </td>
@@ -103,7 +103,7 @@ $courses = WP_FCE_Helper_Fcom::get_all_courses();
             <?php foreach ($spaces as $space): ?>
                 <label style="display: block; margin-bottom: 6px;">
                     <input type="checkbox" name="fce_spaces[]" value="<?php echo esc_attr($space->get_id()); ?>">
-                    <?php echo esc_html($space->get_title()); ?>
+                    <?php echo esc_html($space->get_title(true)); ?>
                 </label>
             <?php endforeach; ?>
         </div>
@@ -113,7 +113,7 @@ $courses = WP_FCE_Helper_Fcom::get_all_courses();
             <?php foreach ($courses as $course): ?>
                 <label style="display: block; margin-bottom: 6px;">
                     <input type="checkbox" name="fce_spaces[]" value="<?php echo esc_attr($course->get_id()); ?>">
-                    <?php echo esc_html($course->get_title()); ?>
+                    <?php echo esc_html($course->get_title(true)); ?>
                 </label>
             <?php endforeach; ?>
         </div>
@@ -137,7 +137,7 @@ $courses = WP_FCE_Helper_Fcom::get_all_courses();
                             name="fce_edit_entities[]"
                             value="<?php echo esc_attr($entity->get_id()); ?>"
                             data-entity-type="<?php echo esc_attr($entity->get_type()); ?>">
-                        <?php echo esc_html($entity->get_title()); ?>
+                        <?php echo esc_html($entity->get_title(true)); ?>
                     </label>
                 <?php endforeach; ?>
             </div>
@@ -150,7 +150,7 @@ $courses = WP_FCE_Helper_Fcom::get_all_courses();
                             name="fce_edit_entities[]"
                             value="<?php echo esc_attr($entity->get_id()); ?>"
                             data-entity-type="<?php echo esc_attr($entity->get_type()); ?>">
-                        <?php echo esc_html($entity->get_title()); ?>
+                        <?php echo esc_html($entity->get_title(true)); ?>
                     </label>
                 <?php endforeach; ?>
             </div>

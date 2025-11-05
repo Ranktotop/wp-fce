@@ -22,6 +22,7 @@ class WP_FCE_Model_Fcom extends WP_FCE_Model_Base
      */
     protected static array $db_fields = [
         'id'    => '%d',
+        'parent_id' => '%d',
         'title' => '%s',
         'slug'  => '%s',
         'type'  => '%s',
@@ -33,10 +34,13 @@ class WP_FCE_Model_Fcom extends WP_FCE_Model_Base
      *
      * @var string[]
      */
-    protected static array $guarded = ['id'];
+    protected static array $guarded = ['id', 'parent_id'];
 
     /** @var int|null Primary key */
     public ?int $id = null;
+
+    /** @var int|null */
+    public ?int $parent_id = null;
 
     /** @var string */
     public string $title = '';
@@ -91,12 +95,29 @@ class WP_FCE_Model_Fcom extends WP_FCE_Model_Base
     }
 
     /**
+     * Check if this entity is a group.
+     *
+     * @return bool
+     */
+    public function is_group(): bool
+    {
+        return $this->type === 'space_group';
+    }
+
+    /**
      * Get the title.
      *
+     * @param bool    $include_group Whether to include the group title.
      * @return string
      */
-    public function get_title(): string
+    public function get_title(bool $include_group = false): string
     {
+        if ($include_group) {
+            $group = $this->get_parent();
+            if ($group) {
+                return $this->title . " (" . $group->get_title() . ")";
+            }
+        }
         return $this->title;
     }
 
@@ -128,6 +149,29 @@ class WP_FCE_Model_Fcom extends WP_FCE_Model_Base
     public function get_privacy(): string
     {
         return $this->privacy;
+    }
+
+    /**
+     * Get the parent.
+     *
+     * @return WP_FCE_Model_Fcom|null
+     */
+    public function get_parent(): ?WP_FCE_Model_Fcom
+    {
+        $parent_id = $this->parent_id;
+        if ($parent_id === null) {
+            return null;
+        }
+        return WP_FCE_Model_Fcom::load_by_id($parent_id);
+    }
+
+    public function get_group_title(): string
+    {
+        $parent = $this->get_parent();
+        if ($parent === null) {
+            return '';
+        }
+        return $parent->get_title();
     }
 
     /**
