@@ -663,7 +663,13 @@ class Wp_Fce_Admin
 					'type'  => 'text',
 					'title' => __('Font Awesome CDN Javascript URL', 'wp-fce'),
 					'desc'  => __('URL of the Font Awesome CDN Free Webkit Javascript', 'wp-fce')
-				]
+				],
+				[
+					'id'       => 'prevent_gif_conversion',
+					'type'     => 'switch',
+					'title'    => __('Prevent GIF Conversion', 'wp-fce'),
+					'subtitle' => __('Check to prevent GIF images from being converted to webp', 'wp-fce')
+				],
 			],
 		]);
 		Redux::set_section('wp_fce_options', [

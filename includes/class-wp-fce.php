@@ -281,6 +281,9 @@ class Wp_Fce
 
 		//Redirect home if enabled
 		$this->loader->add_action('template_redirect', $plugin_public, 'redirect_to_portal');
+
+		// Register Fluent Community filters after init
+		$this->loader->add_action('init', $plugin_public, 'register_fluent_community_filters', 20);
 	}
 
 	/**

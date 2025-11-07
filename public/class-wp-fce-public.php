@@ -285,4 +285,18 @@ class Wp_Fce_Public
 
 		$this->public_ajax_handler->handle_public_ajax_callback();
 	}
+
+	public function register_fluent_community_filters()
+	{
+		$preventGifConversion = Wp_Fce_Helper_Options::get_bool_option('prevent_gif_conversion', false);
+
+		if ($preventGifConversion) {
+			add_filter('fluent_community/convert_image_to_webp', function ($convert, $file) {
+				if (isset($file['type']) && $file['type'] === 'image/gif') {
+					return false;
+				}
+				return $convert;
+			}, 10, 2);
+		}
+	}
 }
