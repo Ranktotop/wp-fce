@@ -55,7 +55,7 @@ Access is automatically revoked unless another active product grants access to t
 
 == Changelog ==
 
-= 1.1.9 =
+= 1.2.0 =
 * Added switch for prevent gifs from getting converted to webp
 
 = 1.1.8 =
