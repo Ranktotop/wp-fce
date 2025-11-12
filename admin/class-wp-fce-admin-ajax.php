@@ -53,14 +53,16 @@ class Wp_Fce_Admin_Ajax_Handler
         if (!isset($data['product_id']) || !is_numeric($data['product_id'])) {
             return ['state' => false, 'message' => __('Invalid product ID', 'wp-fce')];
         }
+        $debug_log = WP_FCE_Helper_Options::get_bool_option('api_debug_mode', false);
 
         try {
             //Before we delete the product, we remove all users from product exclusive spaces
             $exclusive_spaces = WP_FCE_Helper_Fcom::get_spaces_exclusive_to_product((int) $data['product_id']);
             foreach ($exclusive_spaces as $space) {
-                $space->revoke_all_user_access();
+                $space->revoke_all_user_access(debug_log: $debug_log);
             }
             WP_FCE_Helper_Product::delete((int) $data['product_id']);
+            fce_log('delete_product: Deleted product ' . (int) $data['product_id'], 'debug', ! $debug_log);
 
             return ['state' => true, 'message' => __('Product successfully deleted', 'wp-fce')];
         } catch (\Exception $e) {

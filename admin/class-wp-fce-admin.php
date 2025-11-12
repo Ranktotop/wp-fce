@@ -306,6 +306,12 @@ class Wp_Fce_Admin
 					'title' => __('API Key (Admin)', 'wp-fce'),
 					'desc'  => __('Used to validate Admin requests to the REST API.', 'wp-fce'),
 				],
+				[
+					'id'       => 'api_debug_mode',
+					'type'     => 'switch',
+					'title'    => __('Debug Mode', 'wp-fce'),
+					'subtitle' => __('Check to print additional logs to console', 'wp-fce')
+				],
 
 				// ────────────────────────────────────────────
 				// 2) HINWEIS-BLOCK MIT URL-LISTE

@@ -112,12 +112,13 @@ abstract class WP_FCE_Helper_Base
     /**
      * Find exactly one model matching the criteria (or null).
      *
-     * @param  array<string,mixed> $criteria
+     * @param  array<string,mixed> $criteria  column => value or array of values
+     * @param  array<string,string> $order    column => 'ASC'|'DESC'
      * @return WP_FCE_Model_Base|null
      */
-    public static function findOneBy(array $criteria): ?WP_FCE_Model_Base
+    public static function findOneBy(array $criteria, array $order = []): ?WP_FCE_Model_Base
     {
-        $results = static::find($criteria, [], 1);
+        $results = static::find($criteria, $order, 1);
         return $results[0] ?? null;
     }
 

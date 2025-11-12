@@ -102,14 +102,17 @@ class WP_FCE_Helper_Ipn_Log extends WP_FCE_Helper_Base
             $transaction_id
         );
 
+        $expired = $ipnLog->is_expired() ? 'expired' : 'active';
+        $debug_log = WP_FCE_Helper_Options::get_bool_option('api_debug_mode', false);
         if ($existing) {
             $existing->set_source($source);
             $existing->set_transaction_id($transaction_id);
             $existing->set_start_date($ipn_date);
             $existing->set_expiry_date($expiry_date);
-            $existing->set_status($ipnLog->is_expired() ? 'expired' : 'active');
+            $existing->set_status($expired);
             $existing->set_note('Processed by IPN');
             $existing->save();
+            fce_log('record_ipn: Updated product-user access between user ' . $existing->get_user_id() . ' and product ' . $existing->get_product_id() . ' with state ' . $expired . ' until ' . ($expiry_date ? $expiry_date->format('Y-m-d H:i:s') : 'none'), 'debug', !$debug_log);
         } else {
             WP_FCE_Helper_Product_User::create(
                 $user_id,
@@ -118,9 +121,10 @@ class WP_FCE_Helper_Ipn_Log extends WP_FCE_Helper_Base
                 $transaction_id,
                 $ipn_date,
                 $expiry_date,
-                $ipnLog->is_expired() ? 'expired' : 'active',
+                $expired,
                 'Processed by IPN'
             );
+            fce_log('record_ipn: Added new product-user access between user ' . $user_id . ' and product ' . $product_id . ' with state ' . $expired . ' until ' . ($expiry_date ? $expiry_date->format('Y-m-d H:i:s') : 'none'), 'debug', !$debug_log);
         }
 
         // update access

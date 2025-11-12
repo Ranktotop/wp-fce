@@ -221,10 +221,11 @@ class WP_FCE_Model_Product_User extends WP_FCE_Model_Base
      * Sets state to "active" if expiry date is in the future or not set AND start date is before now. Otherwise, state is set to "expired".
      *
      * @param  DateTime $expiry_date The new expiry date.
+     * @param  bool $debug_log Whether to suppress debug logging.
      * @return void
      * @throws \Exception on DB error
      */
-    public function renew(?DateTime $expiry_date = null): void
+    public function renew(?DateTime $expiry_date = null, bool $debug_log = false): void
     {
         // 1) If no date is given, used current date
         if (null === $expiry_date) {
@@ -244,6 +245,7 @@ class WP_FCE_Model_Product_User extends WP_FCE_Model_Base
         }
 
         $this->save();
+        fce_log('renew: Updated product-user access between user ' . $this->get_user_id() . ' and product ' . $this->get_product_id() . ' to state ' . $this->get_status() . ' until ' . ($expiry_date ? $expiry_date->format('Y-m-d H:i:s') : 'none'), 'debug', ! $debug_log);
     }
 
     public function is_active(): bool

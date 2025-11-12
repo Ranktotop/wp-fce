@@ -41,7 +41,7 @@ class WP_FCE_Helper_Product_User extends WP_FCE_Helper_Base
             'user_id'        => $user_id,
             'product_id'     => $product_id,
             'transaction_id' => $transaction_id,
-        ]);
+        ], ['id' => 'DESC']);
     }
 
     /**
@@ -59,7 +59,7 @@ class WP_FCE_Helper_Product_User extends WP_FCE_Helper_Base
         return static::findOneBy([
             'user_id'        => $user_id,
             'product_id'     => $product_id
-        ]);
+        ], ['id' => 'DESC']);
     }
 
     /**
@@ -75,7 +75,7 @@ class WP_FCE_Helper_Product_User extends WP_FCE_Helper_Base
         if ($status !== null) {
             $criteria['status'] = $status;
         }
-        return static::find($criteria);
+        return static::find($criteria, ['id' => 'DESC']);
     }
 
     /**
@@ -86,7 +86,7 @@ class WP_FCE_Helper_Product_User extends WP_FCE_Helper_Base
      */
     public static function get_for_product(int $product_id): array
     {
-        return static::find(['product_id' => $product_id]);
+        return static::find(['product_id' => $product_id], ['id' => 'DESC']);
     }
 
     /**
@@ -114,6 +114,8 @@ class WP_FCE_Helper_Product_User extends WP_FCE_Helper_Base
             $sql .= " AND product_id = %d";
             $params[] = $product_id;
         }
+
+        $sql .= " ORDER BY id DESC";
 
         $query = $params ? $wpdb->prepare($sql, ...$params) : $sql;
         $rows  = $wpdb->get_results($query, ARRAY_A) ?: [];

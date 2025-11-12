@@ -61,9 +61,11 @@ class WP_FCE_Cron
      */
     public static function check_expirations(?int $user_id = null, ?int $product_id = null): void
     {
+        $debug_log = WP_FCE_Helper_Options::get_bool_option('api_debug_mode', false);
+        fce_log('check_expirations: Starting expiration check' . ($user_id ? ' for user ' . $user_id : '') . ($product_id ? ' and product ' . $product_id : ''), 'debug', ! $debug_log);
         // Get all product-user entries
         if ($user_id !== null && $product_id !== null) {
-            $pu = WP_FCE_Helper_Product_User::get_by_user_product($user_id, $product_id);
+            $pu = WP_FCE_Helper_Product_User::get_by_user_product($user_id, $product_id); # we need the most actual entry here
             $all = $pu ? [$pu] : [];
         } elseif ($user_id !== null) {
             $all = WP_FCE_Helper_Product_User::get_for_user($user_id);
@@ -75,11 +77,11 @@ class WP_FCE_Cron
 
         //Update state to expired/active based on expiry and start date
         foreach ($all as $entry) {
-            $entry->renew();
+            $entry->renew(debug_log: $debug_log);
         }
 
         //sync access
-        self::sync_space_accesses($all);
+        self::sync_space_accesses($all, $debug_log);
     }
 
     /**
@@ -91,9 +93,10 @@ class WP_FCE_Cron
      * product-user entry for the same space.
      *
      * @param WP_FCE_Model_Product_User[] $user_products The product-user entries to update
+     * @param bool $debug_log Whether to suppress debug logging.
      * @return void
      */
-    public static function sync_space_accesses(array $user_products): void
+    public static function sync_space_accesses(array $user_products, bool $debug_log = false): void
     {
         foreach ($user_products as $entry) {
             foreach ($entry->get_mapped_spaces() as $mapping) {
@@ -106,12 +109,12 @@ class WP_FCE_Cron
 
                 if ($has_access) {
                     // Zugriff sicherstellen
-                    $space->grant_user_access($entry->get_user_id());
+                    $space->grant_user_access($entry->get_user_id(), debug_log: $debug_log);
                 } else {
                     // Nur entfernen, wenn KEIN anderes aktives Produkt auf diesen Space mapped ist
                     $other_active = WP_FCE_Helper_Product_User::has_other_active_product_for_space($entry->get_user_id(), $entry->get_product_id(), $space->get_id());
                     if (! $other_active) {
-                        $space->revoke_user_access($entry->get_user_id());
+                        $space->revoke_user_access($entry->get_user_id(), debug_log: $debug_log);
                     }
                 }
             }

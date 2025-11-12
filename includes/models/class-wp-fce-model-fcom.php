@@ -181,13 +181,17 @@ class WP_FCE_Model_Fcom extends WP_FCE_Model_Base
      * @param int    $user_id The ID of the user to add.
      * @param string $role    The role to assign to the user, defaults to "member".
      * @param string $source  The source of the access grant, defaults to "by_automation".
+     * @param bool   $debug_log Whether to suppress debug logging.
+     * @return void
      */
-    public function grant_user_access(int $user_id, string $role = "member", string $source = "by_automation"): void
+    public function grant_user_access(int $user_id, string $role = "member", string $source = "by_automation", bool $debug_log = false): void
     {
         if ($this->is_space()) {
             \FluentCommunity\App\Services\Helper::addToSpace($this->get_id(), $user_id, $role, $source);
+            fce_log('grant_user_access: Granted user ' . $user_id . ' access to space ' . $this->get_id() . ' with role ' . $role, 'debug', ! $debug_log);
         } else if ($this->is_course()) {
             \FluentCommunity\Modules\Course\Services\CourseHelper::enrollCourse($this->get_id(), $user_id);
+            fce_log('grant_user_access: Granted user ' . $user_id . ' access to course ' . $this->get_id(), 'debug', ! $debug_log);
         }
     }
 
@@ -196,14 +200,17 @@ class WP_FCE_Model_Fcom extends WP_FCE_Model_Base
      *
      * @param int $user_id
      * @param string $source
+     * @param bool $debug_log Whether to suppress debug logging.
      * @return void
      */
-    public function revoke_user_access(int $user_id, string $source = "by_automation"): void
+    public function revoke_user_access(int $user_id, string $source = "by_automation", bool $debug_log = false): void
     {
         if ($this->is_space()) {
             \FluentCommunity\App\Services\Helper::removeFromSpace($this->get_id(), $user_id, $source);
+            fce_log('revoke_user_access: Revoked user ' . $user_id . ' access to space ' . $this->get_id(), 'debug', ! $debug_log);
         } else if ($this->is_course()) {
             \FluentCommunity\Modules\Course\Services\CourseHelper::leaveCourse($this->get_id(), $user_id);
+            fce_log('revoke_user_access: Revoked user ' . $user_id . ' access to course ' . $this->get_id(), 'debug', ! $debug_log);
         }
     }
 
@@ -211,16 +218,19 @@ class WP_FCE_Model_Fcom extends WP_FCE_Model_Base
      * Revoke access to this course/space for all users.
      *
      * @param string $source The source of the access revoke, defaults to "by_automation".
+     * @param bool   $debug_log Whether to suppress debug logging.
      * @return void
      */
-    public function revoke_all_user_access(string $source = "by_automation"): void
+    public function revoke_all_user_access(string $source = "by_automation", bool $debug_log = false): void
     {
         $users = WP_FCE_Helper_User::get_all();
         foreach ($users as $user) {
             if ($this->is_space()) {
                 \FluentCommunity\App\Services\Helper::removeFromSpace($this->get_id(), $user->get_id(), $source);
+                fce_log('revoke_user_access: Revoked user ' . $user->get_id() . ' access to space ' . $this->get_id(), 'debug', ! $debug_log);
             } else if ($this->is_course()) {
                 \FluentCommunity\Modules\Course\Services\CourseHelper::leaveCourse($this->get_id(), $user->get_id());
+                fce_log('revoke_user_access: Revoked user ' . $user->get_id() . ' access to course ' . $this->get_id(), 'debug', ! $debug_log);
             }
         }
     }
