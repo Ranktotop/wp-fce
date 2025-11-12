@@ -100,6 +100,9 @@ class WP_FCE_Helper_Community_API
         }
 
         $user_data = $this->fetch_user_data_by_api_key($api_key);
+        if ($user_data !== null) {
+            $user_data['api_key'] = $api_key;
+        }
         $this->cached_user_data = $user_data;
         return $this->cached_user_data;
     }

@@ -80,8 +80,8 @@ function get_transaction_details_link($management_link)
         <div class="widgets-stats-container">
 
             <div class="widgets-stat-item-info">
-                <div class="widgets-stat-item-number"><?php esc_html_e('User ID', 'wp-fce'); ?></div>
-                <div class="widgets-stat-item-label"><?= esc_html($community_api_helper->get_user_data()['user_id'] ?? 'N/A'); ?></div>
+                <div class="widgets-stat-item-number"><?php esc_html_e('API-Key', 'wp-fce'); ?></div>
+                <div class="widgets-stat-item-label"><?= esc_html($community_api_helper->get_user_data()['api_key'] ?? 'N/A'); ?></div>
             </div>
 
             <div class="widgets-stat-item-info">

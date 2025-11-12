@@ -55,7 +55,7 @@ Access is automatically revoked unless another active product grants access to t
 
 == Changelog ==
 
-= 1.2.1 =
+= 1.2.2 =
 * Added bulk overrides and fixes some minor bugs
 
 = 1.2.0 =
