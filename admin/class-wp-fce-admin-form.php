@@ -1,4 +1,8 @@
 <?php
+
+use League\Csv\Reader;
+use League\Csv\CharsetConverter;
+
 class Wp_Fce_Admin_Form_Handler
 {
 
@@ -36,6 +40,9 @@ class Wp_Fce_Admin_Form_Handler
         }
         if (isset($_POST['wp_fce_form_action']) && $_POST['wp_fce_form_action'] === 'create_override') {
             $this->handle_override_access();
+        }
+        if (isset($_POST['wp_fce_form_action']) && $_POST['wp_fce_form_action'] === 'create_override_bulk') {
+            $this->handle_override_access_bulk();
         }
 
         // weitere: elseif ($_POST['wp_fce_form_action'] === '...') ...
@@ -266,10 +273,140 @@ class Wp_Fce_Admin_Form_Handler
                     WP_FCE_Helper_Access_Override::add_override($user_id, $product->get_id(), $mode, $valid_until, $comment);
             }
 
-            //update access
-            WP_FCE_Cron::check_expirations(user_id: $user_id, product_id: $product->get_id());
-
             wp_safe_redirect(add_query_arg('fce_success', urlencode(__('Access override saved', 'wp-fce')), $_SERVER['REQUEST_URI']));
+            exit;
+        } catch (\Exception $e) {
+            add_action('admin_notices', function () use ($e) {
+                echo '<div class="notice notice-error"><p>' . esc_html($e->getMessage()) . '</p></div>';
+            });
+        }
+    }
+
+    /**
+     * Handles creation or update of admin-defined access overrides in bulk.
+     *
+     * @since 1.0.0
+     */
+    private function handle_override_access_bulk(): void
+    {
+        if (
+            !isset($_POST['wp_fce_nonce']) ||
+            !wp_verify_nonce($_POST['wp_fce_nonce'], 'wp_fce_create_override_bulk')
+        ) {
+            return;
+        }
+
+        //validate inputs
+        $product_id  = (int) ($_POST['product_id_bulk'] ?? 0);
+        $mode        = sanitize_text_field($_POST['mode_bulk'] ?? '');
+        $comment        = sanitize_text_field($_POST['comment_bulk'] ?? '');
+        $valid_until = sanitize_text_field($_POST['valid_until_bulk'] ?? '');
+        $csv_data   = sanitize_textarea_field($_POST['csv_data_bulk'] ?? '');
+
+        if (
+            empty($csv_data) ||
+            !$product_id ||
+            !in_array($mode, ['allow', 'deny'], true) ||
+            empty($valid_until)
+        ) {
+            add_action('admin_notices', function () {
+                echo '<div class="notice notice-error"><p>' . esc_html__('Invalid form data for access override', 'wp-fce') . '</p></div>';
+            });
+            return;
+        }
+
+        //load the csv
+        $reader = Reader::fromString($csv_data);
+        $reader->setDelimiter(';');
+        $reader->setHeaderOffset(0); // Erste Zeile = Header
+        CharsetConverter::addTo($reader, 'utf-8', 'utf-8');
+
+        //validate header
+        $header = $reader->getHeader();
+        $required_fields = ['email', 'firstname', 'lastname'];
+        $missing_fields = array_diff($required_fields, $header);
+        if (!empty($missing_fields)) {
+            add_action('admin_notices', function () use ($missing_fields) {
+                echo '<div class="notice notice-error"><p>' . esc_html__('Missing required CSV fields: ' . implode(', ', $missing_fields), 'wp-fce') . '</p></div>';
+            });
+            return;
+        }
+
+        //load records
+        $records = iterator_to_array($reader->getRecords());
+        $invalid_count = 0;
+        $skipped_count = 0;
+
+        //validate records
+        $rows = [];
+        foreach ($records as $row) {
+            if (empty($row['email']) || !is_email($row['email'])) {
+                $invalid_count++;
+                continue;
+            }
+
+            //convert firstname and lastname to "" if missing or null
+            if (empty($row['firstname'])) {
+                $row['firstname'] = '';
+            }
+
+            if (empty($row['lastname'])) {
+                $row['lastname'] = '';
+            }
+
+            $rows[] = $row;
+        }
+        $create_users = isset($_POST['create_users_bulk']) && $_POST['create_users_bulk'] == '1';
+        $send_emails = isset($_POST['send_welcome_mails_bulk']) && $_POST['send_welcome_mails_bulk'] == '1';
+        try {
+            foreach ($rows as $row) {
+
+                //get or create user
+                if (!$create_users) {
+                    $user = WP_FCE_Helper_User::get_by_email($row['email']);
+                } else {
+                    $user = WP_FCE_Helper_User::get_or_create(
+                        email: $row['email'],
+                        login: "",
+                        password: "",
+                        first_name: $row['firstname'],
+                        last_name: $row['lastname'],
+                        send_welcome_email: $send_emails
+                    );
+                }
+
+                //make sure it exists
+                if (!$user) {
+                    $skipped_count++;
+                    continue;
+                }
+
+                //now handle the override creation
+                $user_id     = $user->get_id();
+
+                // Konvertiere ins externe Produkt-ID-Format
+                $product = WP_FCE_Model_Product::load_by_id($product_id);
+
+                $existing = WP_FCE_Helper_Access_Override::get_latest_override_by_product_user($user_id, $product->get_id(), false);
+
+                if ($existing) {
+                    WP_FCE_Helper_Access_Override::patch_override($existing->get_id(), $valid_until, $mode, $comment);
+                } else {
+                    $existing =
+                        WP_FCE_Helper_Access_Override::add_override($user_id, $product->get_id(), $mode, $valid_until, $comment);
+                }
+            }
+            $redirect_url = add_query_arg(
+                'fce_success',
+                urlencode(sprintf(
+                    __('Access overrides saved! Invalid lines: %s, Skipped lines: %s', 'wp-fce'),
+                    $invalid_count,
+                    $skipped_count
+                )),
+                $_SERVER['REQUEST_URI']
+            );
+
+            wp_safe_redirect($redirect_url);
             exit;
         } catch (\Exception $e) {
             add_action('admin_notices', function () use ($e) {

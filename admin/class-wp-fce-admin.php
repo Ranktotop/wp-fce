@@ -959,6 +959,7 @@ class Wp_Fce_Admin
 		$this->enqueue_custom_page_css();
 		$view = plugin_dir_path(dirname(__FILE__)) . 'templates/wp-fce-admin-manage-products.php';
 		if (file_exists($view)) {
+			$this->render_notice_box();
 			include $view;
 		}
 	}
@@ -978,6 +979,7 @@ class Wp_Fce_Admin
 		$this->enqueue_custom_page_css();
 		$view = plugin_dir_path(dirname(__FILE__)) . 'templates/wp-fce-admin-map-products.php';
 		if (file_exists($view)) {
+			$this->render_notice_box();
 			include $view;
 		}
 	}
@@ -987,7 +989,16 @@ class Wp_Fce_Admin
 		$this->enqueue_custom_page_css();
 		$view = plugin_dir_path(dirname(__FILE__)) . 'templates/wp-fce-admin-manage-access.php';
 		if (file_exists($view)) {
+			$this->render_notice_box();
 			include $view;
+		}
+	}
+
+	public function render_notice_box(): void
+	{
+		$notice_view = plugin_dir_path(dirname(__FILE__)) . 'templates/partials/wp-fce-notice.php';
+		if (file_exists($notice_view)) {
+			include $notice_view;
 		}
 	}
 

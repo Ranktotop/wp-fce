@@ -61,6 +61,7 @@ class WP_FCE_Helper_Access_Override extends WP_FCE_Helper_Base
 
     /**
      * Add a new access override entry.
+     * Automatically checks expirations after adding the override.
      *
      * @param  int         $user_id
      * @param  int         $product_id
@@ -107,11 +108,15 @@ class WP_FCE_Helper_Access_Override extends WP_FCE_Helper_Base
             );
         }
 
+        //update access
+        WP_FCE_Cron::check_expirations(user_id: $user_id, product_id: $product_id);
+
         return $ov->get_id();
     }
 
     /**
      * Remove all overrides for a given user/product.
+     * Automatically checks expirations after removing the overrides.
      *
      * @param  int $user_id
      * @param  int $product_id
@@ -131,13 +136,31 @@ class WP_FCE_Helper_Access_Override extends WP_FCE_Helper_Base
             }
         }
 
+        //temporary set admin dummy to expired
+        $result = WP_FCE_Helper_Product_User::expire_admin_dummy($user_id, $product_id);
+        $sync_needed = is_int($result) && $result > 0;
+
+        //sync access with fluent community if needed
+        if ($sync_needed) {
+            WP_FCE_Cron::check_expirations(user_id: $user_id, product_id: $product_id);
+        }
+
         // Delete dummy entries if existing
         WP_FCE_Helper_Product_User::delete_admin_dummy($user_id, $product_id);
-
 
         return $success;
     }
 
+    /**
+     * Patches an existing access override with new parameters.
+     * Automatically checks expirations after applying the patch.
+     *
+     * @param int $override_id The unique identifier of the access override to patch
+     * @param \DateTime|int|string $valid_until The expiration date/time for the override. Can be a DateTime object, Unix timestamp, or date string
+     * @param string $mode The override mode/type to apply
+     * @param string|null $comment Optional comment describing the reason for the override patch
+     * @return void
+     */
     public static function patch_override(int $override_id, \DateTime|int|string $valid_until, string $mode, ?string $comment = null)
     {
         $ov = static::get_by_id($override_id);
@@ -151,6 +174,14 @@ class WP_FCE_Helper_Access_Override extends WP_FCE_Helper_Base
         $ov->save();
 
         if ($ov->is_deny()) {
+            //temporary set admin dummy to expired
+            $result = WP_FCE_Helper_Product_User::expire_admin_dummy($ov->get_user_id(), $ov->get_product_id());
+            $sync_needed = is_int($result) && $result > 0;
+
+            //sync access with fluent community if needed
+            if ($sync_needed) {
+                WP_FCE_Cron::check_expirations(user_id: $ov->get_user_id(), product_id: $ov->get_product_id());
+            }
             //remove dummy entry
             WP_FCE_Helper_Product_User::delete_admin_dummy($ov->get_user_id(), $ov->get_product_id());
         } else if ($ov->is_allow()) {
@@ -169,6 +200,9 @@ class WP_FCE_Helper_Access_Override extends WP_FCE_Helper_Base
                     'active',
                     'Zugang manuell durch Admin-Override erzeugt'
                 );
+
+                //update access
+                WP_FCE_Cron::check_expirations(user_id: $ov->get_user_id(), product_id: $ov->get_product_id());
             }
         }
     }

@@ -222,6 +222,37 @@ class WP_FCE_Helper_Product_User extends WP_FCE_Helper_Base
     }
 
     /**
+     * Expires dummy entries which were created by an admin override.
+     *
+     * @param int $user_id The ID of the user whose dummy data should be expired
+     * @param int $product_id The ID of the product for which dummy data should be expired
+     * @return int The number of rows affected or false on failure
+     */
+    public static function expire_admin_dummy(int $user_id, int $product_id): int|false
+    {
+        global $wpdb;
+        $table = static::getTableName();
+
+        $now_str = current_time('mysql');
+
+        return $wpdb->update(
+            $table,
+            [
+                'expiry_date' => $now_str,
+                'status'      => 'expired',
+            ],
+            [
+                'user_id'    => $user_id,
+                'product_id' => $product_id,
+                'source'     => 'admin',
+                'transaction_id' => 'override-manual',
+            ],
+            ['%s', '%s'],
+            ['%d', '%d', '%s', '%s']
+        );
+    }
+
+    /**
      * Check if a user has any other active product in the same space.
      *
      * @param  int  $user_id

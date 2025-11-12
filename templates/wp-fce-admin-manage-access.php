@@ -21,7 +21,7 @@ usort($rules, function ($a, $b) {
     <h1 class="wp-heading-inline"><?php esc_html_e('Access Management', 'wp-fce'); ?></h1>
 
     <div class="fce-admin-sections">
-        <!-- Bestehende Produkte -->
+        <!-- Bestehende Regeln -->
         <div class="fce-section fce-section-list">
             <h2><?php esc_html_e('Existing Rules', 'wp-fce'); ?></h2>
             <p class="description">
@@ -105,7 +105,7 @@ usort($rules, function ($a, $b) {
 
         <hr>
 
-        <!-- Neues Produkt anlegen -->
+        <!-- Neue Regel anlegen -->
         <div class="fce-section fce-section-create">
             <h2><?php esc_html_e('Add Rule', 'wp-fce'); ?></h2>
             <p class="description">
@@ -169,6 +169,85 @@ usort($rules, function ($a, $b) {
                 </table>
 
                 <?php submit_button(__('Save Rule', 'wp-fce')); ?>
+            </form>
+        </div>
+        <!-- Bulk import -->
+        <div class="fce-section fce-section-create-bulk">
+            <h2><?php esc_html_e('Bulk add Rules', 'wp-fce'); ?></h2>
+            <p class="description">
+                <?php esc_html_e('Bulk create access rules for existing/new users and products', 'wp-fce'); ?>
+            </p>
+
+            <form method="post" action="">
+                <input type="hidden" name="wp_fce_form_action" value="create_override_bulk">
+                <?php wp_nonce_field('wp_fce_create_override_bulk', 'wp_fce_nonce'); ?>
+
+                <table class="form-table">
+                    <tbody>
+                        <tr>
+                            <th><label for="csv_data_bulk"><?php _e('User', 'wp-fce'); ?></label></th>
+                            <td>
+                                <textarea name="csv_data_bulk" id="csv_data_bulk" rows="20" cols="100" placeholder="<?php echo esc_attr("email;firstname;lastname\nmyemail@mydomain.de;John;Doe\nmyemail2@mydomain.de;Jane;Doe"); ?>" required></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="product_id_bulk"><?php _e('Product', 'wp-fce'); ?></label></th>
+                            <td>
+                                <select name="product_id_bulk" id="product_id_bulk" required>
+                                    <option value="">-- <?php _e('Choose product', 'wp-fce'); ?> --</option>
+                                    <?php foreach ($products as $product): ?>
+                                        <option value="<?= esc_attr($product->get_id()); ?>">
+                                            <?= esc_html($product->get_name()); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="mode_bulk"><?php _e('Access Mode', 'wp-fce'); ?></label></th>
+                            <td>
+                                <select name="mode_bulk" id="mode_bulk" required>
+                                    <option value="allow"><?php _e('Grant Access', 'wp-fce'); ?></option>
+                                    <option value="deny"><?php _e('Revoke Access', 'wp-fce'); ?></option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="comment_bulk"><?php _e('Comment', 'wp-fce'); ?></label></th>
+                            <td>
+                                <input type="text" name="comment_bulk" id="comment_bulk">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="valid_until_bulk"><?php _e('Valid until', 'wp-fce'); ?></label></th>
+                            <td>
+                                <input type="datetime-local" name="valid_until_bulk" id="valid_until_bulk" required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="create_users_bulk"><?php _e('Create Users if not exist', 'wp-fce'); ?></label></th>
+                            <td>
+                                <div style="width:50px;">
+                                    <label style="display: block; margin-top: 3px;">
+                                        <input type="checkbox" name="create_users_bulk" value="1">
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="send_welcome_mails_bulk"><?php _e('Send welcome mails for new users', 'wp-fce'); ?></label></th>
+                            <td>
+                                <div style="width:50px;">
+                                    <label style="display: block; margin-top: 3px;">
+                                        <input type="checkbox" name="send_welcome_mails_bulk" value="1">
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <?php submit_button(__('Create Rules', 'wp-fce')); ?>
             </form>
         </div>
     </div>
