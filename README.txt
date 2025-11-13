@@ -50,7 +50,7 @@ Access is automatically revoked unless another active product grants access to t
 == Screenshots ==
 
 1. API & Darstellung settings page
-2. Product mapping interface
+2. Product mapping interface 
 3. Simulated IPN testing tool (for admin use)
 
 == Changelog ==
