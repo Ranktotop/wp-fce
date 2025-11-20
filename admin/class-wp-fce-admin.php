@@ -208,7 +208,7 @@ class Wp_Fce_Admin
                 </tr>',
 					esc_html($param['name']),
 					esc_attr(strtolower($param['type'])),
-					esc_html($param['type']),
+					esc_html(str_replace("-array", "[ ]", $param['type'])),
 					esc_attr(strtolower($param['location'])),
 					esc_html($param['location']),
 					$required_badge,
@@ -425,6 +425,20 @@ class Wp_Fce_Admin
 										'location' => 'URL',
 										'required' => true,
 										'description' => __('Admin API key for authentication', 'wp-fce')
+									],
+									[
+										'name' => 'spaceid',
+										'type' => 'integer-array',
+										'location' => 'URL',
+										'required' => false,
+										'description' => __('Grant access to these space-ids after registration. Comma-separated list of space IDs', 'wp-fce')
+									],
+									[
+										'name' => 'productid',
+										'type' => 'string-array',
+										'location' => 'URL',
+										'required' => false,
+										'description' => __('Grant access to all spaces assigned to this product-IDs. Comma-separated list of product IDs (SKUs)', 'wp-fce')
 									],
 									[
 										'name' => 'user_email',

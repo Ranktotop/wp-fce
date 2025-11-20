@@ -347,10 +347,30 @@ class WP_FCE_REST_Controller
             ], 400);
         }
 
+        //comma separated list of space/course ids
+        $passed_space_id_string = sanitize_text_field($request->get_param('spaceid'));
+        $passed_space_ids = [];
+        if (!empty($passed_space_id_string)) {
+            $passed_space_ids = array_map('intval', explode(',', $passed_space_id_string));
+        }
+
+        //comma separated list of product ids (strings)
+        $passed_product_id_string = sanitize_text_field($request->get_param('productid'));
+        $passed_product_ids = [];
+        if (!empty($passed_product_id_string)) {
+            $passed_product_ids = array_map('sanitize_text_field', explode(',', $passed_product_id_string));
+        }
+
         try {
+            // Check ob User existiert vor Erstellung
+            $user_existed = email_exists($email);
+
             // get or create the user and send welcome email
             $user = WP_FCE_Helper_User::get_or_create($email, '', '', $first_name, $last_name, $send_welcome_email);
-            $was_created = !email_exists($email) ? 'created' : 'existing';
+            $was_created = $user_existed ? 'existing' : 'created';
+
+            // Alle Entities sammeln (mit eindeutiger ID als Key um Duplikate zu vermeiden)
+            $entities_by_id = [];
 
             // get all public entities (spaces/courses)
             /** @var WP_FCE_Model_Fcom[] $public_entities */
@@ -358,12 +378,36 @@ class WP_FCE_REST_Controller
                 WP_FCE_Helper_Fcom::get_all_public_spaces(),
                 WP_FCE_Helper_Fcom::get_all_public_courses()
             );
+            foreach ($public_entities as $entity) {
+                $entities_by_id[$entity->get_id()] = $entity;
+            }
+
+            //add all passed space ids as entities and merge them into the public entities
+            if (!empty($passed_space_ids)) {
+                $passed_spaces = WP_FCE_Helper_Fcom::get_by_ids($passed_space_ids);
+                foreach ($passed_spaces as $entity) {
+                    $entities_by_id[$entity->get_id()] = $entity;
+                }
+            }
+
+            //iterate passed products, get their assigned spaces and merge them into the public entities
+            if (!empty($passed_product_ids)) {
+                foreach ($passed_product_ids as $product_sku) {
+                    $product = WP_FCE_Helper_Product::get_by_sku($product_sku);
+                    if ($product) {
+                        $mapped_spaces = $product->get_mapped_spaces();
+                        foreach ($mapped_spaces as $entity) {
+                            $entities_by_id[$entity->get_id()] = $entity;
+                        }
+                    }
+                }
+            }
 
             // grant access to all public entities
             $granted_access = [];
             $failed_access = [];
 
-            foreach ($public_entities as $entity) {
+            foreach ($entities_by_id as $entity) {
                 try {
                     $entity->grant_user_access($user->get_id(), 'member', 'by_api_registration');
                     $granted_access[] = [

@@ -412,12 +412,12 @@
     color: white;
 }
 
-.fce-type-string {
+.fce-type-string,.fce-type-string-array {
     background: #17a2b8;
     color: white;
 }
 
-.fce-type-integer,
+.fce-type-integer,.fce-type-integer-array,
 .fce-type-number {
     background: #28a745;
     color: white;
