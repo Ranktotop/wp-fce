@@ -348,14 +348,14 @@ class WP_FCE_REST_Controller
         }
 
         //comma separated list of space/course ids
-        $passed_space_id_string = sanitize_text_field($request->get_param('spaceid'));
+        $passed_space_id_string = sanitize_text_field($json_data['spaceid']);
         $passed_space_ids = [];
         if (!empty($passed_space_id_string)) {
             $passed_space_ids = array_map('intval', explode(',', $passed_space_id_string));
         }
 
         //comma separated list of product ids (strings)
-        $passed_product_id_string = sanitize_text_field($request->get_param('productid'));
+        $passed_product_id_string = sanitize_text_field($json_data['productid']);
         $passed_product_ids = [];
         if (!empty($passed_product_id_string)) {
             $passed_product_ids = array_map('sanitize_text_field', explode(',', $passed_product_id_string));
