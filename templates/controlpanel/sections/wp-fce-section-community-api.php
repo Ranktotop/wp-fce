@@ -464,19 +464,19 @@ function get_transaction_details_link($management_link)
 <div class="widgets-stats-container">
     <?php if ($community_api_helper->get_make_plugin_url()): ?>
         <div class="widgets-stat-item-info">
-            <span class="widgets-stat-item-number" style="font-size: 1.2em;"><?= esc_html_e('Make.com Plugin', 'wp-fce'); ?></span>
+            <span class="widgets-stat-item-number" style="font-size: 1.2em;"><?= esc_html__('Make.com Plugin', 'wp-fce'); ?></span>
             <span class="widgets-stat-item-label"><?= get_transaction_details_link($community_api_helper->get_make_plugin_url()); ?></span>
         </div>
     <?php endif; ?>
     <?php if ($community_api_helper->get_n8n_plugin_url()): ?>
         <div class="widgets-stat-item-info">
-            <span class="widgets-stat-item-number" style="font-size: 1.2em;"><?= esc_html_e('n8n Plugin', 'wp-fce'); ?></span>
+            <span class="widgets-stat-item-number" style="font-size: 1.2em;"><?= esc_html__('n8n Plugin', 'wp-fce'); ?></span>
             <span class="widgets-stat-item-label"><?= get_transaction_details_link($community_api_helper->get_n8n_plugin_url()); ?></span>
         </div>
     <?php endif; ?>
     <?php if ($community_api_helper->get_documentation_url()): ?>
         <div class="widgets-stat-item-info">
-            <span class="widgets-stat-item-number" style="font-size: 1.2em;"><?= esc_html_e('Documentation/Help', 'wp-fce'); ?></span>
+            <span class="widgets-stat-item-number" style="font-size: 1.2em;"><?= esc_html__('Documentation/Help', 'wp-fce'); ?></span>
             <span class="widgets-stat-item-label"><?= get_transaction_details_link($community_api_helper->get_documentation_url()); ?></span>
         </div>
     <?php endif; ?>
