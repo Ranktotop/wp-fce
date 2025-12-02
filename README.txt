@@ -55,7 +55,7 @@ Access is automatically revoked unless another active product grants access to t
 
 == Changelog ==
 
-= 1.2.4 =
+= 1.2.5 =
 * Added API Parameters for register user
 
 = 1.2.2 =

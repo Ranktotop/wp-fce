@@ -157,6 +157,11 @@ class Wp_Fce_Public
 		});
 
 		add_filter('template_include', [$this, 'load_custom_template']);
+		// Prüfen ob Rules neu geschrieben werden müssen
+		$rules = get_option('rewrite_rules');
+		if (!isset($rules['^wp-fce/controlpanel/?$'])) {
+			flush_rewrite_rules(false);
+		}
 	}
 
 	/**

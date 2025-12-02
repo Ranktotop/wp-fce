@@ -34,7 +34,8 @@ class WP_FCE_Deactivator
 			}
 		}
 
-		// 2) Cron‐Event löschen
+		// 2) Rewrite-Regeln flushen & Cron‐Event löschen
+		flush_rewrite_rules();
 		WP_FCE_Cron::unregister_cronjobs();
 	}
 }
