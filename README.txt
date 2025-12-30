@@ -2,8 +2,8 @@
 Contributors: marcmeese
 Donate link: https://marcmeese.com
 Tags: fluentcommunity, api, payments, digistore24, copecart, membership
-Requires at least: 6.0
-Tested up to: 6.5
+Requires at least: 6.5
+Tested up to: 6.9
 Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -54,6 +54,8 @@ Access is automatically revoked unless another active product grants access to t
 3. Simulated IPN testing tool (for admin use)
 
 == Changelog ==
+= 1.2.6 =
+* Fixed deprecation warnings
 
 = 1.2.5 =
 * Added API Parameters for register user
