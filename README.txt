@@ -54,6 +54,9 @@ Access is automatically revoked unless another active product grants access to t
 3. Simulated IPN testing tool (for admin use)
 
 == Changelog ==
+= 1.3.1 =
+* Fixed "Undefined array key REQUEST_METHOD" warning when WordPress runs via WP-CLI or server cron
+
 = 1.3.0 =
 * Removed Community API integration (settings, user control panel tab, stored API keys)
 * Removed standalone control panel page (/wp-fce/controlpanel) and its background image setting
