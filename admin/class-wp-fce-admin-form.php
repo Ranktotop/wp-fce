@@ -24,7 +24,7 @@ class Wp_Fce_Admin_Form_Handler
         // We don't check nonce here, because each handler uses its own nonce field
 
         // Admin check
-        if (!is_admin() || $_SERVER['REQUEST_METHOD'] !== 'POST') {
+        if (!is_admin() || ($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
             return;
         }
 

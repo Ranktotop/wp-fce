@@ -21,7 +21,7 @@ class Wp_Fce_Public_Form_Handler
 
         // User check
         // We don't check if user is logged in here, because some functions might be public to all
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
             return;
         }
 
