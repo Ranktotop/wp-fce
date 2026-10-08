@@ -8,10 +8,12 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: 📥 Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: 🧰 Setup PHP & Composer
         uses: shivammathur/setup-php@v2
@@ -28,10 +30,9 @@ jobs:
             -x ".git*" ".github/*" "tests/*" "*.md" "composer.*" "phpunit.*"
 
       - name: 🚀 Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
           name: ${{ github.ref_name }}
           files: release/wp-fce.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
