@@ -20,11 +20,10 @@
 }
 
 .fce-link-orders::before {
-    font-family: "Font Awesome 5 Free";
-    font-weight: 900;
-    /* 900 = solid */
-    content: "\f09d";
-    /* Unicode für fa-credit-card */
+    font-family: "dashicons";
+    font-weight: normal;
+    content: "\f18e";
+    /* Unicode für dashicons-money-alt */
     display: inline-block;
     margin-right: 8px;
     font-size: 16px;

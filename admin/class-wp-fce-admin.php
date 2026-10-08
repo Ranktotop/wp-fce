@@ -116,11 +116,6 @@ class Wp_Fce_Admin
 		wp_enqueue_script($this->wp_fce, plugin_dir_url(__FILE__) . 'js/wp-fce-admin.js', array('jquery'), $this->version, false);
 
 		// Seitenspezifische Skripte
-		if (strpos($hook_suffix, 'fce_settings') !== false) {
-			// Community-API Assets
-			$this->enqueue_community_api_assets($hook_suffix);
-		}
-
 		if ($hook_suffix === 'toplevel_page_fce_admin_manage_products') {
 			// Products Assets
 			$this->enqueue_products_assets($hook_suffix);
@@ -268,22 +263,6 @@ class Wp_Fce_Admin
 		// Platzhalter einsetzen, falls leer
 		$ipn_param   = $api_key_ipn   ?: '{ipn_api_key}';
 		$admin_param = $api_key_admin ?: '{admin_api_key}';
-
-		Redux::set_section('wp_fce_options', [
-			'title'  => __('General', 'wp-fce'),
-			'id'     => 'general_section',
-			'subtitle'   => __('Basic Settings', 'wp-fce'),
-			'icon'   => 'el el-cog',
-			'fields' => [
-				[
-					'id'       => 'redirect_home_to_portal',
-					'type'     => 'switch',
-					'title'    => __('Redirect Home to Portal', 'wp-fce'),
-					'subtitle'     => __('Check to activate redirecting users from the home page to the portal', 'wp-fce'),
-					'default'  => 0
-				],
-			],
-		]);
 
 		Redux::set_section('wp_fce_options', [
 			'title'  => __('API', 'wp-fce'),
@@ -660,16 +639,14 @@ class Wp_Fce_Admin
 		Redux::set_section('wp_fce_options', [
 			'title'  => __('Appearance', 'wp-fce'),
 			'id'     => 'appearance_section',
-			'desc'   => __('Defines the appearance of the payments-overview page', 'wp-fce'),
+			'desc'   => __('Defines the appearance and links of the community', 'wp-fce'),
 			'icon'   => 'el el-picture',
 			'fields' => [
 				[
-					'id'       => 'orders_background_image',
-					'type'     => 'media',
-					'url'      => true,
-					'title'    => __('Background Image', 'wp-fce'),
-					'subtitle' => __('Is shown on the payments-overview page', 'wp-fce'),
-					'desc'     => __('Optional. Supports PNG and JPEG', 'wp-fce'),
+					'id'    => 'profile_link_url',
+					'type'  => 'text',
+					'title' => __('Payment History Page URL', 'wp-fce'),
+					'desc'  => __('Page containing the [wp_fce_payment_history] shortcode. The "My Purchases" link on the own community profile points here if the user has external payments. With FluentCart purchases only, it points to the FluentCart customer account instead. Without purchases, the link is hidden.', 'wp-fce'),
 				],
 				[
 					'id'    => 'login_landingpage_url',
@@ -677,12 +654,6 @@ class Wp_Fce_Admin
 					'title' => __('Login Landing Page URL', 'wp-fce'),
 					'desc'  => __('URL of the page the user lands on after logging into wordpress', 'wp-fce'),
 					'default' => home_url('/wp-admin/'),
-				],
-				[
-					'id'    => 'font_awesome_cdn_url',
-					'type'  => 'text',
-					'title' => __('Font Awesome CDN Javascript URL', 'wp-fce'),
-					'desc'  => __('URL of the Font Awesome CDN Free Webkit Javascript', 'wp-fce')
 				],
 				[
 					'id'       => 'prevent_gif_conversion',
@@ -712,104 +683,6 @@ class Wp_Fce_Admin
 					'type'     => 'raw',
 					'content'  => '<a href="' . admin_url('admin.php?page=fce_admin_manage_access') . '" class="button button-primary">' . __('Manage access', 'wp-fce') . '</a>',
 				]
-			],
-		]);
-		Redux::set_section('wp_fce_options', [
-			'title'  => __('Community-API', 'wp-fce'),
-			'id'     => 'community_api_section',
-			'icon'   => 'el el-key',
-			'desc'   => __('Community-API Settings', 'wp-fce'),
-			'fields' => [
-				[
-					'id'    => 'community_api_enabled',
-					'type'  => 'switch',
-					'title' => __('Enable Community API', 'wp-fce'),
-					'desc'  => __('Enable the Community API for this site', 'wp-fce'),
-					'default' => false,
-				],
-				[
-					'id'    => 'community_api_url',
-					'type'  => 'text',
-					'title' => __('API URL', 'wp-fce'),
-					'desc'  => __('Base URL of the Community API server', 'wp-fce'),
-					'default' => 'localhost',
-				],
-				[
-					'id'    => 'community_api_port',
-					'type'  => 'text',
-					'title' => __('API Port', 'wp-fce'),
-					'desc'  => __('Port of the Community API server', 'wp-fce'),
-					'default' => '8000',
-				],
-				[
-					'id'    => 'community_api_ssl',
-					'type'  => 'switch',
-					'title' => __('Use SSL', 'wp-fce'),
-					'desc'  => __('Enable SSL/HTTPS for API connections', 'wp-fce'),
-					'default' => false,
-				],
-				[
-					'id'    => 'community_api_master_token',
-					'type'  => 'text',
-					'title' => __('Master Token', 'wp-fce'),
-					'desc'  => __('Master token for administrative operations', 'wp-fce'),
-				],
-				[
-					'id'    => 'community_api_service_token',
-					'type'  => 'text',
-					'title' => __('Service Token', 'wp-fce'),
-					'desc'  => __('Service token for read-only operations', 'wp-fce'),
-				],
-				[
-					'id'      => 'community_api_test_button',
-					'type'    => 'raw',
-					'title'   => __('Connection Test', 'wp-fce'),
-					'content' => '<button type="button" class="button button-secondary" onclick="testCommunityAPIConnection()">' . __('Test Connection', 'wp-fce') . '</button>
-              <div id="community-api-test-result" style="margin-top: 10px;"></div>',
-				],
-				[
-					'id'    => 'community_api_section-urls',
-					'type'  => 'section',
-					'title' => __('URLs', 'wp-fce'),
-					"indent" => false,
-				],
-				[
-					'id'    => 'community_api_plugin_url_make',
-					'type'  => 'text',
-					'title' => __('make.com plugin-url', 'wp-fce'),
-					'desc'  => __('URL of the make.com plugin', 'wp-fce')
-				],
-				[
-					'id'    => 'community_api_plugin_url_n8n',
-					'type'  => 'text',
-					'title' => __('n8n plugin-url', 'wp-fce'),
-					'desc'  => __('URL of the n8n plugin', 'wp-fce')
-				],
-				[
-					'id'    => 'community_api_help_url',
-					'type'  => 'text',
-					'title' => __('Community API help page URL', 'wp-fce'),
-					'desc'  => __('URL of the Community API help page', 'wp-fce')
-				],
-				[
-					'id'    => 'community_api_buy_url',
-					'type'  => 'text',
-					'title' => __('Community API salespage URL', 'wp-fce'),
-					'desc'  => __('URL of the Community API salespage, where the customer can buy credits', 'wp-fce')
-				],
-				[
-					'id'    => 'community_api_buy_url_threshold',
-					'type'  => 'text',
-					'title' => __('Show "Buy Credits" Button threshold', 'wp-fce'),
-					'desc'  => __('Show button only if the user has fewer or equal than X credits. -1 = never show, -2 = always show. Must be numeric', 'wp-fce'),
-					'validate' => [
-						'numeric'
-					],
-					'default' => -2,
-					'min'     => -2,
-					'step'    => 1,
-					'required' => ['community_api_buy_url', '!=', ''],
-				],
 			],
 		]);
 	}
@@ -1014,42 +887,6 @@ class Wp_Fce_Admin
 		if (file_exists($notice_view)) {
 			include $notice_view;
 		}
-	}
-
-	/**
-	 * Lädt Skripte und Styles für die Community-API Einstellungen.
-	 *
-	 * @param string $hook_suffix Aktueller Admin-Page-Hook.
-	 */
-	public function enqueue_community_api_assets(string $hook_suffix): void
-	{
-		// Nur auf Redux-Einstellungsseiten laden
-		if (strpos($hook_suffix, 'fce_settings') === false) {
-			return;
-		}
-
-		// JS
-		wp_enqueue_script(
-			$this->wp_fce . '-community-api-js',
-			plugin_dir_url(__FILE__) . 'js/wp-fce-admin-community-api.js',
-			['jquery'],
-			$this->version,
-			true
-		);
-
-		// Konfig für AJAX im JS
-		wp_localize_script(
-			$this->wp_fce . '-community-api-js',
-			'FCE_CommunityAPI',
-			[
-				'ajaxUrl' => admin_url('admin-ajax.php'),
-				'nonce'   => wp_create_nonce('security_wp-fce'),
-				'messages' => [
-					'testing' => __('Testing...', 'wp-fce'),
-					'connection_failed' => __('Connection failed', 'wp-fce'),
-				]
-			]
-		);
 	}
 
 	/**

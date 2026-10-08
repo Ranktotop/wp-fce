@@ -104,7 +104,11 @@ class Wp_Fce_Public
 	}
 
 	/**
-	 * Add a custom link to the FluentCommunity profile menu
+	 * Add a "My Purchases" link to the own FluentCommunity profile.
+	 *
+	 * The link is only shown if the user has purchases. It points to the configured
+	 * payment history page if there are external payments (IPN), otherwise directly
+	 * to the FluentCart customer account.
 	 *
 	 * @param array $data
 	 * @param object $xprofile
@@ -116,31 +120,53 @@ class Wp_Fce_Public
 			return $data;
 		}
 
+		$link_url = $this->get_purchases_link_url(WP_FCE_Helper_User::get_by_id(get_current_user_id()));
+		if (!$link_url) {
+			return $data;
+		}
+
 		$data['profile_nav_actions'][] = [
 			'css_class' => 'fce-link-orders',
-			'title'     => __('Control Panel', 'wp-fce'),
+			'title'     => __('My Purchases', 'wp-fce'),
 			'svg_icon'  => '',
-			'url'       => site_url('/wp-fce/controlpanel'),
+			'url'       => $link_url,
 		];
 
 		return $data;
+	}
+
+	/**
+	 * Determines where the "My Purchases" link of a user points to.
+	 *
+	 * @param WP_FCE_Model_User $user
+	 * @return string|false False if the user has no purchases or no matching target is configured.
+	 */
+	private function get_purchases_link_url(WP_FCE_Model_User $user): string|false
+	{
+		$history_url = WP_FCE_Helper_Options::get_string_option('profile_link_url');
+		$has_external_payments = !empty(WP_FCE_Helper_Ipn_Log::get_latest_ipns_for_user($user->get_email()));
+
+		if ($has_external_payments && $history_url) {
+			return $history_url;
+		}
+
+		if (WP_FCE_Helper_Fluent_Cart::user_has_orders($user)) {
+			return WP_FCE_Helper_Fluent_Cart::get_customer_account_url() ?: $history_url;
+		}
+
+		return false;
 	}
 
 	public function enqueue_profile_link_css(): void
 	{
 		$css_url = plugins_url('wp-fce/public/css/fce-profile-link.css', dirname(__DIR__));
 		echo '<link rel="stylesheet" href="' . esc_url($css_url) . '" media="all">';
-		// Font Awesome 5 CDN
-		$font_awesome_url = WP_FCE_Helper_Options::get_string_option('font_awesome_cdn_url');
-		// if url is not false or empty use default cdn url
-		if ($font_awesome_url === false || empty($font_awesome_url)) {
-			$font_awesome_url = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js";
-		}
-		echo '<script src="' . esc_url($font_awesome_url) . '" crossorigin="anonymous"></script>';
+		// Dashicons from WordPress core for the link icon
+		echo '<link rel="stylesheet" href="' . esc_url(includes_url('css/dashicons.min.css')) . '" media="all">';
 	}
 
 	/**
-	 * Registriert eine benutzerdefinierte Route für /wp-fce/bestellungen
+	 * Registriert die REST-API-Routen des Plugins.
 	 */
 	public function register_api_routes(): void
 	{
@@ -148,96 +174,72 @@ class Wp_Fce_Public
 		$controller->register_routes();
 	}
 
-	public function register_front_end_routes(): void
+	/**
+	 * Registers all shortcodes of the plugin.
+	 */
+	public function register_shortcodes(): void
 	{
-		add_rewrite_rule('^wp-fce/controlpanel/?$', 'index.php?wp_fce_page=controlpanel', 'top');
-		add_filter('query_vars', function ($vars) {
-			$vars[] = 'wp_fce_page';
-			return $vars;
-		});
-
-		add_filter('template_include', [$this, 'load_custom_template']);
-		// Prüfen ob Rules neu geschrieben werden müssen
-		$rules = get_option('rewrite_rules');
-		if (!isset($rules['^wp-fce/controlpanel/?$'])) {
-			flush_rewrite_rules(false);
-		}
+		add_shortcode('wp_fce_payment_history', [$this, 'render_payment_history_shortcode']);
 	}
 
 	/**
-	 * Liefert das Template für unsere Bestellseite
+	 * Renders the payment history of the current user.
+	 *
+	 * Usage: [wp_fce_payment_history]
+	 *
+	 * @return string
 	 */
-	public function load_custom_template($template)
+	public function render_payment_history_shortcode(): string
 	{
-		if (get_query_var('wp_fce_page') === 'controlpanel') {
-			return plugin_dir_path(dirname(__FILE__)) . 'templates/controlpanel/wp-fce-controlpanel.php';
+		if (!is_user_logged_in()) {
+			return '<p>' . esc_html__('Please log in to see your payment history.', 'wp-fce') . '</p>';
 		}
 
-		return $template;
+		$user = WP_FCE_Helper_User::get_by_id(get_current_user_id());
+		$ipns = WP_FCE_Helper_Ipn_Log::get_latest_ipns_for_user($user->get_email());
+		$payment_stats = $this->get_payment_statistics($ipns);
+		$customer_account_url = WP_FCE_Helper_Fluent_Cart::user_has_orders($user)
+			? WP_FCE_Helper_Fluent_Cart::get_customer_account_url()
+			: false;
+
+		wp_enqueue_style(
+			$this->wp_fce . '-payment-history',
+			plugin_dir_url(__FILE__) . 'css/wp-fce-payment-history.css',
+			[],
+			$this->version
+		);
+
+		ob_start();
+		include plugin_dir_path(dirname(__FILE__)) . 'templates/shortcodes/wp-fce-payment-history.php';
+		return ob_get_clean();
 	}
 
-	public function redirect_to_portal()
+	/**
+	 * Calculates payment statistics from an array of IPN logs.
+	 *
+	 * @param WP_FCE_Model_Ipn_Log[] $ipns
+	 * @return array Keys 'total_payments', 'recent_payments', 'payment_sources'.
+	 */
+	private function get_payment_statistics(array $ipns): array
 	{
-		// Prüfen ob wir wirklich auf der Root-URL sind
-		$request_uri = $_SERVER['REQUEST_URI'] ?? '';
-		$parsed_home = parse_url(home_url());
-		$home_path = $parsed_home['path'] ?? '/';
-
-		// Normalisiere die Pfade
-		$home_path = rtrim($home_path, '/') . '/';
-		$request_path = parse_url($request_uri, PHP_URL_PATH);
-		$request_path = rtrim($request_path, '/') . '/';
-
-		// Nur weiterleiten wenn wir exakt auf der Home-URL sind
-		if ($request_path !== $home_path) {
-			return;
-		}
-
-		// Diese Parameter verhindern eine Weiterleitung
-		$blocking_params = [
-			'page',
-			'p',
-			'post_type',
-			'preview',
-			's',
-			'author',
-			'category_name',
-			'tag',
-			'action',
-			'doing_wp_cron',
-			"page_id"
-			// weitere WordPress-spezifische Parameter nach Bedarf
+		$stats = [
+			'total_payments'  => count($ipns),
+			'payment_sources' => [],
+			'recent_payments' => 0,
 		];
 
-		// Prüfen ob einer der blockierenden Parameter vorhanden ist
-		if (!empty($_GET)) {
-			foreach ($blocking_params as $param) {
-				if (isset($_GET[$param])) {
-					return; // Nicht weiterleiten wenn blockierender Parameter gefunden
-				}
+		$thirty_days_ago = new DateTime('-30 days', wp_timezone());
+
+		foreach ($ipns as $ipn) {
+			$source = $ipn->get_source();
+			$stats['payment_sources'][$source] = ($stats['payment_sources'][$source] ?? 0) + 1;
+
+			if ($ipn->get_ipn_date() > $thirty_days_ago) {
+				$stats['recent_payments']++;
 			}
 		}
 
-		$activated = WP_FCE_Helper_Options::get_bool_option('redirect_home_to_portal', false);
-		if (!$activated) {
-			return;
-		}
-
-		// Portal URL von Fluent Community ermitteln
-		$portal_url = WP_FCE_Helper_Options::get_fluent_portal_url(include_query: true);
-
-		if (!$portal_url) {
-			return;
-		}
-
-		// Alle GET-Parameter übernehmen (z.B. UTM-Parameter)
-		if (!empty($_GET)) {
-			$portal_url = add_query_arg($_GET, $portal_url);
-		}
-
-		// Weiterleitung durchführen
-		wp_safe_redirect($portal_url, 302);
-		exit;
+		return $stats;
 	}
 
 	/**

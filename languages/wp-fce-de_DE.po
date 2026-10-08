@@ -4850,3 +4850,24 @@ msgstr "https://marcmeese.com"
 
 #~ msgid "Title Font"
 #~ msgstr "Titel Schrift"
+
+msgid "My Purchases"
+msgstr "Meine Käufe"
+
+msgid "Please log in to see your payment history."
+msgstr "Bitte melde dich an, um deine Zahlungshistorie zu sehen."
+
+msgid "Payment History Page URL"
+msgstr "URL der Zahlungshistorie-Seite"
+
+msgid "Page containing the [wp_fce_payment_history] shortcode. The \"My Purchases\" link on the own community profile points here if the user has external payments. With FluentCart purchases only, it points to the FluentCart customer account instead. Without purchases, the link is hidden."
+msgstr "Seite mit dem Shortcode [wp_fce_payment_history]. Der Link „Meine Käufe“ im eigenen Community-Profil führt hierher, wenn der Nutzer externe Zahlungen hat. Hat er nur FluentCart-Käufe, führt er stattdessen ins FluentCart-Kundenkonto. Ohne Käufe wird der Link ausgeblendet."
+
+msgid "Defines the appearance and links of the community"
+msgstr "Legt Erscheinungsbild und Links der Community fest"
+
+msgid "Your purchases from our shop, including invoices and subscriptions, can be found in your customer account."
+msgstr "Deine Käufe aus unserem Shop inklusive Rechnungen und Abos findest du in deinem Kundenkonto."
+
+msgid "Go to my customer account"
+msgstr "Zu meinem Kundenkonto"

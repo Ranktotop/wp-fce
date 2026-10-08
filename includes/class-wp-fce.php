@@ -93,6 +93,7 @@ class Wp_Fce
 
 		$this->load_dependencies();
 		$this->set_locale();
+		$this->define_migration_hooks();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
 	}
@@ -173,7 +174,7 @@ class Wp_Fce
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-access-log.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-user.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-fcom.php';
-		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-community-api.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-fluent-cart.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/class-wp-fce-helper-options.php';
 
 		/**
@@ -191,6 +192,11 @@ class Wp_Fce
 		 * Cronjob classes
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-fce-cron.php';
+
+		/**
+		 * One-time data migrations after updates
+		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-fce-migrations.php';
 
 		$this->loader = new Wp_Fce_Loader();
 	}
@@ -210,6 +216,17 @@ class Wp_Fce
 		$plugin_i18n = new Wp_Fce_i18n();
 
 		$this->loader->add_action('plugins_loaded', $plugin_i18n, 'load_plugin_textdomain');
+	}
+
+	/**
+	 * Run pending one-time data migrations on every load, so they also
+	 * apply after updates that do not trigger the activation hook.
+	 *
+	 * @access   private
+	 */
+	private function define_migration_hooks()
+	{
+		$this->loader->add_action('plugins_loaded', WP_FCE_Migrations::class, 'run');
 	}
 
 	/**
@@ -271,16 +288,13 @@ class Wp_Fce
 		//Register cronjob
 		WP_FCE_Cron::register_cron_actions();
 
-		//Register Front-End Routes#
-		$this->loader->add_action('init', $plugin_public, 'register_front_end_routes');
+		//Register shortcodes
+		$this->loader->add_action('init', $plugin_public, 'register_shortcodes');
 
 		//Add payments link on user profiles
 		$this->loader->add_action('fluent_community/portal_head', $plugin_public, 'enqueue_profile_link_css');
 		$this->loader->add_filter('fluent_community/profile_view_data', $plugin_public, 'add_profile_management_link', 10, 2);
 		$this->loader->add_action('init', $plugin_public, 'register_form_handler');
-
-		//Redirect home if enabled
-		$this->loader->add_action('template_redirect', $plugin_public, 'redirect_to_portal');
 
 		// Register Fluent Community filters after init
 		$this->loader->add_action('init', $plugin_public, 'register_fluent_community_filters', 20);

@@ -54,6 +54,14 @@ Access is automatically revoked unless another active product grants access to t
 3. Simulated IPN testing tool (for admin use)
 
 == Changelog ==
+= 1.3.0 =
+* Removed Community API integration (settings, user control panel tab, stored API keys)
+* Removed standalone control panel page (/wp-fce/controlpanel) and its background image setting
+* Added [wp_fce_payment_history] shortcode to show external payments on any page
+* Profile link renamed to "My Purchases"; only shown if the user has purchases and links to the FluentCart customer account when the user only has FluentCart orders
+* Removed "Redirect Home to Portal" and "Font Awesome CDN URL" settings; profile link icon now uses WordPress Dashicons
+* Obsolete settings and data are cleaned up automatically once after the update
+
 = 1.2.6 =
 * Fixed deprecation warnings
 

@@ -37,43 +37,6 @@ class Wp_Fce_Public_Ajax_Handler
     }
 
     /**
-     * Loads the Community API Transactions page for a user.
-     *
-     * @param array $data Must contain key 'user_id'.
-     * @param array $meta Optional, can contain 'page' for pagination.
-     * @return array JSON response (success/fail)
-     *
-     * @throws \Exception If an error occurs, an Exception object is thrown.
-     */
-    private function load_community_api_transactions_page_for_user(array $data, array $meta): array
-    {
-        try {
-            $user = $this->get_verified_user($data, 'user_id');
-        } catch (\Exception $e) {
-            return ['state' => false, 'message' => $e->getMessage()];
-        }
-
-        // Seite validieren
-        $page = intval($meta['page'] ?? 1);
-        $page_size = intval($meta['page_size'] ?? 10);
-        if ($page < 1 || $page_size < 1) {
-            return ['state' => false, 'message' => __('Invalid page number or page size', 'wp-fce')];
-        }
-
-        //load helper
-        $helper = new WP_FCE_Helper_Community_Api($user);
-
-        // Transaktionen abrufen
-        $transaction_response = $helper->fetch_transactions($page, $page_size);
-        if (!$transaction_response) {
-            return ['state' => false, 'message' => __('Error fetching transactions', 'wp-fce')];
-        }
-        //add state to response
-        $transaction_response['state'] = true;
-        return $transaction_response;
-    }
-
-    /**
      * Get a verified user from the request.
      * This function verifies that the user is logged in,
      * and ensures that the user ID in the request matches the logged-in user.

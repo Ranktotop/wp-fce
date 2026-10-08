@@ -105,41 +105,4 @@ class WP_FCE_Helper_Options
         $value = self::get_option($key, $default_str);
         return $value === '1' ? true : ($value === '0' ? false : $default);
     }
-
-    /**
-     * Get the Fluent Portal URL.
-     *
-     * Retrieves the URL for the Fluent Portal if it exists and is configured.
-     *
-     * @since 1.0.0
-     * 
-     * @return string|false The Fluent Portal URL as a string if available, or false if not configured or unavailable.
-     */
-    public static function get_fluent_portal_url(bool $include_query = false): string|false
-    {
-        $fcom_settings = get_option('fluent_community_settings', []);
-        $slug = $fcom_settings['slug'] ?? '';
-        if (empty($slug)) {
-            return false;
-        }
-        $portal_url = home_url($slug);
-        if (!empty($_GET) && $include_query) {
-            $portal_url = add_query_arg($_GET, $portal_url);
-        }
-        return $portal_url;
-    }
-
-    public static function get_buy_credits_threshold(): int
-    {
-        if (!self::get_buy_credits_url()) {
-            return -1; // -1 means do never show the buy credits link
-        }
-        $threshold = self::get_int_option('community_api_buy_url_threshold', -2);
-        return is_numeric($threshold) ? (int)$threshold : -2;
-    }
-
-    public static function get_buy_credits_url(): string|false
-    {
-        return self::get_string_option('community_api_buy_url');
-    }
 }

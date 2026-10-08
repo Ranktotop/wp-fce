@@ -1,0 +1,147 @@
+/**
+ * Styles for the [wp_fce_payment_history] shortcode.
+ * Inherits font and text color from the theme, so it works on light and dark themes.
+ * The accent color can be overridden via --wp-fce-accent.
+ */
+
+.wp-fce-payment-history {
+    --wp-fce-accent: #1e88b4;
+    --wp-fce-surface: color-mix(in srgb, currentColor 5%, transparent);
+    --wp-fce-border: color-mix(in srgb, currentColor 15%, transparent);
+}
+
+/*************** Customer Account Notice ******************/
+
+.wp-fce-payment-history .wp-fce-customer-account-notice {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 20px;
+    background: var(--wp-fce-surface);
+    border: 1px solid var(--wp-fce-border);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.wp-fce-payment-history .wp-fce-customer-account-notice p {
+    flex: 1 1 260px;
+    margin: 0;
+}
+
+.wp-fce-payment-history .wp-fce-button {
+    display: inline-block;
+    background: var(--wp-fce-accent);
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+}
+
+.wp-fce-payment-history .wp-fce-button:hover,
+.wp-fce-payment-history .wp-fce-button:focus {
+    color: #fff;
+    filter: brightness(1.1);
+}
+
+/*************** Widgets ******************/
+
+.wp-fce-payment-history .widgets-stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.wp-fce-payment-history .widgets-stat-item-info {
+    background: var(--wp-fce-surface);
+    padding: 15px;
+    border-radius: 6px;
+    text-align: center;
+    border-left: 4px solid var(--wp-fce-accent);
+}
+
+.wp-fce-payment-history .widgets-stat-item-number {
+    display: block;
+    font-size: 2em;
+    font-weight: bold;
+    line-height: 1.2;
+    color: var(--wp-fce-accent);
+}
+
+.wp-fce-payment-history .widgets-stat-item-label {
+    display: block;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+/*************** Table ******************/
+
+.wp-fce-payment-history .fce-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border: 1px solid var(--wp-fce-border);
+    border-radius: 8px;
+}
+
+.wp-fce-payment-history .fce-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+}
+
+.wp-fce-payment-history .fce-table th,
+.wp-fce-payment-history .fce-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 0;
+    border-bottom: 1px solid var(--wp-fce-border);
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.wp-fce-payment-history .fce-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.wp-fce-payment-history .fce-table th {
+    background: var(--wp-fce-surface);
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.wp-fce-payment-history .fce-table a {
+    color: var(--wp-fce-accent);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.wp-fce-payment-history .fce-table a:hover {
+    text-decoration: underline;
+}
+
+/*************** Responsive ******************/
+
+@media screen and (max-width: 480px) {
+    .wp-fce-payment-history .widgets-stats-container {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .wp-fce-payment-history .widgets-stat-item-number {
+        font-size: 1.5em;
+    }
+
+    .wp-fce-payment-history .fce-table th,
+    .wp-fce-payment-history .fce-table td {
+        padding: 8px 6px;
+        font-size: 0.85em;
+    }
+
+    .wp-fce-payment-history .fce-table__col--hide-mobile {
+        display: none;
+    }
+}
