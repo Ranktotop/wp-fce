@@ -54,6 +54,10 @@ Access is automatically revoked unless another active product grants access to t
 3. Simulated IPN testing tool (for admin use)
 
 == Changelog ==
+= 1.3.2 =
+* Fixed "Undefined array key productid" warning when the registration API is called without product IDs
+* Access sync and renewal now only write debug log entries when a membership or product access actually changes
+
 = 1.3.1 =
 * Fixed "Undefined array key REQUEST_METHOD" warning when WordPress runs via WP-CLI or server cron
 

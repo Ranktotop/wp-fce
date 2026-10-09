@@ -186,12 +186,15 @@ class WP_FCE_Model_Fcom extends WP_FCE_Model_Base
      */
     public function grant_user_access(int $user_id, string $role = "member", string $source = "by_automation", bool $debug_log = false): void
     {
+        // FluentCommunity returns true only if the membership actually changed, so we only log real changes
         if ($this->is_space()) {
-            \FluentCommunity\App\Services\Helper::addToSpace($this->get_id(), $user_id, $role, $source);
-            fce_log('grant_user_access: Granted user ' . $user_id . ' access to space ' . $this->get_id() . ' with role ' . $role, 'debug', ! $debug_log);
+            if (\FluentCommunity\App\Services\Helper::addToSpace($this->get_id(), $user_id, $role, $source)) {
+                fce_log('grant_user_access: Granted user ' . $user_id . ' access to space ' . $this->get_id() . ' with role ' . $role, 'debug', ! $debug_log);
+            }
         } else if ($this->is_course()) {
-            \FluentCommunity\Modules\Course\Services\CourseHelper::enrollCourse($this->get_id(), $user_id);
-            fce_log('grant_user_access: Granted user ' . $user_id . ' access to course ' . $this->get_id(), 'debug', ! $debug_log);
+            if (\FluentCommunity\Modules\Course\Services\CourseHelper::enrollCourse($this->get_id(), $user_id)) {
+                fce_log('grant_user_access: Granted user ' . $user_id . ' access to course ' . $this->get_id(), 'debug', ! $debug_log);
+            }
         }
     }
 
@@ -205,12 +208,15 @@ class WP_FCE_Model_Fcom extends WP_FCE_Model_Base
      */
     public function revoke_user_access(int $user_id, string $source = "by_automation", bool $debug_log = false): void
     {
+        // FluentCommunity returns true only if the user was actually removed, so we only log real changes
         if ($this->is_space()) {
-            \FluentCommunity\App\Services\Helper::removeFromSpace($this->get_id(), $user_id, $source);
-            fce_log('revoke_user_access: Revoked user ' . $user_id . ' access to space ' . $this->get_id(), 'debug', ! $debug_log);
+            if (\FluentCommunity\App\Services\Helper::removeFromSpace($this->get_id(), $user_id, $source)) {
+                fce_log('revoke_user_access: Revoked user ' . $user_id . ' access to space ' . $this->get_id(), 'debug', ! $debug_log);
+            }
         } else if ($this->is_course()) {
-            \FluentCommunity\Modules\Course\Services\CourseHelper::leaveCourse($this->get_id(), $user_id);
-            fce_log('revoke_user_access: Revoked user ' . $user_id . ' access to course ' . $this->get_id(), 'debug', ! $debug_log);
+            if (\FluentCommunity\Modules\Course\Services\CourseHelper::leaveCourse($this->get_id(), $user_id)) {
+                fce_log('revoke_user_access: Revoked user ' . $user_id . ' access to course ' . $this->get_id(), 'debug', ! $debug_log);
+            }
         }
     }
 

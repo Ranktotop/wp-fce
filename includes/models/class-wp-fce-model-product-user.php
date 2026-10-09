@@ -227,6 +227,9 @@ class WP_FCE_Model_Product_User extends WP_FCE_Model_Base
      */
     public function renew(?DateTime $expiry_date = null, bool $debug_log = false): void
     {
+        $old_status = $this->get_status();
+        $old_expiry = $this->get_expiry_date() ? $this->get_expiry_date()->format('Y-m-d H:i:s') : 'none';
+
         // 1) If no date is given, used current date
         if (null === $expiry_date) {
             $expiry_date = $this->get_expiry_date();
@@ -245,7 +248,12 @@ class WP_FCE_Model_Product_User extends WP_FCE_Model_Base
         }
 
         $this->save();
-        fce_log('renew: Updated product-user access between user ' . $this->get_user_id() . ' and product ' . $this->get_product_id() . ' to state ' . $this->get_status() . ' until ' . ($expiry_date ? $expiry_date->format('Y-m-d H:i:s') : 'none'), 'debug', ! $debug_log);
+
+        // only log real changes, the cron renews every entry on each run
+        $new_expiry = $expiry_date ? $expiry_date->format('Y-m-d H:i:s') : 'none';
+        if ($old_status !== $this->get_status() || $old_expiry !== $new_expiry) {
+            fce_log('renew: Updated product-user access between user ' . $this->get_user_id() . ' and product ' . $this->get_product_id() . ' to state ' . $this->get_status() . ' until ' . $new_expiry, 'debug', ! $debug_log);
+        }
     }
 
     public function is_active(): bool
