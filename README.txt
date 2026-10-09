@@ -54,6 +54,9 @@ Access is automatically revoked unless another active product grants access to t
 3. Simulated IPN testing tool (for admin use)
 
 == Changelog ==
+= 1.3.3 =
+* Login redirect now honors an internal redirect_to target for non-admins and only falls back to the configured landing page URL otherwise
+
 = 1.3.2 =
 * Fixed "Undefined array key productid" warning when the registration API is called without product IDs
 * Access sync and renewal now only write debug log entries when a membership or product access actually changes

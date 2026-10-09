@@ -779,7 +779,18 @@ class Wp_Fce_Admin
 			return $redirect_to;
 		}
 
-		// Nur für Nicht-Admins: Prüfe ob eine custom URL konfiguriert ist
+		// Explizit angefordertes Ziel (redirect_to) hat Vorrang, sofern es intern ist.
+		// /wp-admin zählt nicht, da WordPress admin_url() als Standard setzt.
+		if (!empty($requested_redirect_to)) {
+			$requested_path = (string) wp_parse_url($requested_redirect_to, PHP_URL_PATH);
+			$points_to_admin = strpos($requested_path, '/wp-admin') !== false;
+
+			if (!$points_to_admin && wp_validate_redirect($requested_redirect_to, '') !== '') {
+				return $requested_redirect_to;
+			}
+		}
+
+		// Fallback: Prüfe ob eine custom URL konfiguriert ist
 		$custom_url = Redux::get_option('wp_fce_options', 'login_landingpage_url');
 
 		if (!empty($custom_url) && $custom_url !== home_url('/wp-admin/')) {
